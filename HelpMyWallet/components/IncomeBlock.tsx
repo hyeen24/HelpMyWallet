@@ -29,7 +29,7 @@ const IncomeBlock = ({incomeList} : {incomeList: IncomeType[]}) => {
         );
     }
   return (
-    <View style={{marginTop: 8}}>
+    <View style={{marginVertical: 20}}>
         <Text style={styles.blockTitleTxt}>My 
             <Text style={{ fontWeight: 700 }}> Income
             </Text>
