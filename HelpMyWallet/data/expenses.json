@@ -1,0 +1,7 @@
+[
+    { "id": "1", "name": "Food", "amount": "120.50" },
+    { "id": "2", "name": "Shopping", "amount": "75.20" },
+    { "id": "3", "name": "Entertainment", "amount": "40.75" },
+    { "id": "4", "name": "Travel", "amount": "180.00" },
+    { "id": "5", "name": "Utilities", "amount": "60.25" }
+]
