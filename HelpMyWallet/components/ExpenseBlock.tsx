@@ -20,8 +20,9 @@ const ExpenseBlock = ({expenseList} : {expenseList: ExpenseType[]}) => {
                 </TouchableOpacity>
             );
         }
-        let amount = item.amount.split('.');
-        let percentage = Math.floor(parseFloat(item.amount) / totalAmount * 100) 
+        let amountString = item.amount ?? "0.00";
+        let amount = amountString.split('.');
+        let percentage = Math.floor((parseFloat(amountString) / totalAmount) * 100);
 
         let BlockColor;
         let TxtColor;
