@@ -2,15 +2,19 @@ import { StyleSheet, Text, View } from 'react-native'
 import React from 'react'
 import { AntDesign, FontAwesome, SimpleLineIcons } from '@expo/vector-icons'
 import Colors from '@/constants/Colors'
+import { Stack } from 'expo-router'
+import Header from '@/components/Header'
 
 const Page = () => {
   return (
-    <View>
-      <Text>Page</Text>
-      <SimpleLineIcons name='pie-chart' size={18} color={Colors.black}/>
-      <FontAwesome name="user-o" size={18} color={Colors.black}/>
-      <AntDesign name="swap" size={18} color={Colors.black}/>
-    </View>
+    <>
+    <Stack.Screen options={{
+        header: () => <Header/>
+    }}/>
+        <View style={styles.container}>
+        <Text>Page</Text>
+        </View>
+    </>
   )
 }
 
@@ -19,6 +23,13 @@ export default Page
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: Colors.black
+        justifyContent: 'center',
+        alignItems: 'center',
+        backgroundColor: Colors.black,
+        paddingHorizontal: 20
+    },
+    text: {
+        color: Colors.white
+
     }
 })

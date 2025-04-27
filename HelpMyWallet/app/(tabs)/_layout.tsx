@@ -3,33 +3,40 @@ import React from 'react'
 import { Tabs } from 'expo-router'
 import Colors from '@/constants/Colors'
 import { AntDesign, FontAwesome, SimpleLineIcons } from '@expo/vector-icons'
+import { StatusBar } from 'expo-status-bar'
 
 const Layout = () => {
   return (
+   <>
     <Tabs screenOptions={{
-        tabBarStyle: {
-            justifyContent: 'center',
-            backgroundColor: Colors.grey,
-            position: 'absolute',
-            bottom: 40,
-            height: 'auto',
-            marginHorizontal: 120,
-            paddingHorizontal: 10,
-            paddingBottom:4,
-            paddingTop: 4,
-            borderRadius: 40
-        },
-        tabBarShowLabel: false,
-        tabBarInactiveTintColor: '#999',
-        tabBarActiveTintColor: Colors.white
-    }}>
+            tabBarStyle: {
+                justifyContent: 'center',
+                alignSelf: 'center',
+                backgroundColor: Colors.grey,
+                position: 'absolute',
+                bottom: 40,
+                height: 56,
+                marginHorizontal: 120,
+                paddingHorizontal: 10,
+                paddingBottom:8,
+                paddingTop: 8,
+                borderRadius: 40,
+                borderWidth: 1,
+                borderTopWidth:1,
+                borderColor: '#333',
+                borderTopColor: '#333',
+            },
+            tabBarShowLabel: false,
+            tabBarInactiveTintColor: '#999',
+            tabBarActiveTintColor: Colors.white
+        }}>
         <Tabs.Screen name='index' options={{ 
             tabBarIcon: ({color, focused}) => (
                 <View style={{
                     alignItems: 'center', 
                     justifyContent: 'center',
-                    height: 32,
-                    width: 32,
+                    height: 36,
+                    width: 36,
                     borderRadius: 30,
                     backgroundColor: focused ? Colors.tintColor : Colors.grey
                 }}>
@@ -42,8 +49,8 @@ const Layout = () => {
                 <View style={{
                     alignItems: 'center', 
                     justifyContent: 'center',
-                    height: 32,
-                    width: 32,
+                    height: 36,
+                    width: 36,
                     borderRadius: 30,
                     backgroundColor: focused ? Colors.tintColor : Colors.grey
                 }}>
@@ -56,8 +63,8 @@ const Layout = () => {
                 <View style={{
                     alignItems: 'center', 
                     justifyContent: 'center',
-                    height: 32,
-                    width: 32,
+                    height: 36,
+                    width: 36,
                     borderRadius: 30,
                     backgroundColor: focused ? Colors.tintColor : Colors.grey
                 }}>
@@ -66,6 +73,8 @@ const Layout = () => {
             )
          }} />
     </Tabs>
+    <StatusBar style="light"/>
+   </> 
   )
 }
 
