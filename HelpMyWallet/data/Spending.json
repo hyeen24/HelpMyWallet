@@ -1,0 +1,44 @@
+[
+    {
+        "id" : 1,
+        "name" : "Shopee",
+        "date" : "2024-05-01",
+        "amount" : "35.42"
+    },
+    {
+        "id" : 2,
+        "name" : "Amazon",
+        "date" : "2024-05-01",
+        "amount" : "335.42"
+    },
+    {
+        "id" : 3,
+        "name" : "Credit Card",
+        "date" : "2024-05-01",
+        "amount" : "3555.42"
+    },
+    {
+        "id" : 4,
+        "name" : "Online Shooping",
+        "date" : "2024-05-01",
+        "amount" : "12335.42"
+    },
+    {
+        "id" : 5,
+        "name" : "Food",
+        "date" : "2024-05-01",
+        "amount" : "6.42"
+    },
+    {
+        "id" : 6,
+        "name" : "Cigrate",
+        "date" : "2024-05-01",
+        "amount" : "16.42"
+    },
+    {
+        "id" : 7,
+        "name" : "Transport",
+        "date" : "2024-05-01",
+        "amount" : "76.42"
+    }
+]
