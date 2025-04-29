@@ -3,8 +3,11 @@ import React from 'react'
 import { ExpenseType } from '@/types';
 import Colors from '@/constants/Colors';
 import { Feather } from '@expo/vector-icons';
+import { useRouter } from 'expo-router';
+import addCategory from '@/app/addCategory';
 
 const ExpenseBlock = ({expenseList} : {expenseList: ExpenseType[]}) => {
+    const router = useRouter();
 
     const totalAmount = expenseList.reduce((sum, expense) => {
         return sum + parseFloat(expense.amount);
@@ -13,7 +16,7 @@ const ExpenseBlock = ({expenseList} : {expenseList: ExpenseType[]}) => {
     const renderItem: ListRenderItem<Partial<ExpenseType>> = ({item, index}) => {
         if ( index == 0 ) {
             return (
-                <TouchableOpacity>
+                <TouchableOpacity onPress={() => router.navigate('/addCategory')}>
                     <View style={styles.addCategoryView}>
                         <Feather name="plus" size={22} color={'#ccc'} />
                     </View>

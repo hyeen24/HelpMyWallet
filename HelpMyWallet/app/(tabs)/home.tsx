@@ -12,7 +12,7 @@ import IncomeList from '@/data/income.json';
 import SpendingList from '@/data/Spending.json';
 import SpendingBlock from "@/components/SpendingBlock";
 
-const Page = () => {
+const Home = () => {
     const pieData = [
         {
           value: 47,
@@ -32,7 +32,7 @@ const Page = () => {
         }}
       />
       <View style={[styles.container, { paddingTop: 60 }]}>
-        <ScrollView>
+        <ScrollView showsVerticalScrollIndicator={false}>
             <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center'}}>
                 <View style={{ gap: 10 }}>
                     <Text style={styles.text}>
@@ -75,13 +75,13 @@ const Page = () => {
   );
 };
 
-export default Page;
+export default Home;
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: Colors.black,
-    paddingHorizontal: 20,
+    paddingHorizontal: 10
   },
   text: {
     color: Colors.white,

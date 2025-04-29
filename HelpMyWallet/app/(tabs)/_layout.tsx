@@ -30,7 +30,7 @@ const Layout = () => {
             tabBarInactiveTintColor: '#999',
             tabBarActiveTintColor: Colors.white
         }}>
-        <Tabs.Screen name='index' options={{ 
+        <Tabs.Screen name='home' options={{ 
             tabBarIcon: ({color, focused}) => (
                 <View style={{
                     alignItems: 'center', 
