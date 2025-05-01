@@ -1,3 +1,4 @@
+import { ReactNode } from "react";
 import { TextInput, TextInputProps, TextStyle, TouchableOpacityProps, ViewStyle } from "react-native";
 
 
@@ -46,3 +47,7 @@ export type BackButtonProps = {
 style?: ViewStyle;
 iconSize?: number;
 };
+
+export type ChildrenProps = {
+  children: ReactNode ;
+}

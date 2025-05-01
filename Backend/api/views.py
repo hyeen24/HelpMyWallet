@@ -1,4 +1,3 @@
-
 from django.shortcuts import render
 from django.contrib.auth.models import User
 from rest_framework import generics
@@ -12,7 +11,6 @@ class TransactionListCreate(generics.ListCreateAPIView):
     permission_classes = [IsAuthenticated]
 
     def get_queryset(self):
-<<<<<<< HEAD
         user = self.request.user    
         return Transaction.objects.filter(author=user)
 
@@ -22,19 +20,11 @@ class TransactionListCreate(generics.ListCreateAPIView):
         else:
             print(serializer.errors)
 
-=======
-        return Transaction.objects.filter(user=self.request.user)
-
-    def perform_create(self, serializer):
-        serializer.save(author=self.request.user)
->>>>>>> 42bcd603708e1c63efc7aa3da7865093b98c37bd
-
 class CategoryListCreate(generics.ListCreateAPIView):
     serializer_class = CategorySerializer
     permission_classes = [IsAuthenticated]
 
     def get_queryset(self):
-<<<<<<< HEAD
         user = self.request.user    
         return Category.objects.filter(author=user)
     
@@ -43,27 +33,8 @@ class CategoryListCreate(generics.ListCreateAPIView):
             serializer.save(author=self.request.user)
         else:
             print(serializer.errors)
-    
-=======
-        return Category.objects.filter(author=self.request.user)
-
-    def perform_create(self, serializer):
-        serializer.save(user=self.request.user)
-
-class CategoryDelete(generics.DestroyAPIView):
-    serializer_class = CategorySerializer
-    permission_classes = [IsAuthenticated]
-
-    def get_queryset(self):
-        return Category.objects.filter(author=self.request.user)
->>>>>>> 42bcd603708e1c63efc7aa3da7865093b98c37bd
 
 class CreateUserView(generics.CreateAPIView):
     queryset = User.objects.all()
     serializer_class = UserSerializer
     permission_classes = [AllowAny]
-<<<<<<< HEAD
-=======
-
-
->>>>>>> 42bcd603708e1c63efc7aa3da7865093b98c37bd
