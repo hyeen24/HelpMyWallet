@@ -1,13 +1,18 @@
 import { StyleSheet, View, Text, Image } from 'react-native'
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useRouter } from 'expo-router'
 import Colors from '@/constants/Colors';
 
 const index = () => {
     const router = useRouter();
+    const [isAuthenticated, setIsAuthenticated] = useState(false);
     useEffect(() => {
         setTimeout(() => {
-            router.push("/home");
+            if (isAuthenticated) {
+                router.push("/home");
+            } else {
+                router.push("/login");
+            }
             }, 2000);
     },[])
   return ( 

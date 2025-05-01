@@ -11,7 +11,10 @@ class Category(MP_Node):
     node_order_by = ['name']
 
     def total_amount(self):
-        return self.transactions.filter(user=self.author).aggregate(total=models.Sum('amount'))['total'] or 0
+        return self.transactions.filter(
+            user=self.author,
+            category__in=self.get_descendants(include_self=True)
+            ).aggregate(total=models.Sum('amount'))['total'] or 0
 
 class Transaction(models.Model):
     title = models.CharField(max_length=100)
