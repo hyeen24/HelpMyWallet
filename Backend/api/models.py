@@ -13,7 +13,6 @@ class Category(MP_Node):
     def total_amount(self):
         return self.transactions.filter(user=self.author).aggregate(total=models.Sum('amount'))['total'] or 0
 
-
 class Transaction(models.Model):
     title = models.CharField(max_length=100)
     trans_date = models.DateTimeField()
@@ -24,7 +23,7 @@ class Transaction(models.Model):
         null=True,
         blank=True
     )
-    amount = models.DecimalField(decimal_places=2)
+    amount = models.DecimalField(max_digits=1000000000,decimal_places=2)
     description = models.TextField()
     created_at = models.DateTimeField(auto_now_add=True)
     author = models.ForeignKey(User, on_delete=models.CASCADE, related_name="transactions")
