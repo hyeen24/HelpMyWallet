@@ -12,8 +12,8 @@ const welcome = () => {
     <ScreenWrapper>
       <View style={styles.container}>
         <View>
-            <TouchableOpacity onPress={() => {}} style={styles.loginButton}>
-                <Text style={{ fontWeight: 500 }}>Sign In</Text>
+            <TouchableOpacity onPress={() => router.push('/(auth)/login')} style={styles.loginButton}>
+                <Text style={{ color: Colors.white, fontWeight: 500 }}>Sign In</Text>
             </TouchableOpacity>
 
             <Animated.Image
