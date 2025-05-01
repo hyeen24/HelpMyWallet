@@ -41,3 +41,8 @@ export type ScreenWrapperProps = {
     style?: ViewStyle;
     children: React.ReactNode;
   };
+
+export type BackButtonProps = {
+style?: ViewStyle;
+iconSize?: number;
+};
