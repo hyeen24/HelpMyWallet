@@ -5,7 +5,7 @@ import Input from '@/components/Input';
 import Button from '@/components/Button';
 import { useRouter } from 'expo-router'
 import Colors from '@/constants/Colors';
-import { AntDesign } from '@expo/vector-icons';
+import { AntDesign, Feather } from '@expo/vector-icons';
 import BackButton from '@/components/BackButton';
 
 const Login= () => {
@@ -50,15 +50,15 @@ const Login= () => {
           <Input 
           placeholder="Enter your email" 
           onChangeText={(value) => {emailRef.current = value}}
-          icon={<AntDesign name='lock' size={26}
-          color={Colors.neutral900}/>}
+          icon={<Feather name='mail' size={26}
+          color={Colors.white}/>}
           />
           <Input 
           placeholder="Enter your password" 
           secureTextEntry
           onChangeText={(value) => {passwordRef.current = value}}
           icon={<AntDesign name='lock' size={26}
-          color={Colors.neutral900}/>}
+          color={Colors.white}/>}
           />
         </View>
         <Pressable onPress={() => {}}>
@@ -69,8 +69,8 @@ const Login= () => {
         </Button> 
 
         <View style={styles.footer}>
-          <Text style={{ fontSize: 15 }}>Don't have an account?</Text>
-          <Pressable onPress={()=>{}}>
+          <Text style={{color: Colors.white, fontSize: 15 }}>Don't have an account?</Text>
+          <Pressable onPress={()=> router.push('/(auth)/register')}>
             <Text style={{ fontSize: 15, fontWeight: 700, color : Colors.white
             }}>Sign up</Text>
           </Pressable>
@@ -115,7 +115,8 @@ const styles = StyleSheet.create({
     },
     loginTxt1 : {
       fontSize: 30,
-      fontWeight: 800
+      fontWeight: 800,
+      color: Colors.white
     }
   });
   

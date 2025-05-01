@@ -46,7 +46,7 @@ const welcome = () => {
             <Animated.View 
             entering={FadeIn.duration(1000).delay(200).springify().damping(12)}
             style={styles.buttonContainer}>
-                <Button onPress={() => {}}>
+                <Button onPress={() => router.push('/(auth)/register')}>
                     <Text style={{ fontSize: 22, color: Colors.white, fontWeight: 600}}>Get Started</Text>
                 </Button>
             </Animated.View>
