@@ -1,5 +1,5 @@
 import { ScrollView, StyleSheet, Text, View } from "react-native";
-import React, { useContext } from "react";
+import React, { useContext, useEffect } from "react";
 import { AntDesign, FontAwesome, SimpleLineIcons } from "@expo/vector-icons";
 import Colors from "@/constants/Colors";
 import { Stack } from "expo-router";
@@ -11,10 +11,23 @@ import ExpenseList from '@/data/expenses.json';
 import IncomeList from '@/data/income.json';
 import SpendingList from '@/data/Spending.json';
 import SpendingBlock from "@/components/SpendingBlock";
-import { AuthProvider } from "@/contexts/AuthContext";
+import api from "../api";
 
 const Home = () => {
   
+  useEffect(() => {
+    const fetchData = async () => {
+      console.log()
+      try {
+        const response = await api.get("api/transactions/");
+        console.log("Transactions:", response.data);
+      } catch (err) {
+        console.error("API fetch error:", err);
+      }
+    };
+    fetchData();
+  }, []);
+
     const pieData = [
         {
           value: 47,

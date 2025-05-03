@@ -53,6 +53,8 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         await SecureStore.setItemAsync("accessToken", access);
         await SecureStore.setItemAsync("refreshToken", refresh);
         setUserToken(access);
+        
+        console.log(access)
         return true;
       } catch (err) {
         // console.error("Login error:", err);
