@@ -7,11 +7,13 @@ import { Alert } from "react-native";
 export const AuthContext = createContext<{
   login: (username: string, password: string) => Promise<boolean>;
   logout: () => Promise<void>;
+  register: (first_name: string, username: string, password: string) => Promise<boolean>;
   isLoading: boolean;
   userToken: string | null;
   refreshToken: () => Promise<boolean>;
 }>({
   login: async () => false,
+  register: async () => false,
   logout: async () => {},
   isLoading: false,
   userToken: null,
@@ -53,11 +55,31 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         setUserToken(access);
         return true;
       } catch (err) {
-        console.error("Login error:", err);
+        // console.error("Login error:", err);
+        Alert.alert("Invalid email or password.")
         return false;
       } finally {
         setIsLoading(false);
       }
+    };
+
+    const register = async (first_name: string, username:string, password:string) => {
+        setIsLoading(true);
+
+        try {
+            const response = await api.post("/api/user/register/", {first_name, username, password });
+            console.log(response)
+
+            return true;
+
+        } catch (err) {
+            console.error("Login error:", err);
+            // Alert.alert("Error while trying to register")
+            return false;
+
+        } finally {
+            setIsLoading(false);
+        }
     };
   
     const refreshToken = async (): Promise<boolean> => {
@@ -79,15 +101,15 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     };
   
     const logout = async () => {
-        console.log("logout")
+        // console.log("logout")
       await SecureStore.deleteItemAsync("accessToken");
       await SecureStore.deleteItemAsync("refreshToken");
       setUserToken(null);
       
     };
-  
+
     return (
-      <AuthContext.Provider value={{ login, logout, isLoading, userToken, refreshToken }}>
+      <AuthContext.Provider value={{ login, logout, register, isLoading, userToken, refreshToken }}>
         {children}
       </AuthContext.Provider>
     );

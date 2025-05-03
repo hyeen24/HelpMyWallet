@@ -23,6 +23,10 @@ const Login= () => {
       Alert.alert('Login','Please fill up all fields.')
       return;
     } 
+    if (passwordRef.current.length < 8 ) {
+          Alert.alert('Login','Please ensure password has the minimum length of 8 characters.')
+          return;
+        }
 
     const isLoggedIn = await login(emailRef.current , passwordRef.current);
     console.log(emailRef.current, passwordRef.current)
@@ -66,6 +70,9 @@ const Login= () => {
           icon={<AntDesign name='lock' size={26}
           color={Colors.white}/>}
           />
+          {passwordRef.current.length < 8 && (
+                        <Text style={{ fontSize: 15, color: Colors.white}} > {'\u2022'} Minimum 8 characters</Text>
+                      )}
         </View>
         <Pressable onPress={() => {}}>
           <Text  style={{fontSize: 14, color: Colors.white, alignSelf: 'flex-end'}} >Forget Password?</Text>

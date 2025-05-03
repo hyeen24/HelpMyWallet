@@ -1,5 +1,5 @@
 import { View, Text, StyleSheet, Pressable, Alert } from 'react-native'
-import React, { useRef, useState } from 'react'
+import React, { useContext, useRef, useState } from 'react'
 import BackButton from '@/components/BackButton';
 import ScreenWrapper from '@/components/ScreenWrapper';
 import Input from '@/components/Input';
@@ -7,20 +7,40 @@ import Button from '@/components/Button';
 import { useRouter } from 'expo-router';
 import Colors from '@/constants/Colors';
 import { AntDesign, Feather, FontAwesome } from '@expo/vector-icons';
+import api from '../api';
+import { AuthContext } from '@/contexts/AuthContext';
 
 const Register = () => {
   
   // variables
-  const nameRef = useRef("");
+  const [ name, setName ] = useState("");
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-  const emailRef = useRef("");
+  const [ email, setEmail ] = useState("");
   const [password, setPassword] = useState("");
   const router = useRouter();
-  const [isLoading, setIsLoading] = useState(false);
+  const { register, isLoading } = useContext(AuthContext);
 
   // Handling Register, It first checks the field then It will call the handleSignUp from Context
   const handleRegister = async () => {
-    localStorage.clear()
+    if (!name || !email || !password) {
+      Alert.alert('Fail to Sign Up', 'Please fill up all fields.');
+      return;
+    } 
+
+    if (emailRegex.test(email) == false) {
+      Alert.alert('Fail to Sign Up', 'Please enter a valid email address.');
+      return;
+    }
+    
+    if (password.length < 8 ) {
+      Alert.alert('Fail to Sign Up','Please ensure password has the minimum length of 8 characters.')
+      return;
+    }
+    console.log(name,email,password)
+    
+    const isRegistered = await register(name, email, password)
+    console.log(isRegistered)
+
   }
 
   return (
@@ -38,13 +58,13 @@ const Register = () => {
           </Text>
           <Input 
           placeholder="Enter your name" 
-          onChangeText={(value) => {nameRef.current = value}}
+          onChangeText={(value) => {setName(value)}}
           icon={<FontAwesome name='address-book' size={26}
           color={Colors.neutral300}/>}
           />
           <Input 
           placeholder="Enter your email" 
-          onChangeText={(value) => {emailRef.current = value}}
+          onChangeText={(value) => {setEmail(value)}}
           icon={<Feather name='mail' size={26}
           color={Colors.neutral300}/>}
           />

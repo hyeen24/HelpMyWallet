@@ -8,8 +8,8 @@ import { AuthContext } from "@/contexts/AuthContext";
 export default function ProtectedRoute({ children }: ChildrenProps) {
   const { userToken, refreshToken, isLoading } = useContext(AuthContext);
   const [isAuthorized, setIsAuthorized] = useState<boolean | null>(null);
-  console.log("userToken: ",userToken)
-  console.log("isAuthorized: ",isAuthorized)
+  // console.log("userToken: ",userToken)
+  // console.log("isAuthorized: ",isAuthorized)
   
   useEffect(() => {
     const validateToken = async () => {
