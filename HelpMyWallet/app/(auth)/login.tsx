@@ -1,5 +1,5 @@
 import { View, Text, StyleSheet, Pressable, Alert } from 'react-native'
-import React, { useRef, useState } from 'react';
+import React, { useContext, useRef, useState } from 'react';
 import ScreenWrapper from '@/components/ScreenWrapper';
 import Input from '@/components/Input';
 import Button from '@/components/Button';
@@ -7,27 +7,33 @@ import { useRouter } from 'expo-router'
 import Colors from '@/constants/Colors';
 import { AntDesign, Feather } from '@expo/vector-icons';
 import BackButton from '@/components/BackButton';
+import { AuthContext } from '@/contexts/AuthContext';
+import Loading from '@/components/Loading';
+
 
 const Login= () => {
-
+  const { login, isLoading } = useContext(AuthContext);
   const emailRef = useRef("");
   const passwordRef = useRef("");
   const router = useRouter();
-  const [isLoading, setIsLoading] = useState(false);
-
+  
+  // console.log(isLoading)
   const handleSignIn = async () => {
     if(!emailRef.current || !passwordRef.current){
       Alert.alert('Login','Please fill up all fields.')
       return;
-    }
+    } 
 
-    // const response = await SignIn({ username:emailRef.current, password:passwordRef.current})
+    const isLoggedIn = await login(emailRef.current , passwordRef.current);
+    console.log(emailRef.current, passwordRef.current)
+    console.log("isLoggedIn: ",isLoggedIn)
+    if (isLoggedIn){
+        router.push('/(tabs)/home')
+      }
+    } 
 
-    // if (response.success == true) {
-    //   console.log("Login success")
-    // } else {
-    //   Alert.alert('Sign In Failed!',response.msg)
-    // }
+  if (isLoading) {
+    return <Loading />;  // Show loading while authentication is in process
   }
 
   return (

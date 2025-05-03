@@ -20,7 +20,7 @@ const Register = () => {
 
   // Handling Register, It first checks the field then It will call the handleSignUp from Context
   const handleRegister = async () => {
-    
+    localStorage.clear()
   }
 
   return (

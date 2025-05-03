@@ -5,14 +5,9 @@ import Colors from '@/constants/Colors';
 
 const index = () => {
     const router = useRouter();
-    const [isAuthenticated, setIsAuthenticated] = useState(false);
     useEffect(() => {
         setTimeout(() => {
-            if (isAuthenticated) {
                 router.push("/home");
-            } else {
-                router.push("/login");
-            }
             }, 2000);
     },[])
   return ( 

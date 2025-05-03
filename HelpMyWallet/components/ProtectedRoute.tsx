@@ -1,61 +1,50 @@
-import { router } from 'expo-router';
-import { jwtDecode } from 'jwt-decode';
-import api from '@/app/api';
-import { REFRESH_TOKEN, ACCESS_TOKEN } from '@/constants/constants';
-import { useEffect, useState, ReactNode } from 'react';
-import Loading from './Loading';
-import { ChildrenProps } from '@/types';
+import { useContext, useEffect, useState } from "react";
+import { jwtDecode } from "jwt-decode";
+import { router } from "expo-router";
+import Loading from "./Loading";
+import { ChildrenProps } from "@/types";
+import { AuthContext } from "@/contexts/AuthContext";
 
 export default function ProtectedRoute({ children }: ChildrenProps) {
+  const { userToken, refreshToken, isLoading } = useContext(AuthContext);
   const [isAuthorized, setIsAuthorized] = useState<boolean | null>(null);
-
+  console.log("userToken: ",userToken)
+  console.log("isAuthorized: ",isAuthorized)
+  
   useEffect(() => {
-    const auth = async () => {
-      const token = localStorage.getItem(ACCESS_TOKEN);
-      if (!token) {
+    const validateToken = async () => {
+      if (!userToken) {
         setIsAuthorized(false);
         return;
       }
 
-      const decoded: any = jwtDecode(token);
-      const tokenExpiration = decoded.exp;
-      const now = Date.now() / 1000;
-
-      if (tokenExpiration && tokenExpiration < now) {
-        await refreshToken();
-      } else {
-        setIsAuthorized(true);
-      }
-    };
-
-    const refreshToken = async () => {
-      const refreshToken = localStorage.getItem(REFRESH_TOKEN);
-
       try {
-        const res = await api.post('/api/token/refresh/', { refresh: refreshToken });
-        if (res.status === 200) {
-          localStorage.setItem(ACCESS_TOKEN, res.data.access);
-          setIsAuthorized(true);
+        const decoded: any = jwtDecode(userToken);
+        const now = Date.now() / 1000;
+
+        if (decoded.exp && decoded.exp < now) {
+          const refreshed = await refreshToken();
+          setIsAuthorized(refreshed);
         } else {
-          setIsAuthorized(false);
+          setIsAuthorized(true);
         }
-      } catch (error) {
-        console.log(error);
+      } catch (err) {
+        console.error("Token decode failed:", err);
         setIsAuthorized(false);
       }
     };
 
-    auth();
-  }, []);
-  
+    validateToken();
+  }, [userToken]);
+
   useEffect(() => {
     if (isAuthorized === false) {
-      router.replace('/(auth)/login'); // use replace to avoid going back
+      router.replace("/(auth)/welcome");
     }
   }, [isAuthorized]);
 
-  if (isAuthorized === null || isAuthorized === false) {
-    return <Loading />; // or return null
+  if (isLoading || isAuthorized === null) {
+    return <Loading />;
   }
 
   return <>{children}</>;

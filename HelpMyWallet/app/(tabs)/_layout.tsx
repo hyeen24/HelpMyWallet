@@ -4,10 +4,12 @@ import { Tabs } from 'expo-router'
 import Colors from '@/constants/Colors'
 import { AntDesign, FontAwesome, SimpleLineIcons } from '@expo/vector-icons'
 import { StatusBar } from 'expo-status-bar'
+import ProtectedRoute from '@/components/ProtectedRoute'
 
 const Layout = () => {
   return (
-   <>
+    <>
+   <ProtectedRoute>
     <Tabs screenOptions={{
             tabBarStyle: {
                 justifyContent: 'center',
@@ -73,8 +75,9 @@ const Layout = () => {
             )
          }} />
     </Tabs>
+    </ProtectedRoute> 
     <StatusBar style="light"/>
-   </> 
+   </>
   )
 }
 

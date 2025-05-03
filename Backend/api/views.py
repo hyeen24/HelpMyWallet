@@ -34,6 +34,10 @@ class CategoryListCreate(generics.ListCreateAPIView):
         else:
             print(serializer.errors)
 
+class CategoryDelete(generics.DestroyAPIView):
+    queryset = Category.objects.all()
+    serializer_class = CategorySerializer
+
 class CreateUserView(generics.CreateAPIView):
     queryset = User.objects.all()
     serializer_class = UserSerializer

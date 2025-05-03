@@ -1,5 +1,5 @@
 import { ScrollView, StyleSheet, Text, View } from "react-native";
-import React from "react";
+import React, { useContext } from "react";
 import { AntDesign, FontAwesome, SimpleLineIcons } from "@expo/vector-icons";
 import Colors from "@/constants/Colors";
 import { Stack } from "expo-router";
@@ -11,8 +11,10 @@ import ExpenseList from '@/data/expenses.json';
 import IncomeList from '@/data/income.json';
 import SpendingList from '@/data/Spending.json';
 import SpendingBlock from "@/components/SpendingBlock";
+import { AuthProvider } from "@/contexts/AuthContext";
 
 const Home = () => {
+  
     const pieData = [
         {
           value: 47,

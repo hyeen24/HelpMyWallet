@@ -1,9 +1,13 @@
 import { Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
-import React from 'react'
+import React, { useContext } from 'react'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import Colors from '@/constants/Colors'
+import { AuthContext } from '@/contexts/AuthContext'
 
 const Header = () => {
+    const { logout } = useContext(AuthContext)
+
+
   return (
     <SafeAreaView style={styles.container}>
         <View style={styles.leftContainer}>
@@ -17,7 +21,7 @@ const Header = () => {
                     <Text style={{ color: Colors.white, fontSize: 16}}>Your Budget</Text>
                 </View>
             </View >
-            <TouchableOpacity onPress={() => {}} style={{ 
+            <TouchableOpacity onPress={logout} style={{ 
                 borderColor: '#666',
                 borderWidth:1,
                 padding: 8,
