@@ -20,8 +20,7 @@ class CategorySerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Category
-        fields = ["id", "name", "icon", "color", "parent", "author", "total_amount"]
-        extra_kwargs = {"author": {"read_only": True}}
+        fields = ["name", "icon", "color", "parent", "author", "total_amount"]
 
     def get_total_amount(self,obj):
         return obj.total_amount()
@@ -31,7 +30,7 @@ class TransactionSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Transaction
-        fields = ["id", "title", "trans_date", "category", "category_name", "amount", "description", "created_at", "author"]
+        fields = ["id","title", "trans_date", "category", "category_name", "amount", "description", "created_at", "author"]
         extra_kwargs = {"author": {"read_only": True}}
 
     def get_category_name(self, obj):

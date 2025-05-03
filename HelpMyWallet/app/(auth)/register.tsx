@@ -9,6 +9,7 @@ import Colors from '@/constants/Colors';
 import { AntDesign, Feather, FontAwesome } from '@expo/vector-icons';
 import api from '../api';
 import { AuthContext } from '@/contexts/AuthContext';
+import { toTitleCase } from '@/utils/stringUtils';
 
 const Register = () => {
   
@@ -22,6 +23,8 @@ const Register = () => {
 
   // Handling Register, It first checks the field then It will call the handleSignUp from Context
   const handleRegister = async () => {
+    const isValidName = (str: string) => /^[A-Za-z\s]+$/.test(name);
+
     if (!name || !email || !password) {
       Alert.alert('Fail to Sign Up', 'Please fill up all fields.');
       return;
@@ -36,10 +39,21 @@ const Register = () => {
       Alert.alert('Fail to Sign Up','Please ensure password has the minimum length of 8 characters.')
       return;
     }
-    console.log(name,email,password)
+
+    if (!isValidName(name)) {
+      Alert.alert("Fail to Sign Up","Name should only consist of alphabets.");
+      return;
+    }
+    // console.log("isValidName: ",isValidName(name))
+    // console.log(name,email,password)
+    // setName(toTitleCase(name));
     
     const isRegistered = await register(name, email, password)
-    console.log(isRegistered)
+    if (isRegistered) {
+      router.push('/(auth)/login')
+    } else {
+      Alert.alert("Registration Error","There is an unknown error during registration.")
+    }
 
   }
 

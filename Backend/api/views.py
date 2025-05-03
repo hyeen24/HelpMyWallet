@@ -26,14 +26,19 @@ class CategoryListCreate(generics.ListCreateAPIView):
     permission_classes = [IsAuthenticated]
 
     def get_queryset(self):
-        user = self.request.user    
-        return Category.objects.filter(author=user)
-    
+        return Category.objects.filter(author=self.request.user)
+
     def perform_create(self, serializer):
-        if serializer.is_valid():
-            serializer.save(author=self.request.user)
+        name = serializer.validated_data['name']
+        icon = serializer.validated_data.get('icon')
+        color = serializer.validated_data.get('color')
+        author = self.request.user
+        parent = serializer.validated_data.get('parent')
+
+        if parent:
+            parent.add_child(name=name, icon=icon, color=color, author=author)
         else:
-            print(serializer.errors)
+            Category.add_root(name=name, icon=icon, color=color, author=author)
 
 class CategoryDelete(generics.DestroyAPIView):
     queryset = Category.objects.all()
@@ -43,3 +48,10 @@ class CreateUserView(generics.CreateAPIView):
     queryset = User.objects.all()
     serializer_class = UserSerializer
     permission_classes = [AllowAny]
+
+class CurrentUserView(generics.RetrieveAPIView):
+    serializer_class = UserSerializer
+    permission_classes = [IsAuthenticated]
+
+    def get_object(self):
+        return self.request.user

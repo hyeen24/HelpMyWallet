@@ -1,18 +1,18 @@
 import { ListRenderItem, StyleSheet, Text, View } from 'react-native'
 import React from 'react'
 import Colors from '@/constants/Colors'
-import { SpendingType } from '@/types'
+import { TransactionType } from '@/types'
 import { FontAwesome, FontAwesome5, Foundation } from '@expo/vector-icons'
 
-const SpendingBlock = ({spendingList}: {spendingList: SpendingType[]}) => {
+const TransactionBlock = ({transactionList}: {transactionList: TransactionType[]}) => {
    
   return (
     <View style={{ alignItems:'flex-start'}}>
         <Text style={styles.blockTitleTxt}>My 
-            <Text style={{ fontWeight: 700 }}> Spending</Text>
+            <Text style={{ fontWeight: 700 }}> Transactions</Text>
         </Text>
         
-        {spendingList.map((item) => {
+        {transactionList.map((item) => {
             return(
               <View key={item.id} style={{ flexDirection: 'row', marginVertical: 10, alignItems:'center'}}>
                
@@ -34,7 +34,7 @@ const SpendingBlock = ({spendingList}: {spendingList: SpendingType[]}) => {
   )
 }
 
-export default SpendingBlock
+export default TransactionBlock
 
 const styles = StyleSheet.create({
     blockTitleTxt: {

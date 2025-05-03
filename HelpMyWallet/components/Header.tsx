@@ -3,10 +3,13 @@ import React, { useContext } from 'react'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import Colors from '@/constants/Colors'
 import { AuthContext } from '@/contexts/AuthContext'
+import * as SecureStore from 'expo-secure-store';
+import { toTitleCase } from '@/utils/stringUtils'
 
 const Header = () => {
-    const { logout } = useContext(AuthContext)
-
+    const { logout } = useContext(AuthContext);
+    const name = SecureStore.getItem("name");
+    
 
   return (
     <SafeAreaView style={styles.container}>
@@ -17,7 +20,7 @@ const Header = () => {
                     style={{ height: 50, width: 50, borderRadius: 30 }}
                 />
                 <View style={{ marginLeft: 10}}>
-                    <Text style={{ color: Colors.white, fontSize: 12}}>Hi, User</Text>
+                    <Text style={{ color: Colors.white, fontSize: 12}}>Hi, {name}</Text>
                     <Text style={{ color: Colors.white, fontSize: 16}}>Your Budget</Text>
                 </View>
             </View >
@@ -27,7 +30,7 @@ const Header = () => {
                 padding: 8,
                 borderRadius:10,
                 }}>
-                <Text style={{ color: Colors.white, fontSize: 12}}>My Transactions</Text>
+                <Text style={{ color: Colors.white, fontSize: 12}}>Logout</Text>
             </TouchableOpacity>
         </View>
     </SafeAreaView>

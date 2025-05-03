@@ -47,14 +47,19 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       
       try {
         const response = await api.post("/api/token/", { username, password });
-        console.log("res: ",response);
+        // console.log("res: ",response);
   
         const { access, refresh } = response.data;
         await SecureStore.setItemAsync("accessToken", access);
         await SecureStore.setItemAsync("refreshToken", refresh);
         setUserToken(access);
+
+        api.get('/api/me').then(async (res)=>{
+            const {first_name, user_name} = res.data
+            await SecureStore.setItemAsync("name", first_name);
+        })
         
-        console.log(access)
+        // console.log(access)
         return true;
       } catch (err) {
         // console.error("Login error:", err);
@@ -75,7 +80,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
             return true;
 
         } catch (err) {
-            console.error("Login error:", err);
+            // console.error("Login error:", err);
             // Alert.alert("Error while trying to register")
             return false;
 
@@ -106,6 +111,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         // console.log("logout")
       await SecureStore.deleteItemAsync("accessToken");
       await SecureStore.deleteItemAsync("refreshToken");
+      await SecureStore.deleteItemAsync("name");
       setUserToken(null);
       
     };

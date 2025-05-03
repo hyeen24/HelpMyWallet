@@ -14,7 +14,7 @@ export interface IncomeType {
     amount: string;
 }
 
-export interface SpendingType {
+export interface TransactionType {
     id : number;
     name : string;
     date : string;

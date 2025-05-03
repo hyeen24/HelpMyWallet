@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View } from 'react-native'
+import { Alert, StyleSheet, Text, View } from 'react-native'
 import React, { useState } from 'react'
 import Colors from '@/constants/Colors'
 import { SafeAreaView } from 'react-native-safe-area-context'
@@ -6,9 +6,26 @@ import Input from '@/components/Input'
 import { MaterialCommunityIcons, MaterialIcons } from '@expo/vector-icons'
 import Button from '@/components/Button'
 import { isLoaded } from 'expo-font'
+import api from './api'
 
 const addCategory = () => {
     const [categoryName, setCategoryName] = useState("");
+    const createCategory = async () => {
+        try {
+            const payload = {
+                categoryName
+                // icon
+                //color
+            };
+
+            const res = await api.post('/api/categories/', {name:categoryName});
+            Alert.alert("Category Created!", `ID: ${res.data.id}`);
+          } catch (error) {
+            console.error(error.response?.data || error.message);
+            Alert.alert("Error", "Failed to create category.");
+          }
+    };
+
   return (
     <SafeAreaView style={styles.container}>
         <Text style={styles.pageTitleTxt}>Add New Category</Text>
@@ -29,7 +46,7 @@ const addCategory = () => {
             <Text style={styles.groupHeaderTxt}>Category Color</Text>
             
         </View>  
-        <Button>
+        <Button onPress={createCategory}>
                 <Text style={styles.groupHeaderTxt}>Add</Text>
         </Button>
     </SafeAreaView>

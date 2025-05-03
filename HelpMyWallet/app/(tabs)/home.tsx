@@ -1,4 +1,4 @@
-import { ScrollView, StyleSheet, Text, View } from "react-native";
+import { Alert, ScrollView, StyleSheet, Text, View } from "react-native";
 import React, { useContext, useEffect } from "react";
 import { AntDesign, FontAwesome, SimpleLineIcons } from "@expo/vector-icons";
 import Colors from "@/constants/Colors";
@@ -9,22 +9,42 @@ import ExpenseBlock from "@/components/ExpenseBlock";
 import IncomeBlock from "@/components/IncomeBlock";
 import ExpenseList from '@/data/expenses.json';
 import IncomeList from '@/data/income.json';
-import SpendingList from '@/data/Spending.json';
-import SpendingBlock from "@/components/SpendingBlock";
+import TransactionList from '@/data/Spending.json';
 import api from "../api";
+import TransactionBlock from "@/components/SpendingBlock";
 
 const Home = () => {
+
+  const deleteCategory = (id : string) => {
+    api.delete(`api/category/delete/${id}`).then((res) => {
+      if (res.status === 204) Alert.alert("Action", "Category deleted successfully.")
+        else Alert.alert("Action", "Fail to delete category.")
+    }).catch((error) => Alert.alert(error))
+  }
   
   useEffect(() => {
     const fetchData = async () => {
-      console.log()
+      
+      // Retrieve data for transactions
       try {
         const response = await api.get("api/transactions/");
-        console.log("Transactions:", response.data);
+        const transactionsData = response.data
+        console.log("Transactions:", transactionsData);
+      } catch (err) {
+        console.error("API fetch error:", err);
+      }
+
+      // Retrieve data for categories
+      try {
+        const response = await api.get("api/categories/");
+          const categoriesData = response.data
+          console.log("Categories:",categoriesData);
+        
       } catch (err) {
         console.error("API fetch error:", err);
       }
     };
+
     fetchData();
   }, []);
 
@@ -83,7 +103,7 @@ const Home = () => {
             </View>
                 <ExpenseBlock expenseList={ExpenseList}/>
                 <IncomeBlock incomeList={IncomeList}/>
-                <SpendingBlock spendingList={SpendingList} />
+                <TransactionBlock transactionList={TransactionList} />
         </ScrollView>
       </View>
     </>
