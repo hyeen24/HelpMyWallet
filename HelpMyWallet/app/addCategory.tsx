@@ -8,6 +8,7 @@ import Button from '@/components/Button'
 import { isLoaded } from 'expo-font'
 import api from './api'
 import CustomIconButton from '@/components/CustomIconButton'
+import ColorList from '@/data/colors.json'
 
 const addCategory = () => {
     const [categoryType, setCategoryType] = useState("");
@@ -69,8 +70,21 @@ const addCategory = () => {
             color={Colors.white}/>}
             />
         </View>
-        <View>
+        <View style={{ height: 100 }}>
             <Text style={styles.groupHeaderTxt}>Category Icon</Text>
+            <View style={{ flex : 1, flexDirection : 'row', gap : 10, flexWrap :'wrap'}}>
+            {
+                ColorList.map((item)=> {
+                  return(
+                    <View style={{ justifyContent: 'center', alignItems:'center', height: 40, width: 40, borderColor: '#666', borderWidth: 1,
+                        borderRadius : 50
+                    }}>
+                        <View style={[styles.colorContainer, {backgroundColor: item['code ']}]}></View>
+                    </View>
+                  )  
+                })
+            }
+            </View>
         </View>
         <View>
             <Text style={styles.groupHeaderTxt}>Category Color</Text>   
@@ -112,5 +126,10 @@ const styles = StyleSheet.create({
         justifyContent: "center",
         alignItems: "center",
         gap: 5,
-      }
+      },
+    colorContainer: {
+        height : 30,
+        width : 30,
+        borderRadius : 30,
+    }
 })      

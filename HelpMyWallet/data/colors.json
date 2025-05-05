@@ -1,0 +1,18 @@
+[
+    {"name" : "black", "code ": "#1A1A1A"},
+    {"name" :"white","code ": "#FCFCFC"},
+    {"name" :"grey","code ": "#242424"},
+    {"name" :"tintColor","code ": "#723FEB"},
+    {"name" :"blue","code ": "#97E0F7"},
+    {"name" :"neutral900","code ": "#171717"},
+    {"name" :"neutral50","code ": "#fafafa"},
+    {"name" :"neutral100","code": "#f5f5f5"},
+    {"name" :"neutral200","code": "#e5e5e5"},
+    {"name" :"neutral300","code": "#d4d4d4"},
+    {"name" :"neutral350","code": "#cccccc"},
+    {"name" :"neutral400","code": "#a3a3a3"},
+    {"name" :"neutral500","code": "#737373"},
+    {"name" :"neutral600","code": "#525252"},
+    {"name" :"neutral700","code": "#404040"},
+    {"name" :"neutral800","code": "#262626"}
+]
