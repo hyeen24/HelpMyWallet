@@ -21,6 +21,11 @@ export interface TransactionType {
     amount : string;
 }
 
+export interface DropDownItem {
+  label: string;
+  value: string | number;
+}
+
 export interface InputProps extends TextInputProps {
     icon?: React.ReactNode;
     containerStyle?: ViewStyle;
@@ -30,12 +35,34 @@ export interface InputProps extends TextInputProps {
     // error?: string;
   }
 
+  export type OptionItem = {
+    value: string;
+    label: string;
+  };
+  
+  export interface DropDownProps {
+    data: OptionItem[];
+    onChange: (item: OptionItem) => void;
+    placeholder: string;
+  }
+
 export interface CustomButtonProps extends TouchableOpacityProps {
     style?: ViewStyle;
     onPress?: () => void;
     loading?: boolean;
     hasShadow?: boolean;
     children: React.ReactNode;
+  }
+
+  export interface CustomIconButtonProps extends TouchableOpacityProps {
+    style?: ViewStyle;
+    onPress?: () => void;
+    icon?: React.ReactNode;
+    loading?: boolean;
+    hasShadow?: boolean;
+    text?: string;
+    focusable?: boolean;
+    focused?: boolean;
   }
 
 export type ScreenWrapperProps = {
