@@ -28,7 +28,7 @@ const Login= () => {
           return;
         }
 
-    const isLoggedIn = await login(emailRef.current , passwordRef.current);
+    const isLoggedIn = await login(emailRef.current.toLowerCase() , passwordRef.current);
     console.log(emailRef.current, passwordRef.current)
     console.log("isLoggedIn: ",isLoggedIn)
     if (isLoggedIn){

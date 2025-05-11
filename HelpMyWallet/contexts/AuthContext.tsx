@@ -47,7 +47,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       
       try {
         const response = await api.post("/api/token/", { username, password });
-        // console.log("res: ",response);
+        console.log("res: ",response);
   
         const { access, refresh } = response.data;
         await SecureStore.setItemAsync("accessToken", access);
@@ -62,7 +62,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         // console.log(access)
         return true;
       } catch (err) {
-        // console.error("Login error:", err);
+        console.error("Login error:", err);
         Alert.alert("Invalid email or password.")
         return false;
       } finally {
