@@ -1,7 +1,6 @@
 [
     {"name" :"white","code ": "#FCFCFC"},
     {"name" :"black","code ": "#000000"},
-    {"name" :"darkGray","code ": "#4B4B4B"},
     {"name" :"lightGray","code ": "#D9D9D9"},
     {"name" :"gray","code ": "#AFAFAF"},
     {"name" :"red","code ": "#FF3B30"},

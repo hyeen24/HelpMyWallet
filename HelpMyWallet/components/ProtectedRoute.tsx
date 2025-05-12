@@ -7,43 +7,45 @@ import { AuthContext } from "@/contexts/AuthContext";
 
 export default function ProtectedRoute({ children }: ChildrenProps) {
   const { userToken, refreshToken, isLoading } = useContext(AuthContext);
-  const [isAuthorized, setIsAuthorized] = useState<boolean | null>(null);
-  // console.log("userToken: ",userToken)
-  // console.log("isAuthorized: ",isAuthorized)
-  
+  const [checkingAuth, setCheckingAuth] = useState(true);
+
   useEffect(() => {
     const validateToken = async () => {
       if (!userToken) {
-        setIsAuthorized(false);
+        console.log("No access token found.");
+        router.replace("/(auth)/welcome");
         return;
       }
 
       try {
-        const decoded: any = jwtDecode(userToken);
-        const now = Date.now() / 1000;
+        const decoded: { exp: number } = jwtDecode(userToken);
+        const now = Math.floor(Date.now() / 1000);
 
-        if (decoded.exp && decoded.exp < now) {
+        if (decoded.exp < now) {
+          console.log("Access token expired. Attempting refresh...");
           const refreshed = await refreshToken();
-          setIsAuthorized(refreshed);
-        } else {
-          setIsAuthorized(true);
+
+          if (!refreshed) {
+            console.log("Refresh failed. Redirecting to welcome.");
+            router.replace("/(auth)/welcome");
+            return;
+          }
         }
+
+        console.log("Access token is valid.");
       } catch (err) {
-        console.error("Token decode failed:", err);
-        setIsAuthorized(false);
+        console.error("Token invalid or decoding failed:", err);
+        router.replace("/(auth)/welcome");
+        return;
+      } finally {
+        setCheckingAuth(false);
       }
     };
 
     validateToken();
   }, [userToken]);
 
-  useEffect(() => {
-    if (isAuthorized === false) {
-      router.replace("/(auth)/welcome");
-    }
-  }, [isAuthorized]);
-
-  if (isLoading || isAuthorized === null) {
+  if (isLoading || checkingAuth) {
     return <Loading />;
   }
 

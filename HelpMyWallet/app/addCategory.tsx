@@ -9,9 +9,12 @@ import { isLoaded } from 'expo-font'
 import api from './api'
 import CustomIconButton from '@/components/CustomIconButton'
 import ColorList from '@/data/colors.json'
+import iconList from '@/data/icons.json'
+
 
 const addCategory = () => {
     const [categoryType, setCategoryType] = useState("");
+    const [icon, setIcon] = useState("");
     const [categoryName, setCategoryName] = useState("");
     const [selectedType, setSelectedType] = useState<'income' | 'expense' | null>(null);
     const [categoryColor, setCategoryColor] = useState("");
@@ -71,9 +74,39 @@ const addCategory = () => {
             color={Colors.white}/>}
             />
         </View>
-        <View style={{ height: 100 }}>
+        <View style={{ height: 150 }}>
             <Text style={styles.groupHeaderTxt}>Category Icon</Text>
-            <View style={{ flex : 1, flexDirection : 'row', gap : 10, flexWrap :'wrap'}}>
+            <View style={{ flex : 1, flexDirection : 'row', gap : 10, flexWrap :'wrap', marginBottom: 10}}>
+            {
+                iconList.map((item)=> {
+                    const iconName = item.iconName; // assume item.name has no trailing space
+                    const iconFamily = item.iconFamily; // corrected to remove trailing space
+                    const isSelectedIcon = icon === iconName;
+                    return (
+                            <TouchableOpacity key={iconName} onPress={() => setIcon(iconName)}>
+                                <View style={{ 
+                                    justifyContent: 'center', 
+                                    alignItems:'center', 
+                                    height: 40, 
+                                    width: 40, 
+                                    borderColor: isSelectedIcon ? Colors.white :'#666', 
+                                    borderWidth: isSelectedIcon ? 2 : 1,
+                                    borderRadius : 50
+                                }}>
+                                    {iconFamily === 'FontAwesome6' && <FontAwesome6 name={iconName} size={24} color={Colors.white} />}
+                                    {iconFamily === 'MaterialIcons' && <MaterialIcons name={iconName} size={24} color={Colors.white} />}
+                                    {iconFamily === 'MaterialCommunityIcons' && <MaterialCommunityIcons name={iconName} size={24} color={Colors.white} />}
+                                </View>
+                            </TouchableOpacity>
+                    )
+                })
+            }
+            
+            </View>
+        </View>
+        <View style={{ height: 200 }}>
+            <Text style={styles.groupHeaderTxt}>Category Color</Text>  
+            <View style={{ flex : 1, flexDirection : 'row', gap : 10, flexWrap :'wrap', marginBottom: 10}}>
             {
                 
                 ColorList.map((item)=> {
@@ -97,14 +130,12 @@ const addCategory = () => {
                   )  
                 })
             }
-            </View>
-        </View>
-        <View>
-            <Text style={styles.groupHeaderTxt}>Category Color</Text>   
-        </View>  
-        <Button onPress={createCategory}>
+            </View> 
+            <Button onPress={createCategory}>
                 <Text style={styles.groupHeaderTxt}>Add</Text>
-        </Button>
+            </Button>
+        </View>  
+        
     </SafeAreaView>
   )
 }
@@ -133,7 +164,7 @@ const styles = StyleSheet.create({
     pageTxt : {
         color: Colors.white,
         fontSize: 12,
-        marginBottom: 30,
+        marginBottom: 10,
     },
     footer: {
         justifyContent: "center",

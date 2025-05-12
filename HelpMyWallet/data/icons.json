@@ -1,0 +1,15 @@
+[
+    {"iconFamily" : "MaterialCommunityIcons", "iconName" : "account-cash", "iconType" : "solid", "iconSize" : 24, "iconColor" : "#000000"},
+    {"iconFamily" : "MaterialCommunityIcons", "iconName" : "bank", "iconType" : "solid", "iconSize" : 24, "iconColor" : "#000000"},
+    {"iconFamily" : "MaterialCommunityIcons", "iconName" : "credit-card", "iconType" : "solid", "iconSize" : 24, "iconColor" : "#000000"},
+    {"iconFamily" : "MaterialCommunityIcons", "iconName" : "cash-multiple", "iconType" : "solid", "iconSize" : 24, "iconColor" : "#000000"},
+    {"iconFamily" : "MaterialCommunityIcons", "iconName" : "food", "iconType" : "solid", "iconSize" : 24, "iconColor" : "#000000"},  
+    {"iconFamily" : "MaterialCommunityIcons", "iconName" : "shopping", "iconType" : "solid", "iconSize" : 24, "iconColor" : "#000000"},  
+    {"iconFamily" : "MaterialCommunityIcons", "iconName" : "cart", "iconType" : "solid", "iconSize" : 24, "iconColor" : "#000000"},  
+    {"iconFamily" : "FontAwesome6", "iconName" : "shopify", "iconType" : "solid", "iconSize" : 24, "iconColor" : "#000000"},  
+    {"iconFamily" : "MaterialCommunityIcons", "iconName" : "spotify", "iconType" : "solid", "iconSize" : 24, "iconColor" : "#000000"},  
+    {"iconFamily" : "MaterialCommunityIcons", "iconName" : "netflix", "iconType" : "solid", "iconSize" : 24, "iconColor" : "#000000"},  
+    {"iconFamily" : "MaterialCommunityIcons", "iconName" : "car", "iconType" : "solid", "iconSize" : 24, "iconColor" : "#000000"},  
+    {"iconFamily" : "MaterialCommunityIcons", "iconName" : "google-play", "iconType" : "solid", "iconSize" : 24, "iconColor" : "#000000"},  
+    {"iconFamily" : "MaterialCommunityIcons", "iconName" : "piggy-bank", "iconType" : "solid", "iconSize" : 24, "iconColor" : "#000000"},  
+]
