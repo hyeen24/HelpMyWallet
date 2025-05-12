@@ -44,17 +44,12 @@ const Register = () => {
       Alert.alert("Fail to Sign Up","Name should only consist of alphabets.");
       return;
     }
-    // console.log("isValidName: ",isValidName(name))
-    // console.log(name,email,password)
-    // setName(toTitleCase(name));
     
-    const isRegistered = await register(name, email.toLowerCase(), password)
+    const  isRegistered = await register(name, email.toLowerCase(), password);
+    
     if (isRegistered) {
       router.push('/(auth)/login')
-    } else {
-      Alert.alert("Registration Error","There is an unknown error during registration.")
-    }
-
+    } 
   }
 
   return (

@@ -66,7 +66,7 @@ const Home = () => {
           header: () => <Header />,
         }}
       />
-      <View style={[styles.container, { paddingTop: 60 }]}>
+      <View style={[styles.container, { paddingTop: 80 }]}>
         <ScrollView showsVerticalScrollIndicator={false}>
             <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center'}}>
                 <View style={{ gap: 10 }}>

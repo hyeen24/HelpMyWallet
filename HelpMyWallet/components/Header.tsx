@@ -9,7 +9,6 @@ import { toTitleCase } from '@/utils/stringUtils'
 const Header = () => {
     const { logout } = useContext(AuthContext);
     const name = SecureStore.getItem("name");
-    
 
   return (
     <SafeAreaView style={styles.container}>

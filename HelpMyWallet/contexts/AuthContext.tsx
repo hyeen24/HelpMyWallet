@@ -72,7 +72,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
     const register = async (first_name: string, username:string, password:string) => {
         setIsLoading(true);
-
+        
         try {
             const response = await api.post("/api/user/register/", {first_name, username, password });
             console.log(response)
@@ -80,10 +80,16 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
             return true;
 
         } catch (err) {
-            // console.error("Login error:", err);
-            // Alert.alert("Error while trying to register")
-            return false;
-
+          const errorData = await err.response.data;
+          // console.log(errorData)
+          if (errorData.username) {
+            Alert.alert("Registration Error", errorData.username[0]) // Username already exists
+            return false
+           } else {
+            Alert.alert("Registration Error", "An unknown error has occured") // Username already exists
+            return false
+           }
+           
         } finally {
             setIsLoading(false);
         }

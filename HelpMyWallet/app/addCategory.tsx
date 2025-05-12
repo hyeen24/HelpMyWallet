@@ -14,6 +14,7 @@ const addCategory = () => {
     const [categoryType, setCategoryType] = useState("");
     const [categoryName, setCategoryName] = useState("");
     const [selectedType, setSelectedType] = useState<'income' | 'expense' | null>(null);
+    const [categoryColor, setCategoryColor] = useState("");
 
     const createCategory = async () => {
         try {
@@ -74,13 +75,25 @@ const addCategory = () => {
             <Text style={styles.groupHeaderTxt}>Category Icon</Text>
             <View style={{ flex : 1, flexDirection : 'row', gap : 10, flexWrap :'wrap'}}>
             {
+                
                 ColorList.map((item)=> {
+                    const colorCode = item['code ']; // assume item.code has no trailing space
+                    const isSelected = categoryColor === colorCode;
+
                   return(
-                    <View style={{ justifyContent: 'center', alignItems:'center', height: 40, width: 40, borderColor: '#666', borderWidth: 1,
-                        borderRadius : 50
-                    }}>
-                        <View style={[styles.colorContainer, {backgroundColor: item['code ']}]}></View>
-                    </View>
+                    <TouchableOpacity key={colorCode} onPress={() => setCategoryColor(item['code '])}>
+                        <View style={{ 
+                            justifyContent: 'center', 
+                            alignItems:'center', 
+                            height: 40, 
+                            width: 40, 
+                            borderColor: isSelected ? Colors.white :'#666', 
+                            borderWidth: isSelected ? 2 : 1,
+                            borderRadius : 50
+                        }}>
+                            <View style={[styles.colorContainer, {backgroundColor: item['code ']}]}></View>
+                        </View>
+                    </TouchableOpacity>
                   )  
                 })
             }
