@@ -32,22 +32,24 @@ class CategoryListCreate(generics.ListCreateAPIView):
         return Category.objects.filter(author=self.request.user)
 
     def perform_create(self, serializer):
+        author = self.request.user
         name = serializer.validated_data['name']
         icon = serializer.validated_data.get('icon')
         color = serializer.validated_data.get('color')
-        author = self.request.user
-        
-        parent_name = self.request.data.get('parent_name').title()  # from raw data
+        parent_name = serializer.validated_data.get('parent_name')
 
         if parent_name:
             try:
-                parent = Category.objects.get(name=parent_name, author=author, depth=1)
+                parent = Category.objects.get(name__iexact=parent_name, author=author)
+                new_category = parent.add_child(name=name, icon=icon, color=color, author=author)
             except Category.DoesNotExist:
                 raise ValidationError(f"Parent category '{parent_name}' not found.")
-
-            parent.add_child(name=name, icon=icon, color=color, author=author)
         else:
-            Category.add_root(name=name, icon=icon, color=color, author=author)
+            new_category = Category.add_root(name=name, icon=icon, color=color, author=author)
+
+        serializer.instance = new_category
+
+
 class RootCategoryListView(APIView):
     permission_classes = [IsAuthenticated]
 

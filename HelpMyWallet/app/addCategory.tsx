@@ -38,7 +38,8 @@ const addCategory = () => {
             };
 
             const res = await api.post('/api/categories/', payload);
-            Alert.alert("Category Created!", `ID: ${res.data.id}`);
+            Alert.alert("Category Created!", `ID: ${res.data}`);
+            
           } catch (error) {
             console.error(error.response?.data || error.message);
             Alert.alert("Error", "Failed to create category.");

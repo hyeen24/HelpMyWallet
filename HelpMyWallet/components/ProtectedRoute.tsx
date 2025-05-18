@@ -19,19 +19,11 @@ export default function ProtectedRoute({ children }: ChildrenProps) {
   
       try {
         const decoded: { exp: number, iat: number } = jwtDecode(userToken);
-        const d = new Date().getTime();
-        console.log("UTC Seconds",d)
+        const now = Math.floor(Date.now() / 1000); 
         
         console.log("Issued at:", new Date(decoded.iat * 1000).toISOString());
         console.log("Expires at:", new Date(decoded.exp * 1000).toISOString());
-        console.log("Now:", new Date().toISOString());
-        
-        const now = Math.floor(Date.now() / 1000); // Current time in seconds
-
-        console.log("Date now: ",now)
-
-        console.log(decoded.exp - 1800)
-        // console.log( decoded.exp - decoded.iat )
+        console.log("Now:", new Date(now * 1000).toISOString());
   
         if (decoded.exp < now) {
           console.log("Access token expired. Attempting refresh...");

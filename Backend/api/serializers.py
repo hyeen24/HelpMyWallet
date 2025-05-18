@@ -16,15 +16,18 @@ class UserSerializer(serializers.ModelSerializer):
         return user
     
 class CategorySerializer(serializers.ModelSerializer):
-    parent = serializers.PrimaryKeyRelatedField(
-        queryset = Category.objects.all(), required=False, allow_null=True
-    )
+    parent = serializers.SerializerMethodField(read_only=True)
     parent_name = serializers.CharField(write_only=True, required=False)
 
     class Meta:
         model = Category
-        fields = ["id", "name", "icon", "color", "parent", "author","parent_name"]
-        extra_kwargs = {"author": {"read_only": True}}
+        fields = ['id', 'name', 'icon', 'color', 'parent', 'author', 'parent_name']
+        extra_kwargs = {'author': {'read_only': True}}
+
+    def get_parent(self, obj):
+        # Use treebeard's get_parent method to return parent's id or None
+        parent = obj.get_parent()
+        return parent.id if parent else None
 
 class TransactionSerializer(serializers.ModelSerializer):
     category_name = serializers.SerializerMethodField()
