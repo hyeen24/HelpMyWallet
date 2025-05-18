@@ -8,6 +8,7 @@ class Category(MP_Node):
     name = models.CharField(max_length=50)
     author = models.ForeignKey(User, on_delete=models.CASCADE, related_name="categories")
     icon = models.CharField(max_length=100, blank=True, null=True)
+    icon_type = models.CharField(max_length=50, blank=True, null=True)
     color = models.CharField(max_length=7, blank=True, null=True)
     node_order_by = ['name']
 

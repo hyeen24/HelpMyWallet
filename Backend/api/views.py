@@ -36,16 +36,17 @@ class CategoryListCreate(generics.ListCreateAPIView):
         name = serializer.validated_data['name']
         icon = serializer.validated_data.get('icon')
         color = serializer.validated_data.get('color')
+        icon_type = serializer.validated_data.get('icon_type')
         parent_name = serializer.validated_data.get('parent_name')
 
         if parent_name:
             try:
                 parent = Category.objects.get(name__iexact=parent_name, author=author)
-                new_category = parent.add_child(name=name, icon=icon, color=color, author=author)
+                new_category = parent.add_child(name=name.title(), icon=icon, color=color, author=author, icon_type=icon_type)
             except Category.DoesNotExist:
                 raise ValidationError(f"Parent category '{parent_name}' not found.")
         else:
-            new_category = Category.add_root(name=name, icon=icon, color=color, author=author)
+            new_category = Category.add_root(name=name.title(), icon=icon, color=color, author=author)
 
         serializer.instance = new_category
 

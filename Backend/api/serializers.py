@@ -21,7 +21,7 @@ class CategorySerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Category
-        fields = ['id', 'name', 'icon', 'color', 'parent', 'author', 'parent_name']
+        fields = ['id', 'name', 'icon', 'color', 'parent', 'author', 'parent_name','icon_type']
         extra_kwargs = {'author': {'read_only': True}}
 
     def get_parent(self, obj):

@@ -15,6 +15,7 @@ import { useRouter } from 'expo-router'
 
 const addCategory = () => {
     const [icon, setIcon] = useState("");
+    const [iconFamily, setIconFamily] = useState("");
     const [categoryName, setCategoryName] = useState("");
     const [selectedType, setSelectedType] = useState<'income' | 'expenses' | null>(null);
     const [categoryColor, setCategoryColor] = useState("");
@@ -23,10 +24,10 @@ const addCategory = () => {
 
     const createCategory = async () => {
 
-        if (!icon || !categoryName || !selectedType || !categoryColor) {
+        if ( !categoryName || !selectedType || selectedType === "expenses" && !categoryColor || selectedType === "income" && !icon) {
             Alert.alert("Error", "Please fill all fields.");
             return;
-        }
+        } 
 
         console.log("category Type ",selectedType)
         
@@ -35,8 +36,11 @@ const addCategory = () => {
                 parent_name: selectedType ,
                 icon: icon,
                 color: categoryColor,
-                name: categoryName
+                name: categoryName,
+                icon_type: iconFamily
             };
+
+            console.log("Payload", payload)
 
             const res = await api.post('/api/categories/', payload);
             Alert.alert("Category", `Category created`, [
@@ -89,67 +93,74 @@ const addCategory = () => {
             color={Colors.white}/>}
             />
         </View>
-        <View style={{ height: 150 }}>
-            <Text style={styles.groupHeaderTxt}>Category Icon</Text>
-            <View style={{ flex : 1, flexDirection : 'row', gap : 10, flexWrap :'wrap', marginBottom: 10}}>
-            {
-                iconList.map((item)=> {
-                    const iconName = item.iconName; // assume item.name has no trailing space
-                    const iconFamily = item.iconFamily; // corrected to remove trailing space
+        {selectedType === 'income' && (
+            <View style={{ height: 150 }}>
+                <Text style={styles.groupHeaderTxt}>Category Icon</Text>
+                <View style={{ flex: 1, flexDirection: 'row', gap: 10, flexWrap: 'wrap', marginBottom: 10 }}>
+                {
+                    iconList.map((item) => {
+                    const iconName = item.iconName;
+                    const iconFamily = item.iconFamily;
                     const isSelectedIcon = icon === iconName;
                     return (
-                            <TouchableOpacity key={iconName} onPress={() => setIcon(iconName)}>
-                                <View style={{ 
-                                    justifyContent: 'center', 
-                                    alignItems:'center', 
-                                    height: 40, 
-                                    width: 40, 
-                                    borderColor: isSelectedIcon ? Colors.white :'#666', 
-                                    borderWidth: isSelectedIcon ? 2 : 1,
-                                    borderRadius : 50
-                                }}>
-                                    {iconFamily === 'FontAwesome6' && <FontAwesome6 name={iconName} size={24} color={Colors.white} />}
-                                    {iconFamily === 'MaterialIcons' && <MaterialIcons name={iconName} size={24} color={Colors.white} />}
-                                    {iconFamily === 'MaterialCommunityIcons' && <MaterialCommunityIcons name={iconName} size={24} color={Colors.white} />}
-                                </View>
-                            </TouchableOpacity>
-                    )
-                })
-            }
-            
+                        <TouchableOpacity key={iconName} onPress={() => {
+                        setIcon(iconName);
+                        setIconFamily(iconFamily);
+                        }}>
+                        <View style={{
+                            justifyContent: 'center',
+                            alignItems: 'center',
+                            height: 40,
+                            width: 40,
+                            borderColor: isSelectedIcon ? Colors.white : '#666',
+                            borderWidth: isSelectedIcon ? 2 : 1,
+                            borderRadius: 50
+                        }}>
+                            {iconFamily === 'FontAwesome6' && <FontAwesome6 name={iconName} size={24} color={Colors.white} />}
+                            {iconFamily === 'MaterialIcons' && <MaterialIcons name={iconName} size={24} color={Colors.white} />}
+                            {iconFamily === 'MaterialCommunityIcons' && <MaterialCommunityIcons name={iconName} size={24} color={Colors.white} />}
+                        </View>
+                        </TouchableOpacity>
+                    );
+                    })
+                }
+                </View>
             </View>
-        </View>
-        <View style={{ height: 200 }}>
-            <Text style={styles.groupHeaderTxt}>Category Color</Text>  
-            <View style={{ flex : 1, flexDirection : 'row', gap : 10, flexWrap :'wrap', marginBottom: 10}}>
-            {
-                
-                ColorList.map((item)=> {
-                    const colorCode = item['code ']; // assume item.code has no trailing space
+        )}
+
+        {selectedType === 'expenses' && (
+            <View style={{ height: 150 }}>
+                <Text style={styles.groupHeaderTxt}>Category Color</Text>
+                <View style={{ flex: 1, flexDirection: 'row', gap: 10, flexWrap: 'wrap', marginBottom: 10 }}>
+                {
+                    ColorList.map((item) => {
+                    const colorCode = item["code "]?.trim(); // remove trailing space if necessary
                     const isSelected = categoryColor === colorCode;
 
-                  return(
-                    <TouchableOpacity key={colorCode} onPress={() => setCategoryColor(item['code '])}>
-                        <View style={{ 
-                            justifyContent: 'center', 
-                            alignItems:'center', 
-                            height: 40, 
-                            width: 40, 
-                            borderColor: isSelected ? Colors.white :'#666', 
+                    return (
+                        <TouchableOpacity key={colorCode} onPress={() => setCategoryColor(colorCode)}>
+                        <View style={{
+                            justifyContent: 'center',
+                            alignItems: 'center',
+                            height: 40,
+                            width: 40,
+                            borderColor: isSelected ? Colors.white : '#666',
                             borderWidth: isSelected ? 2 : 1,
-                            borderRadius : 50
+                            borderRadius: 50
                         }}>
-                            <View style={[styles.colorContainer, {backgroundColor: item['code ']}]}></View>
+                            <View style={[styles.colorContainer, { backgroundColor: colorCode }]} />
                         </View>
-                    </TouchableOpacity>
-                  )  
-                })
-            }
-            </View> 
-            <Button onPress={createCategory}>
+                        </TouchableOpacity>
+                    );
+                    })
+                }
+                </View>
+            </View>
+            )}
+
+        <Button onPress={createCategory}>
                 <Text style={styles.groupHeaderTxt}>Add</Text>
             </Button>
-        </View>  
         
     </SafeAreaView>
   )

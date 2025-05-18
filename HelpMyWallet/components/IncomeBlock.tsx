@@ -2,19 +2,31 @@ import { FlatList, ListRenderItem, StyleSheet, Text, TouchableOpacity, View } fr
 import React from 'react'
 import Colors from '@/constants/Colors'
 import { IncomeType } from '@/types'
-import { Feather, FontAwesome6 } from '@expo/vector-icons'
+import { Feather, FontAwesome6, MaterialCommunityIcons, MaterialIcons } from '@expo/vector-icons'
 
 const IncomeBlock = ({incomeList} : {incomeList: IncomeType[]}) => {
+    console.log("Income List", incomeList)
     const renderItem:ListRenderItem<IncomeType> = ({item}) => {
         let amountString = item.amount ?? "0.00";
         let amount = amountString.split('.');
+        let iconFamily = item.icon_type;
+        let iconName = item.icon;
 
         return(
             <View>
                 <View style={styles.incomeCategoryContainerTop}>
                     <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center'}}>
                         <View style={styles.categoryIconContainer}>
-                            <FontAwesome6 name="sack-dollar" size={22} color={Colors.white}/>
+                            {!iconName || !iconFamily ? (
+                                <Feather name="help-circle" size={22} color={Colors.white} />
+                                ) : iconFamily === 'FontAwesome6' ? (
+                                <FontAwesome6 name={iconName} size={22} color={Colors.white} />
+                                ) : iconFamily === 'MaterialIcons' ? (
+                                <MaterialIcons name={iconName as any} size={22} color={Colors.white} />
+                                ) : iconFamily === 'MaterialCommunityIcons' ? (
+                                <MaterialCommunityIcons name={iconName as any} size={22} color={Colors.white} />
+                                ) : null}
+
                         </View>
                         <TouchableOpacity onPress={() => {}}>
                             <Feather name="more-horizontal" size={20} color={Colors.white}/>
@@ -64,7 +76,7 @@ const styles = StyleSheet.create({
         borderRadius: 50,
         padding: 10,
         borderWidth: 1,
-        alignSelf: 'flex-start',
+        alignSelf: 'center',
     },
     incomeAmountWholeNumber: {
         fontSize: 16,

@@ -12,6 +12,8 @@ export interface IncomeType {
     id: string;
     name: string;
     amount: string;
+    icon_type: string;
+    icon:string;
 }
 
 export interface TransactionType {
