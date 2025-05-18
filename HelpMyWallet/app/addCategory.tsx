@@ -11,6 +11,7 @@ import CustomIconButton from '@/components/CustomIconButton'
 import ColorList from '@/data/colors.json'
 import iconList from '@/data/icons.json'
 import { useRouter } from 'expo-router'
+import BackButton from '@/components/BackButton'
 
 
 const addCategory = () => {
@@ -62,6 +63,7 @@ const addCategory = () => {
 
   return (
     <SafeAreaView style={styles.container}>
+        <BackButton/>
         <Text style={styles.pageTitleTxt}>Add New Category</Text>
         <Text style={styles.pageTxt}>Let's add a new category for your <Text style={{ fontWeight: 600 }}>transactions</Text>.</Text>
         <View>

@@ -1,16 +1,25 @@
-import { ListRenderItem, StyleSheet, Text, View } from 'react-native'
+import { ListRenderItem, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import React from 'react'
 import Colors from '@/constants/Colors'
 import { TransactionType } from '@/types'
 import { FontAwesome, FontAwesome5, Foundation } from '@expo/vector-icons'
+import { useRouter } from 'expo-router'
 
 const TransactionBlock = ({transactionList}: {transactionList: TransactionType[]}) => {
+
+    const router = useRouter();
    
   return (
-    <View style={{ alignItems:'flex-start'}}>
-        <Text style={styles.blockTitleTxt}>My 
-            <Text style={{ fontWeight: 700 }}> Transactions</Text>
-        </Text>
+    <View>
+        <View style= {{flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center'}}>
+            <Text style={styles.blockTitleTxt}>My 
+                <Text style={{ fontWeight: 700 }}> Transactions
+                </Text>
+            </Text>
+            <TouchableOpacity onPress={() => {router.push('/transactions')}}>
+                <Text style={{ color: Colors.white, fontSize: 14}}>See all</Text>
+            </TouchableOpacity>
+        </View>
         
         {transactionList.map((item) => {
             return(
@@ -40,7 +49,6 @@ const styles = StyleSheet.create({
     blockTitleTxt: {
             color: Colors.white,
             fontSize: 16,
-            marginBottom: 20
     },
     spendingTxt : {
         color: Colors.white

@@ -11,7 +11,7 @@ import ExpenseList from '@/data/expenses.json';
 import IncomeList from '@/data/income.json';
 import TransactionList from '@/data/Spending.json';
 import api from "../api";
-import TransactionBlock from "@/components/SpendingBlock";
+import TransactionBlock from "@/components/TransactionBlock";
 
 const Home = () => {
 
@@ -95,7 +95,7 @@ const Home = () => {
                 <View style={{ gap: 10 }}>
                     <Text style={styles.text}>
                         My 
-                        <Text style={{fontWeight: 700}}> Expenses</Text>
+                        <Text style={{fontWeight: 700}}> Overview</Text>
                     </Text>
                     <Text style={{ color: Colors.white, fontSize:36, fontWeight: 700}}>$1500.<Text style={{fontSize:22, fontWeight: 400}}>00</Text></Text>
                 </View>

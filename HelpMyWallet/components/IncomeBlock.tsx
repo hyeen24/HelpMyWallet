@@ -42,10 +42,13 @@ const IncomeBlock = ({incomeList} : {incomeList: IncomeType[]}) => {
     }
   return (
     <View style={{marginVertical: 20}}>
-        <Text style={styles.blockTitleTxt}>My 
-            <Text style={{ fontWeight: 700 }}> Income
+        <View style= {{flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: 20}}>
+            <Text style={styles.blockTitleTxt}>My 
+                <Text style={{ fontWeight: 700 }}> Income
+                </Text>
             </Text>
-        </Text>
+        </View>
+        
         <FlatList 
             data={incomeList} 
             renderItem={renderItem}
@@ -60,8 +63,7 @@ export default IncomeBlock
 const styles = StyleSheet.create({
     blockTitleTxt: {
         color: Colors.white,
-        fontSize: 16,
-        marginBottom: 20
+        fontSize: 16
     },
     incomeCategoryContainerTop : {
         backgroundColor: Colors.grey, 
