@@ -1,5 +1,5 @@
 import { Alert, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
-import React, { useState } from 'react'
+import React, { use, useEffect, useState } from 'react'
 import Colors from '@/constants/Colors'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import Input from '@/components/Input'
@@ -13,21 +13,31 @@ import iconList from '@/data/icons.json'
 
 
 const addCategory = () => {
-    const [categoryType, setCategoryType] = useState("");
     const [icon, setIcon] = useState("");
     const [categoryName, setCategoryName] = useState("");
-    const [selectedType, setSelectedType] = useState<'income' | 'expense' | null>(null);
+    const [selectedType, setSelectedType] = useState<'income' | 'expenses' | null>(null);
     const [categoryColor, setCategoryColor] = useState("");
 
+
     const createCategory = async () => {
+
+        if (!icon || !categoryName || !selectedType || !categoryColor) {
+            Alert.alert("Error", "Please fill all fields.");
+            return;
+        }
+
+        console.log("category Type ",selectedType)
+        
+    
         try {
             const payload = {
-                categoryName
-                // icon
-                //color
+                parent_name: selectedType ,
+                icon: icon,
+                color: categoryColor,
+                name: categoryName
             };
 
-            const res = await api.post('/api/categories/', {name:categoryName});
+            const res = await api.post('/api/categories/', payload);
             Alert.alert("Category Created!", `ID: ${res.data.id}`);
           } catch (error) {
             console.error(error.response?.data || error.message);
@@ -37,7 +47,7 @@ const addCategory = () => {
 
     
 
-    const toggleRadio = (type: 'income' | 'expense') => {
+    const toggleRadio = (type: 'income' | 'expenses') => {
         setSelectedType(prev => (prev === type ? null : type));
     };
 
@@ -60,8 +70,8 @@ const addCategory = () => {
                     icon={<FontAwesome6 name='hand-holding-dollar' size={22} color={Colors.white}/>} 
                     text='Expenses'
                     focusable={true}
-                    focused={selectedType === 'expense'}
-                    onPress={() => toggleRadio('expense')}
+                    focused={selectedType === 'expenses'}
+                    onPress={() => toggleRadio('expenses')}
                     />
                 </View>
             </View>

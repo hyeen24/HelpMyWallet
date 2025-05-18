@@ -16,23 +16,37 @@ export default function ProtectedRoute({ children }: ChildrenProps) {
         router.replace("/(auth)/welcome");
         return;
       }
-
+  
       try {
-        const decoded: { exp: number } = jwtDecode(userToken);
-        const now = Math.floor(Date.now() / 1000);
+        const decoded: { exp: number, iat: number } = jwtDecode(userToken);
+        const d = new Date().getTime();
+        console.log("UTC Seconds",d)
+        
+        console.log("Issued at:", new Date(decoded.iat * 1000).toISOString());
+        console.log("Expires at:", new Date(decoded.exp * 1000).toISOString());
+        console.log("Now:", new Date().toISOString());
+        
+        const now = Math.floor(Date.now() / 1000); // Current time in seconds
 
+        console.log("Date now: ",now)
+
+        console.log(decoded.exp - 1800)
+        // console.log( decoded.exp - decoded.iat )
+  
         if (decoded.exp < now) {
           console.log("Access token expired. Attempting refresh...");
           const refreshed = await refreshToken();
-
+  
           if (!refreshed) {
             console.log("Refresh failed. Redirecting to welcome.");
             router.replace("/(auth)/welcome");
             return;
+          } else {
+            console.log("Access token refreshed successfully.");
           }
+        } else {
+          console.log("Access token is valid.");
         }
-
-        console.log("Access token is valid.");
       } catch (err) {
         console.error("Token invalid or decoding failed:", err);
         router.replace("/(auth)/welcome");
@@ -41,7 +55,7 @@ export default function ProtectedRoute({ children }: ChildrenProps) {
         setCheckingAuth(false);
       }
     };
-
+  
     validateToken();
   }, [userToken]);
 

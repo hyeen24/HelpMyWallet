@@ -1,9 +1,12 @@
 from django.shortcuts import render
 from django.contrib.auth.models import User
+from rest_framework.views import APIView
 from rest_framework import generics
 from .serializers import UserSerializer, CategorySerializer, TransactionSerializer
 from rest_framework.permissions import IsAuthenticated, AllowAny
 from .models import Category, Transaction
+from rest_framework.response import Response
+from rest_framework.exceptions import ValidationError
 
 # Create your views here.
 class TransactionListCreate(generics.ListCreateAPIView):
@@ -33,12 +36,25 @@ class CategoryListCreate(generics.ListCreateAPIView):
         icon = serializer.validated_data.get('icon')
         color = serializer.validated_data.get('color')
         author = self.request.user
-        parent = serializer.validated_data.get('parent')
+        
+        parent_name = self.request.data.get('parent_name').title()  # from raw data
 
-        if parent:
+        if parent_name:
+            try:
+                parent = Category.objects.get(name=parent_name, author=author, depth=1)
+            except Category.DoesNotExist:
+                raise ValidationError(f"Parent category '{parent_name}' not found.")
+
             parent.add_child(name=name, icon=icon, color=color, author=author)
         else:
             Category.add_root(name=name, icon=icon, color=color, author=author)
+class RootCategoryListView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request):
+        root_categories = Category.get_root_nodes().filter(author=request.user)
+        serializer = CategorySerializer(root_categories, many=True)
+        return Response(serializer.data)
 
 class CategoryDelete(generics.DestroyAPIView):
     queryset = Category.objects.all()

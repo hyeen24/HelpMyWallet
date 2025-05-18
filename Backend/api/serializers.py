@@ -1,6 +1,7 @@
 from django.contrib.auth.models import User
 from rest_framework import serializers
 from .models import Category, Transaction
+from django.db import models
 
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
@@ -10,20 +11,20 @@ class UserSerializer(serializers.ModelSerializer):
 
     def create(self, validated_data):
         user = User.objects.create_user(**validated_data)
+        Category.add_root(name="Income", author=user)
+        Category.add_root(name="Expenses", author=user)
         return user
     
 class CategorySerializer(serializers.ModelSerializer):
-    total_amount = serializers.SerializerMethodField()
     parent = serializers.PrimaryKeyRelatedField(
         queryset = Category.objects.all(), required=False, allow_null=True
     )
+    parent_name = serializers.CharField(write_only=True, required=False)
 
     class Meta:
         model = Category
-        fields = ["name", "icon", "color", "parent", "author", "total_amount"]
-
-    def get_total_amount(self,obj):
-        return obj.total_amount()
+        fields = ["id", "name", "icon", "color", "parent", "author","parent_name"]
+        extra_kwargs = {"author": {"read_only": True}}
 
 class TransactionSerializer(serializers.ModelSerializer):
     category_name = serializers.SerializerMethodField()

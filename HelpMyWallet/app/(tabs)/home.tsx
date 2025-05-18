@@ -41,7 +41,8 @@ const Home = () => {
           console.log("Categories:",categoriesData);
         
       } catch (err) {
-        console.error("API fetch error:", err);
+        const errorData = await err.response.data;
+        console.log("API fetch error:", errorData);
       }
     };
 
