@@ -15,6 +15,10 @@ import TransactionBlock from "@/components/SpendingBlock";
 
 const Home = () => {
 
+  const [expenseCategories, setExpenseCategories] = React.useState([]);
+  const [incomeCategories, setIncomeCategories] = React.useState([]);
+  const [transactions, setTransactions] = React.useState([]);
+
   const deleteCategory = (id : string) => {
     api.delete(`api/category/delete/${id}`).then((res) => {
       if (res.status === 204) Alert.alert("Action", "Category deleted successfully.")
@@ -36,14 +40,32 @@ const Home = () => {
 
       // Retrieve data for categories
       try {
-        const response = await api.get("api/categories/");
-          const categoriesData = response.data
-          console.log("Categories:",categoriesData);
-        
+        const responseCategories = await api.get("api/categories/");
+        const categories = responseCategories.data;
+        console.log("Categories:", categories);
+
+        // Get IDs for "Expenses" and "Income"
+        const expensesCategory = categories.find((cat: any) => cat.name === "Expenses");
+        const incomeCategory = categories.find((cat: any) => cat.name === "Income");
+
+        if (expensesCategory && incomeCategory) {
+        const expensesId = expensesCategory.id;
+        const incomeId = incomeCategory.id;
+
+        // Filter subcategories by parent
+        const expenseSubs = categories.filter((cat: any) => cat.parent === expensesId);
+        const incomeSubs = categories.filter((cat: any) => cat.parent === incomeId);
+
+        setExpenseCategories(expenseSubs);
+        setIncomeCategories(incomeSubs);
+      }
+
+
       } catch (err) {
         const errorData = await err.response.data;
         console.log("API fetch error:", errorData);
       }
+
     };
 
     fetchData();
@@ -102,8 +124,8 @@ const Home = () => {
                     />
                 </View>
             </View>
-                <ExpenseBlock expenseList={ExpenseList}/>
-                <IncomeBlock incomeList={IncomeList}/>
+                <ExpenseBlock expenseList={expenseCategories}/>
+                <IncomeBlock incomeList={incomeCategories}/>
                 <TransactionBlock transactionList={TransactionList} />
         </ScrollView>
       </View>

@@ -10,6 +10,7 @@ import api from './api'
 import CustomIconButton from '@/components/CustomIconButton'
 import ColorList from '@/data/colors.json'
 import iconList from '@/data/icons.json'
+import { useRouter } from 'expo-router'
 
 
 const addCategory = () => {
@@ -18,6 +19,7 @@ const addCategory = () => {
     const [selectedType, setSelectedType] = useState<'income' | 'expenses' | null>(null);
     const [categoryColor, setCategoryColor] = useState("");
 
+    const router = useRouter();
 
     const createCategory = async () => {
 
@@ -28,7 +30,6 @@ const addCategory = () => {
 
         console.log("category Type ",selectedType)
         
-    
         try {
             const payload = {
                 parent_name: selectedType ,
@@ -38,8 +39,11 @@ const addCategory = () => {
             };
 
             const res = await api.post('/api/categories/', payload);
-            Alert.alert("Category Created!", `ID: ${res.data}`);
-            
+            Alert.alert("Category", `Category created`, [
+               { text : "OK",
+                onPress: () => router.push('/(tabs)/home')}
+            ]);
+
           } catch (error) {
             console.error(error.response?.data || error.message);
             Alert.alert("Error", "Failed to create category.");
