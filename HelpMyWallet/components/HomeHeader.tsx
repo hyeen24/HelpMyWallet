@@ -6,7 +6,7 @@ import { AuthContext } from '@/contexts/AuthContext'
 import * as SecureStore from 'expo-secure-store';
 import { toTitleCase } from '@/utils/stringUtils'
 
-const Header = () => {
+const HomeHeader = () => {
     const { logout } = useContext(AuthContext);
     const name = SecureStore.getItem("name");
 
@@ -36,7 +36,7 @@ const Header = () => {
   )
 }
 
-export default Header
+export default HomeHeader
 
 const styles = StyleSheet.create({
     container: {

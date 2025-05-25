@@ -30,6 +30,33 @@ class Transaction(models.Model):
     description = models.TextField()
     created_at = models.DateTimeField(auto_now_add=True)
     author = models.ForeignKey(User, on_delete=models.CASCADE, related_name="transactions")
+    merchant = models.ForeignKey(
+        'Merchant',
+        related_name="transactions",
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True
+    )
 
     def __str__(self):
         return self.title
+
+class Merchant(models.Model):
+    name = models.CharField(max_length=100)
+    author = models.ForeignKey(User, on_delete=models.CASCADE, related_name="merchants")
+    icon = models.CharField(max_length=100, blank=True, null=True)
+    icon_type = models.CharField(max_length=50, blank=True, null=True)
+    category = models.ForeignKey(
+        Category,
+        related_name="merchants",
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True
+    )
+
+    def __str__(self):
+        return self.name
+
+    @property
+    def total_spent(self):
+        return self.transactions.aggregate(total=Sum('amount'))['total'] or 0.00

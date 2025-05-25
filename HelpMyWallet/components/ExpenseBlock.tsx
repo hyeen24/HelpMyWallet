@@ -8,6 +8,7 @@ import addCategory from '@/app/addCategory';
 
 const ExpenseBlock = ({expenseList} : {expenseList: ExpenseType[]}) => {
     const router = useRouter();
+    console.log("Expenses", expenseList)
 
     const totalAmount = expenseList.reduce((sum, expense) => {
         return sum + parseFloat(expense.amount);
@@ -27,23 +28,23 @@ const ExpenseBlock = ({expenseList} : {expenseList: ExpenseType[]}) => {
         let amount = amountString.split('.');
         let percentage = Math.floor((parseFloat(amountString) / totalAmount) * 100);
 
-        let BlockColor;
+        let BlockColor = item.color
         let TxtColor;
 
-        switch (item.name) {
-            case "Food" :
-                BlockColor = Colors.blue;
-                TxtColor = Colors.black;
-                break;
-            case "Entertainment" :
-                BlockColor = Colors.tintColor;
-                TxtColor = Colors.white;
-                break;
-            default:
-                BlockColor = Colors.white;
-                TxtColor = Colors.black;
-                break;
-        }
+        // switch (item.name) {
+        //     case "Food" :
+        //         BlockColor = Colors.blue;
+        //         TxtColor = Colors.black;
+        //         break;
+        //     case "Entertainment" :
+        //         BlockColor = Colors.tintColor;
+        //         TxtColor = Colors.white;
+        //         break;
+        //     default:
+        //         BlockColor = Colors.white;
+        //         TxtColor = Colors.black;
+        //         break;
+        // }
 
         return(
             <View style={[styles.expenseBlock,

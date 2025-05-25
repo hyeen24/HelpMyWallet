@@ -23,14 +23,14 @@ const TransactionBlock = ({transactionList}: {transactionList: TransactionType[]
         
         {transactionList.map((item) => {
             return(
-              <View key={item.id} style={{ flexDirection: 'row', marginVertical: 10, alignItems:'center'}}>
+              <View key={item.refNumber} style={{ flexDirection: 'row', marginVertical: 10, alignItems:'center'}}>
                
                     <View style={styles.iconContainer}>
                         <Foundation name="dollar" size={22} color={Colors.white}/>
                     </View>
                     <View style={{flex: 1, flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center'}}>
                         <View style={{ gap: 5 }}>
-                            <Text style={[styles.spendingTxt, { fontWeight: 700 }]}>{item.name}</Text>
+                            <Text style={[styles.spendingTxt, { fontWeight: 700 }]}>{item.desc}</Text>
                             <Text style={styles.spendingTxt}>{item.date}</Text>
                         </View>
                         <Text style={[styles.spendingTxt, { fontWeight: 700 }]}>${item.amount}</Text>

@@ -3,7 +3,6 @@ import React, { useContext, useEffect } from "react";
 import { AntDesign, FontAwesome, SimpleLineIcons } from "@expo/vector-icons";
 import Colors from "@/constants/Colors";
 import { Stack } from "expo-router";
-import Header from "@/components/Header";
 import { PieChart} from "react-native-gifted-charts";
 import ExpenseBlock from "@/components/ExpenseBlock";
 import IncomeBlock from "@/components/IncomeBlock";
@@ -12,6 +11,7 @@ import IncomeList from '@/data/income.json';
 import TransactionList from '@/data/Spending.json';
 import api from "../api";
 import TransactionBlock from "@/components/TransactionBlock";
+import HomeHeader from "@/components/HomeHeader";
 
 const Home = () => {
 
@@ -42,7 +42,7 @@ const Home = () => {
       try {
         const responseCategories = await api.get("api/categories/");
         const categories = responseCategories.data;
-        console.log("Categories:", categories);
+        // console.log("Categories:", categories);
 
         // Get IDs for "Expenses" and "Income"
         const expensesCategory = categories.find((cat: any) => cat.name === "Expenses");
@@ -61,6 +61,18 @@ const Home = () => {
       }
 
 
+      } catch (err) {
+        const errorData = await err.response.data;
+        console.log("API fetch error:", errorData);
+      }
+
+      // Retrieve merchant data
+      try {
+        const responseMerchant = await api.get("api/merchants/");
+        const merchants = responseMerchant.data;
+        console.log("Merchants:", merchants);
+        
+      
       } catch (err) {
         const errorData = await err.response.data;
         console.log("API fetch error:", errorData);
@@ -86,7 +98,7 @@ const Home = () => {
     <>
       <Stack.Screen
         options={{
-          header: () => <Header />,
+          header: () => <HomeHeader />,
         }}
       />
       <View style={[styles.container, { paddingTop: 80 }]}>

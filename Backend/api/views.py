@@ -2,7 +2,7 @@ from django.shortcuts import render
 from django.contrib.auth.models import User
 from rest_framework.views import APIView
 from rest_framework import generics
-from .serializers import UserSerializer, CategorySerializer, TransactionSerializer
+from .serializers import UserSerializer, CategorySerializer, TransactionSerializer, MerchantSerializer
 from rest_framework.permissions import IsAuthenticated, AllowAny
 from .models import Category, Transaction
 from rest_framework.response import Response
@@ -74,3 +74,16 @@ class CurrentUserView(generics.RetrieveAPIView):
 
     def get_object(self):
         return self.request.user
+    
+class MerchantListCreate(generics.ListCreateAPIView):
+    serializer_class = MerchantSerializer  # Replace with actual MerchantSerializer
+    permission_classes = [IsAuthenticated]
+
+    def get_queryset(self):
+        return Transaction.objects.filter(author=self.request.user)  # Replace with actual Merchant queryset
+
+    def perform_create(self, serializer):
+        if serializer.is_valid():
+            serializer.save(author=self.request.user)
+        else:
+            print(serializer.errors)

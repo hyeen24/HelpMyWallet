@@ -39,3 +39,13 @@ class TransactionSerializer(serializers.ModelSerializer):
 
     def get_category_name(self, obj):
         return obj.category.name if obj.category else None
+    
+class MerchantSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.Model  # Replace with actual Merchant model
+        fields = ["id", "name", "icon", "icon_type", "author", "category"]
+        extra_kwargs = {"author": {"read_only": True}}
+
+    def create(self, validated_data):
+        return models.Model.objects.create(**validated_data)  # Replace with actual creation logic
+    

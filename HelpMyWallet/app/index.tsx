@@ -7,7 +7,7 @@ const index = () => {
     const router = useRouter();
     useEffect(() => {
         setTimeout(() => {
-                router.push("/home");
+                router.push("/transactions");
             }, 2000);
     },[])
   return ( 

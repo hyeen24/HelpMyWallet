@@ -17,8 +17,8 @@ export interface IncomeType {
 }
 
 export interface TransactionType {
-    id : number;
-    name : string;
+    refNumber : number;
+    desc : string;
     date : string;
     amount : string;
 }
@@ -55,6 +55,11 @@ export interface CustomButtonProps extends TouchableOpacityProps {
     hasShadow?: boolean;
     children: React.ReactNode;
   }
+
+export interface PageHeaderProps {
+  title: string;
+  rightButton?: React.ReactNode;
+}
 
   export interface CustomIconButtonProps extends TouchableOpacityProps {
     style?: ViewStyle;
