@@ -84,6 +84,16 @@ class MerchantListCreate(generics.ListCreateAPIView):
 
     def perform_create(self, serializer):
         if serializer.is_valid():
-            serializer.save(author=self.request.user)
+            merchant = serializer.save(author=self.request.user)
+            list_of_empty_merchant = Transaction.objects.filter(author=self.request.user, merchant__isnull = True)
+            merchant_name = merchant.name
+            possible_names = [merchant_name.upper(), merchant_name.title(), merchant_name.lower()]
+            
+            for transaction in list_of_empty_merchant:
+                if any(name in transaction.description for name in possible_names):
+                    # update transaction merchant to this merchant.
+                    transaction.merchant = merchant
+                    transaction.save()
+
         else:
             print(serializer.errors)

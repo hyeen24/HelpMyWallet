@@ -48,5 +48,7 @@ class MerchantSerializer(serializers.ModelSerializer):
 
     def create(self, validated_data):
         print("Creating Merchant with data:", validated_data)
+        
         return Merchant.objects.create(**validated_data)  # Replace with actual creation logic
+
     
