@@ -4,6 +4,9 @@ from django.contrib.auth.models import User
 from treebeard.mp_tree import MP_Node
 from django.db.models import Sum
 
+def upload_path(instance, filename):
+    return f'merchants/{instance.author.username}/{filename}'
+
 class Category(MP_Node):
     name = models.CharField(max_length=50)
     author = models.ForeignKey(User, on_delete=models.CASCADE, related_name="categories")
@@ -42,21 +45,9 @@ class Transaction(models.Model):
         return self.title
 
 class Merchant(models.Model):
-    name = models.CharField(max_length=100)
+    name = models.CharField(max_length=100, unique=True)
     author = models.ForeignKey(User, on_delete=models.CASCADE, related_name="merchants")
-    icon = models.CharField(max_length=100, blank=True, null=True)
-    icon_type = models.CharField(max_length=50, blank=True, null=True)
-    category = models.ForeignKey(
-        Category,
-        related_name="merchants",
-        on_delete=models.SET_NULL,
-        null=True,
-        blank=True
-    )
+    icon = models.ImageField(upload_to=upload_path, blank=True, null=True)
 
     def __str__(self):
         return self.name
-
-    @property
-    def total_spent(self):
-        return self.transactions.aggregate(total=Sum('amount'))['total'] or 0.00

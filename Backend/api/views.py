@@ -4,7 +4,7 @@ from rest_framework.views import APIView
 from rest_framework import generics
 from .serializers import UserSerializer, CategorySerializer, TransactionSerializer, MerchantSerializer
 from rest_framework.permissions import IsAuthenticated, AllowAny
-from .models import Category, Transaction
+from .models import Category, Transaction, Merchant
 from rest_framework.response import Response
 from rest_framework.exceptions import ValidationError
 
@@ -80,7 +80,7 @@ class MerchantListCreate(generics.ListCreateAPIView):
     permission_classes = [IsAuthenticated]
 
     def get_queryset(self):
-        return Transaction.objects.filter(author=self.request.user)  # Replace with actual Merchant queryset
+        return Merchant.objects.filter(author=self.request.user)  # Replace with actual Merchant queryset
 
     def perform_create(self, serializer):
         if serializer.is_valid():

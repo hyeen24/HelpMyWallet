@@ -12,6 +12,7 @@ console.log("API URL :",API_URL)
 api.interceptors.request.use(
     async (config) => {
         const token = await SecureStore.getItemAsync("accessToken");
+        console.log("Token: ", token)
 
         if (token) {
             config.headers.Authorization = `Bearer ${token}`

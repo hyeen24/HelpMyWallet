@@ -1,4 +1,6 @@
 from django.urls import path
+from django.conf import settings
+from django.conf.urls.static import static
 from . import views
 
 urlpatterns = [
@@ -7,4 +9,4 @@ urlpatterns = [
     path("category/delete/<int:pk>/",views.CategoryDelete.as_view(), name="delete-category"),
     path("categories/root/", views.RootCategoryListView.as_view(), name="root-categories"),
     path("merchants/", views.MerchantListCreate.as_view(), name="merchant-list"),
-]
+] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

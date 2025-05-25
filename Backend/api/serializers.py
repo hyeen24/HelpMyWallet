@@ -1,6 +1,6 @@
 from django.contrib.auth.models import User
 from rest_framework import serializers
-from .models import Category, Transaction
+from .models import Category, Transaction, Merchant
 from django.db import models
 
 class UserSerializer(serializers.ModelSerializer):
@@ -42,10 +42,11 @@ class TransactionSerializer(serializers.ModelSerializer):
     
 class MerchantSerializer(serializers.ModelSerializer):
     class Meta:
-        model = models.Model  # Replace with actual Merchant model
-        fields = ["id", "name", "icon", "icon_type", "author", "category"]
+        model = Merchant
+        fields = ["id", "name", "icon", "author"]
         extra_kwargs = {"author": {"read_only": True}}
 
     def create(self, validated_data):
-        return models.Model.objects.create(**validated_data)  # Replace with actual creation logic
+        print("Creating Merchant with data:", validated_data)
+        return Merchant.objects.create(**validated_data)  # Replace with actual creation logic
     

@@ -1,4 +1,4 @@
-import { ScrollView, StyleSheet, Text, View } from 'react-native'
+import { Image, ScrollView, StyleSheet, Text, View } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import { Stack } from 'expo-router'
 import Colors from '@/constants/Colors'
@@ -13,19 +13,30 @@ import TransactionList from '@/data/Spending.json';
 
 const transactions = () => {
     const [searchTxt, setSearchTxt]  = useState("");
+    const [merchantData, setMerchantData] = useState<any[]>([]);
 
 
     useEffect(() => {
         const fetchData = async () => {
-        try {
-            const response = await api.get("api/transactions/");
-            const transactionsData = response.data
-            console.log("Transactions:", transactionsData);
-        } catch (err) {
-            console.error("API fetch error:", err);
-        }}
+            try {
+                const response = await api.get("api/transactions/");
+                const transactionsData = response.data
+                console.log("Transactions:", transactionsData);
+            } catch (err) {
+                console.error("API fetch error:", err);
+            }
+
+            try {
+                const response = await api.get("api/merchants/");
+                const merchantData = response.data
+                setMerchantData(merchantData);
+                console.log("Merchant:", merchantData);
+            } catch (err) {
+                console.error("API fetch error:", err);
+            }
+        };
         
-    fetchData();
+        fetchData();
     }, []);
 
   return (
@@ -57,11 +68,27 @@ const transactions = () => {
             </View>
             <ScrollView>
                 {TransactionList.map((item) => {
+                    console.log("merchantData:", merchantData);
+                    const matchedMerchant = merchantData.find((merchant) => 
+                    item.desc.toLowerCase().includes(merchant.name.toLowerCase())
+                    );
+
+                    // console.log("Matching Merchant:",matchedMerchant.icon);
+                    console.log("matchedMerchant:", matchedMerchant);
+
                     return(
                     <View key={item.refNumber} style={styles.itemContainer}>
                     
                             <View style={styles.iconContainer}>
-                                <Foundation name="dollar" size={22} color={Colors.white}/>
+                                { matchedMerchant ? (
+                                    // <Image
+                                    //     source={{ uri: matchedMerchant.icon }}
+                                    //     style={{ width: 22, height: 22, borderRadius: 10 }}/>
+                                    null
+                                    ) : (
+                                        <Foundation name="dollar" size={22} color={Colors.white}/>
+                                    )   
+                                }
                             </View>
                             <View style={{flex: 1, flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center'}}>
                                 <View style={{ gap: 5 }}>
