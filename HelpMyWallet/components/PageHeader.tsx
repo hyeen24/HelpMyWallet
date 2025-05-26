@@ -7,7 +7,10 @@ import { PageHeaderProps } from '@/types'
 import BackButton from './BackButton'
 import { AntDesign } from '@expo/vector-icons'
 
-const PageHeader = ({title, rightButton}: PageHeaderProps) => {
+const PageHeader = ({
+    title, 
+    rightButton, 
+    onPress}: PageHeaderProps) => {
 
   return (
     <SafeAreaView style={styles.container}>
@@ -19,9 +22,14 @@ const PageHeader = ({title, rightButton}: PageHeaderProps) => {
                 {toTitleCase(title)}
             </Text>
         </View>
-        <View style={styles.rightContainer}>
-            {rightButton ? rightButton : <View style={{width: 36}}></View>}
-        </View>
+        {
+            rightButton ?
+            <TouchableOpacity onPress={onPress} style={styles.rightContainer}>
+                {rightButton}
+                </TouchableOpacity>
+            :<View style={{width: 36}}></View>
+        }
+        
     </SafeAreaView>
   )
 }
@@ -51,7 +59,7 @@ const styles = StyleSheet.create({
         height: 50,
         justifyContent: 'center',
         alignItems: 'center', 
-        paddingRight: 10,
+        paddingRight: 20,
     },
     button: {
         backgroundColor: 'transparent',

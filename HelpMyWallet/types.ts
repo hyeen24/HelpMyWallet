@@ -59,6 +59,7 @@ export interface CustomButtonProps extends TouchableOpacityProps {
 export interface PageHeaderProps {
   title: string;
   rightButton?: React.ReactNode;
+  onPress?: () => void;
 }
 
   export interface CustomIconButtonProps extends TouchableOpacityProps {

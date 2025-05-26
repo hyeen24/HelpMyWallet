@@ -16,28 +16,37 @@ const TransactionBlock = ({transactionList}: {transactionList: TransactionType[]
                 <Text style={{ fontWeight: 700 }}> Transactions
                 </Text>
             </Text>
-            <TouchableOpacity onPress={() => {router.push('/transactions')}}>
-                <Text style={{ color: Colors.white, fontSize: 14}}>See all</Text>
-            </TouchableOpacity>
+            {
+                transactionList.length > 0 ?
+                (<TouchableOpacity onPress={() => {router.push('/transactions')}}>
+                    <Text style={{ color: Colors.white, fontSize: 14}}>See all</Text>
+                </TouchableOpacity>) : null
+            }
         </View>
-        
-        {transactionList.map((item) => {
-            return(
-              <View key={item.refNumber} style={{ flexDirection: 'row', marginVertical: 10, alignItems:'center'}}>
-               
-                    <View style={styles.iconContainer}>
-                        <Foundation name="dollar" size={22} color={Colors.white}/>
-                    </View>
-                    <View style={{flex: 1, flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center'}}>
-                        <View style={{ gap: 5 }}>
-                            <Text style={[styles.spendingTxt, { fontWeight: 700 }]}>{item.desc}</Text>
-                            <Text style={styles.spendingTxt}>{item.date}</Text>
+        {
+            transactionList && transactionList.length > 0 ? (
+                transactionList.map((item) => (
+                    <View key={item.refNumber} style={{ flexDirection: 'row', marginVertical: 10, alignItems:'center'}}>
+                        <View style={styles.iconContainer}>
+                            <Foundation name="dollar" size={22} color={Colors.white}/>
                         </View>
-                        <Text style={[styles.spendingTxt, { fontWeight: 700 }]}>${item.amount}</Text>
-                    </View>
-              </View>  
-            );
-        })}
+                        <View style={{flex: 1, flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center'}}>
+                            <View style={{ gap: 5 }}>
+                                <Text style={[styles.spendingTxt, { fontWeight: 700 }]}>{item.desc}</Text>
+                                <Text style={styles.spendingTxt}>{item.date}</Text>
+                            </View>
+                            <Text style={[styles.spendingTxt, { fontWeight: 700 }]}>${item.amount}</Text>
+                        </View>
+                    </View>  
+                ))
+            ) : (
+                <View style={{ height : 100, justifyContent:'center', alignItems:'center'}}>
+                    <Text style={{ fontWeight: 400, color: Colors.white }}>No transaction record.</Text>
+                </View>
+            )
+            
+        }
+        
 
     </View>
   )

@@ -72,6 +72,9 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
     const register = async (first_name: string, username:string, password:string) => {
         setIsLoading(true);
+        await SecureStore.deleteItemAsync("accessToken");
+        await SecureStore.deleteItemAsync("refreshToken");
+        await SecureStore.deleteItemAsync("name");
         
         try {
             const response = await api.post("/api/user/register/", {first_name, username, password });
@@ -81,7 +84,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
         } catch (err) {
           const errorData = await err.response.data;
-          // console.log(errorData)
+          
           if (errorData.username) {
             Alert.alert("Registration Error", errorData.username[0]) // Username already exists
             return false

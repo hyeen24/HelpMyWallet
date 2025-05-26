@@ -97,3 +97,15 @@ class MerchantListCreate(generics.ListCreateAPIView):
 
         else:
             print(serializer.errors)
+
+
+class StatementCreate(generics.CreateAPIView):
+    serializer_class = MerchantSerializer  # Replace with actual StatementSerializer
+    permission_classes = [IsAuthenticated]
+
+    def perform_create(self, serializer):
+        if serializer.is_valid():
+            statement = serializer.save(author=self.request.user)
+            # Additional logic for handling the statement can be added here
+        else:
+            print(serializer.errors)  # Handle validation errors

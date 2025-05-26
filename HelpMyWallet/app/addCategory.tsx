@@ -5,7 +5,7 @@ import { SafeAreaView } from 'react-native-safe-area-context'
 import Input from '@/components/Input'
 import { Entypo, FontAwesome, FontAwesome6, MaterialCommunityIcons, MaterialIcons } from '@expo/vector-icons'
 import Button from '@/components/Button'
-import { isLoaded } from 'expo-font'
+import { isLoaded, isLoading } from 'expo-font'
 import api from './api'
 import CustomIconButton from '@/components/CustomIconButton'
 import ColorList from '@/data/colors.json'
@@ -13,6 +13,8 @@ import iconList from '@/data/icons.json'
 import { useRouter } from 'expo-router'
 import BackButton from '@/components/BackButton'
 import * as ImagePicker from 'expo-image-picker'
+import Loading from '@/components/Loading'
+import PageHeader from '@/components/PageHeader'
 
 
 const addCategory = () => {
@@ -22,6 +24,7 @@ const addCategory = () => {
     const [selectedType, setSelectedType] = useState<'income' | 'expenses' | 'merchant' |null>(null);
     const [categoryColor, setCategoryColor] = useState("");
     const [image, setImage] = useState<string | null>(null);
+    const [loading, setLoading] = useState(false);
 
     const router = useRouter();
     const pickImage = async () => {
@@ -47,6 +50,8 @@ const addCategory = () => {
             Alert.alert("Error", "Please fill all fields.");
             return;
         } 
+        
+        setLoading(true);
 
         console.log("category Type ",selectedType)
         
@@ -75,7 +80,9 @@ const addCategory = () => {
                     console.log("Response", res.data);
                     Alert.alert("Merchant Category", `Merchant category created`, [
                         { text : "OK",
-                            onPress: () => router.push('/(tabs)/home')
+                            onPress: () => {
+                                setLoading(false);
+                                router.push('/(tabs)/home')}
                         }
                         
                     ]);
@@ -104,7 +111,9 @@ const addCategory = () => {
                 const res = await api.post('/api/categories/', payload);
                 Alert.alert("Category", `Category created`, [
                 { text : "OK",
-                    onPress: () => router.push('/(tabs)/home')
+                    onPress: () => {
+                                setLoading(false);
+                                router.push('/(tabs)/home')}
                 }
                 
                 ]);
@@ -118,6 +127,8 @@ const addCategory = () => {
                 Alert.alert("Error", "Failed to create category.");
             }
         }
+
+        
     };
 
     
@@ -127,6 +138,10 @@ const addCategory = () => {
     };
 
   return (
+    <View style={{ flex: 1 }}>
+      {loading ? (
+        <Loading />
+      ) : (
     <SafeAreaView style={styles.container}>
         <BackButton/>
         <Text style={styles.pageTitleTxt}>Add New Category</Text>
@@ -283,6 +298,8 @@ const addCategory = () => {
         
     </SafeAreaView>
   )
+}
+  </View>)
 }
 
 export default addCategory

@@ -13,23 +13,23 @@ import Loading from '@/components/Loading';
 
 const Login= () => {
   const { login, isLoading } = useContext(AuthContext);
-  const emailRef = useRef("");
-  const passwordRef = useRef("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   const router = useRouter();
   
   // console.log(isLoading)
   const handleSignIn = async () => {
-    if(!emailRef.current || !passwordRef.current){
+    if(!email || !password){
       Alert.alert('Login','Please fill up all fields.')
       return;
     } 
-    if (passwordRef.current.length < 8 ) {
+    if (password.length < 8 ) {
           Alert.alert('Login','Please ensure password has the minimum length of 8 characters.')
           return;
         }
 
-    const isLoggedIn = await login(emailRef.current.toLowerCase() , passwordRef.current);
-    console.log(emailRef.current, passwordRef.current)
+    const isLoggedIn = await login(email.toLowerCase() , password);
+    console.log(email, password)
     console.log("isLoggedIn: ",isLoggedIn)
     if (isLoggedIn){
         router.push('/(tabs)/home')
@@ -59,18 +59,18 @@ const Login= () => {
           </Text>
           <Input 
           placeholder="Enter your email" 
-          onChangeText={(value) => {emailRef.current = value}}
+          onChangeText={(value) => {setEmail(value)}}
           icon={<Feather name='mail' size={26}
           color={Colors.white}/>}
           />
           <Input 
           placeholder="Enter your password" 
           secureTextEntry
-          onChangeText={(value) => {passwordRef.current = value}}
+          onChangeText={(value) => {setPassword(value)}}
           icon={<AntDesign name='lock' size={26}
           color={Colors.white}/>}
           />
-          {passwordRef.current.length < 8 && (
+          {password.length < 8 && (
                         <Text style={{ fontSize: 15, color: Colors.white}} > {'\u2022'} Minimum 8 characters</Text>
                       )}
         </View>
