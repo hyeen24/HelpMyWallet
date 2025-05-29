@@ -45,7 +45,7 @@ const Register = () => {
       return;
     }
     
-    const  isRegistered = await register(name, email.toLowerCase(), password);
+    const isRegistered = await register(name, email.toLowerCase(), password);
     
     if (isRegistered) {
       router.push('/(auth)/login')

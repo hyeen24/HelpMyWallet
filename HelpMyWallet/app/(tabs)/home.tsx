@@ -37,6 +37,7 @@ const Home = () => {
         const response = await api.get("api/transactions/");
         const transactionsData = response.data
         console.log("Transactions:", transactionsData);
+        setTransactions(transactionsData)
       } catch (err) {
         console.error("API fetch error:", err);
       }
@@ -146,7 +147,7 @@ const Home = () => {
             </View>
                 <ExpenseBlock expenseList={expenseCategories}/>
                 <IncomeBlock incomeList={incomeCategories}/>
-                <TransactionBlock transactionList={TransactionList} />
+                <TransactionBlock transactionList={transactions} />
         </ScrollView>
       </View>)}
     </>

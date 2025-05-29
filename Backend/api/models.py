@@ -4,8 +4,11 @@ from django.contrib.auth.models import User
 from treebeard.mp_tree import MP_Node
 from django.db.models import Sum
 
-def upload_path(instance, filename):
-    return f'merchants/{instance.author.username}/{filename}'
+def upload_merchant_path(instance, filename):
+    return f'{instance.author.username}/merchants/{filename}'
+
+def upload_document_path(instance, filename):
+    return f'{instance.author.username}/documents/{filename}'
 
 class Category(MP_Node):
     name = models.CharField(max_length=50)
@@ -47,7 +50,15 @@ class Transaction(models.Model):
 class Merchant(models.Model):
     name = models.CharField(max_length=100, unique=True)
     author = models.ForeignKey(User, on_delete=models.CASCADE, related_name="merchants")
-    icon = models.ImageField(upload_to=upload_path, blank=True, null=True)
+    icon = models.ImageField(upload_to=upload_merchant_path, blank=True, null=True)
+
+    def __str__(self):
+        return self.name
+
+class Statement(models.Model):
+    name = models.CharField(max_length=100, unique=True)
+    author = models.ForeignKey(User, on_delete=models.CASCADE, related_name="statements")
+    document = models.FileField(upload_to=upload_document_path)
 
     def __str__(self):
         return self.name

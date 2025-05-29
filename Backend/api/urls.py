@@ -9,4 +9,5 @@ urlpatterns = [
     path("category/delete/<int:pk>/",views.CategoryDelete.as_view(), name="delete-category"),
     path("categories/root/", views.RootCategoryListView.as_view(), name="root-categories"),
     path("merchants/", views.MerchantListCreate.as_view(), name="merchant-list"),
+    path("upload/statement/", views.StatementCreate.as_view(), name="statement-create"),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

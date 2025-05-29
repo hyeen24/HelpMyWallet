@@ -5,7 +5,7 @@ import { SafeAreaView } from 'react-native-safe-area-context'
 import Input from '@/components/Input'
 import { Entypo, FontAwesome, FontAwesome6, MaterialCommunityIcons, MaterialIcons } from '@expo/vector-icons'
 import Button from '@/components/Button'
-import { isLoaded } from 'expo-font'
+import { isLoaded, isLoading } from 'expo-font'
 import api from './api'
 import CustomIconButton from '@/components/CustomIconButton'
 import ColorList from '@/data/colors.json'
@@ -13,6 +13,8 @@ import iconList from '@/data/icons.json'
 import { useRouter } from 'expo-router'
 import BackButton from '@/components/BackButton'
 import * as ImagePicker from 'expo-image-picker'
+import Loading from '@/components/Loading'
+import PageHeader from '@/components/PageHeader'
 
 
 const addCategory = () => {
@@ -22,6 +24,7 @@ const addCategory = () => {
     const [selectedType, setSelectedType] = useState<'income' | 'expenses' | 'merchant' |null>(null);
     const [categoryColor, setCategoryColor] = useState("");
     const [image, setImage] = useState<string | null>(null);
+    const [loading, setLoading] = useState(false);
 
     const router = useRouter();
     const pickImage = async () => {
@@ -42,11 +45,13 @@ const addCategory = () => {
     };
 
     const createCategory = async () => {
-
+        setLoading(true);
         if ( !categoryName || !selectedType || selectedType === "expenses" && !categoryColor || selectedType === "income" && !icon) {
             Alert.alert("Error", "Please fill all fields.");
             return;
         } 
+        
+        
 
         console.log("category Type ",selectedType)
         
@@ -75,7 +80,9 @@ const addCategory = () => {
                     console.log("Response", res.data);
                     Alert.alert("Merchant Category", `Merchant category created`, [
                         { text : "OK",
-                            onPress: () => router.push('/(tabs)/home')
+                            onPress: () => {
+                                setLoading(false);
+                                router.push('/(tabs)/home')}
                         }
                         
                     ]);
@@ -104,7 +111,8 @@ const addCategory = () => {
                 const res = await api.post('/api/categories/', payload);
                 Alert.alert("Category", `Category created`, [
                 { text : "OK",
-                    onPress: () => router.push('/(tabs)/home')
+                    onPress: () => {
+                                router.push('/(tabs)/home')}
                 }
                 
                 ]);
@@ -118,15 +126,19 @@ const addCategory = () => {
                 Alert.alert("Error", "Failed to create category.");
             }
         }
+        setLoading(false);
+        
     };
-
-    
 
     const toggleRadio = (type: 'income' | 'expenses' | 'merchant') => {
         setSelectedType(prev => (prev === type ? null : type));
     };
 
   return (
+    <View style={{ flex: 1  ,backgroundColor: 'transparent'}}>
+      {loading ? (
+        <Loading />
+      ) : (
     <SafeAreaView style={styles.container}>
         <BackButton/>
         <Text style={styles.pageTitleTxt}>Add New Category</Text>
@@ -283,6 +295,8 @@ const addCategory = () => {
         
     </SafeAreaView>
   )
+}
+  </View>)
 }
 
 export default addCategory
