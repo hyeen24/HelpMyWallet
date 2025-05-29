@@ -8,7 +8,7 @@ import { toTitleCase } from '@/utils/stringUtils'
 
 const HomeHeader = () => {
     const { logout } = useContext(AuthContext);
-    const name = SecureStore.getItem("name");
+    const name = SecureStore.getItem("name") || "";
 
   return (
     <SafeAreaView style={styles.container}>
@@ -19,7 +19,7 @@ const HomeHeader = () => {
                     style={{ height: 50, width: 50, borderRadius: 30 }}
                 />
                 <View style={{ marginLeft: 10}}>
-                    <Text style={{ color: Colors.white, fontSize: 12}}>Hi, {name}</Text>
+                    <Text style={{ color: Colors.white, fontSize: 12}}>Hi, {toTitleCase(name)}</Text>
                     <Text style={{ color: Colors.white, fontSize: 16}}>Your Budget</Text>
                 </View>
             </View >

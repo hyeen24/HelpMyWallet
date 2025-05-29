@@ -1,5 +1,5 @@
 import { Alert, ScrollView, StyleSheet, Text, View } from "react-native";
-import React, { useContext, useEffect } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { AntDesign, FontAwesome, SimpleLineIcons } from "@expo/vector-icons";
 import Colors from "@/constants/Colors";
 import { Stack } from "expo-router";
@@ -12,12 +12,14 @@ import TransactionList from '@/data/Spending.json';
 import api from "../api";
 import TransactionBlock from "@/components/TransactionBlock";
 import HomeHeader from "@/components/HomeHeader";
+import Loading from "@/components/Loading";
 
 const Home = () => {
 
   const [expenseCategories, setExpenseCategories] = React.useState([]);
   const [incomeCategories, setIncomeCategories] = React.useState([]);
   const [transactions, setTransactions] = React.useState([]);
+  const [loading, setLoading] = useState(false);
 
   const deleteCategory = (id : string) => {
     api.delete(`api/category/delete/${id}`).then((res) => {
@@ -27,6 +29,7 @@ const Home = () => {
   }
   
   useEffect(() => {
+    setLoading(true);
     const fetchData = async () => {
       
       // Retrieve data for transactions
@@ -81,6 +84,7 @@ const Home = () => {
     };
 
     fetchData();
+    setLoading(false);
   }, []);
 
     const pieData = [
@@ -96,11 +100,15 @@ const Home = () => {
       ];
   return (
     <>
+   
       <Stack.Screen
         options={{
           header: () => <HomeHeader />,
         }}
       />
+       {loading ? (
+        <Loading />
+      ) : (
       <View style={[styles.container, { paddingTop: 80 }]}>
         <ScrollView showsVerticalScrollIndicator={false}>
             <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center'}}>
@@ -140,7 +148,7 @@ const Home = () => {
                 <IncomeBlock incomeList={incomeCategories}/>
                 <TransactionBlock transactionList={TransactionList} />
         </ScrollView>
-      </View>
+      </View>)}
     </>
   );
 };
