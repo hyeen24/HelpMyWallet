@@ -70,6 +70,39 @@ const Transactions = () => {
         console.error('Error picking document:', error);
         }
     };
+
+    const uploadFile = async () => {
+        const formData = new FormData();
+
+        
+        let fileName = fileInfo['assets'][0]['name']
+        let fileType = fileName?.split('.').pop();
+        let fileuri = fileInfo['assets'][0]['uri']
+
+        // console.log(fileInfo)
+        // console.log(fileType)
+        // console.log(fileuri)
+        formData.append('name', fileName);
+
+        if (fileInfo) {
+        
+        formData.append('document', {
+            uri: fileuri,
+            name: fileName,
+            type: `application/${fileType}`,
+        } as any); // `as any` to satisfy TypeScript
+        }
+
+        await api.post('/api/upload/statement/', formData, {
+        headers: {
+            'Content-Type': 'multipart/form-data',
+        },
+        }).then( (res) => {
+            console.log(res.data)
+        }).catch((error) => {
+            console.log(error.message)
+        })
+}
     
   return (
     <>    
@@ -118,12 +151,23 @@ const Transactions = () => {
                 )
                 
             }
-               
-                <Pressable
-                    style={[styles.button, styles.buttonClose]}
-                    onPress={toggleModal}>
-                    <Text style={styles.textStyle}>Cancel</Text>
-                </Pressable>
+                <View style={{ flexDirection:'row', gap: 10 }}>
+                    <Pressable
+                        style={[styles.button, styles.buttonClose]}
+                        onPress={toggleModal}>
+                        <Text style={styles.textStyle}>Cancel</Text>
+                    </Pressable>
+                    {
+                        fileInfo ? (
+                            <Pressable
+                                style={[styles.button, styles.buttonUpload]}
+                                onPress={uploadFile}>
+                                <Text style={styles.textStyle}>Upload</Text>
+                            </Pressable>
+                        ) : null
+                    }
+                    
+                </View>
                 </View>
             </View>
         </Modal>
@@ -255,6 +299,10 @@ const styles = StyleSheet.create({
     backgroundColor: '#F194FF',
   },
   buttonClose: {
+    marginTop: 10,
+    backgroundColor: '#f04a4a',
+  },
+  buttonUpload: {
     marginTop: 10,
     backgroundColor: Colors.tintColor,
   },

@@ -48,17 +48,5 @@ class MerchantSerializer(serializers.ModelSerializer):
 
     def create(self, validated_data):
         print("Creating Merchant with data:", validated_data)
-        
         return Merchant.objects.create(**validated_data)  # Replace with actual creation logic
-
-class StatementSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Statement
-        fields = ["name", "document", "author"]
-        extra_kwargs = {"author": {"read_only": True}}
-
-    def create(self, validated_data):
-        print("Creating Document with data:", validated_data)
-        return Merchant.objects.create(**validated_data)  # Replace with actual creation logic
-
     

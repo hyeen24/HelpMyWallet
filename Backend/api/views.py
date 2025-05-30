@@ -98,7 +98,6 @@ class MerchantListCreate(generics.ListCreateAPIView):
         else:
             print(serializer.errors)
 
-
 class StatementCreate(generics.CreateAPIView):
     serializer_class = MerchantSerializer  # Replace with actual StatementSerializer
     permission_classes = [IsAuthenticated]
