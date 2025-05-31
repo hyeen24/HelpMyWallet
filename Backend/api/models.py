@@ -23,7 +23,7 @@ class Category(MP_Node):
 
 
 class Transaction(models.Model):
-    title = models.CharField(max_length=100)
+    ref_number = models.CharField(max_length=100, unique=True, blank=False, null=False)
     trans_date = models.DateTimeField()
     category = models.ForeignKey(
         Category,

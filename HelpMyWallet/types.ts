@@ -17,9 +17,9 @@ export interface IncomeType {
 }
 
 export interface TransactionType {
-    refNumber : number;
-    desc : string;
-    date : string;
+    ref_number : number;
+    description : string;
+    trans_date : string;
     amount : string;
 }
 

@@ -8,6 +8,7 @@ from rest_framework.permissions import IsAuthenticated, AllowAny
 from .models import Category, Transaction, Merchant, PDFDocument
 from rest_framework.response import Response
 from rest_framework.exceptions import ValidationError
+from .services.bank_statement_parser import extract_transactions_from_pdf
 
 # Create your views here.
 class TransactionListCreate(generics.ListCreateAPIView):
@@ -110,5 +111,10 @@ class PDFUploadView(generics.CreateAPIView):
     def perform_create(self, serializer):
         if serializer.is_valid():
             pdfdocument = serializer.save(author=self.request.user)
+
+            pdfdocument_path = pdfdocument.file.path
+            print("pdfDocument_path:", pdfdocument_path)
+            transactions = extract_transactions_from_pdf(pdfdocument_path, user= self.request.user)
+
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)

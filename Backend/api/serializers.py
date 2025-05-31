@@ -30,10 +30,11 @@ class CategorySerializer(serializers.ModelSerializer):
 
 class TransactionSerializer(serializers.ModelSerializer):
     category_name = serializers.SerializerMethodField()
+    trans_date = serializers.DateTimeField(format="%d %b %Y")
 
     class Meta:
         model = Transaction
-        fields = ["id","title", "trans_date", "category", "category_name", "amount", "description", "created_at", "author"]
+        fields = ["id","ref_number", "trans_date", "category", "category_name", "amount", "description", "created_at", "author"]
         extra_kwargs = {"author": {"read_only": True}}
 
     def get_category_name(self, obj):

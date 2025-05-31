@@ -1,4 +1,4 @@
-import { Image, Modal, Pressable, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
+import { Alert, Image, Modal, Pressable, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import { Stack } from 'expo-router'
 import Colors from '@/constants/Colors'
@@ -91,21 +91,17 @@ const Transactions = () => {
 
         console.log(formData)
         
-        try {
-
-            const res = await api.post('/api/upload/', formData, {
+        await api.post('/api/upload/', formData, {
             headers: {
                 'Content-Type': 'multipart/form-data',
             },
-            })
+            }).then((res) => {  
+                Alert.alert('Bank Statement Uploaded.','Transactions have from the bank statement have been extracted and store in your transactions')
+            }).catch((err) => {
+                const errorData =err.response.data;
+                console.log(errorData);
 
-            console.log(res)
-         } catch (error) {
-             const errorData = await error.response.data;
-             console.log(errorData)
-            
-         }
-
+            });
     
 }
     
@@ -205,10 +201,10 @@ const Transactions = () => {
                     );
 
                     // console.log("Matching Merchant:",matchedMerchant.icon);
-                    console.log("matchedMerchant:", matchedMerchant);
+                    // console.log("matchedMerchant:", matchedMerchant);
 
                     return(
-                    <View key={item.refNumber} style={styles.itemContainer}>
+                    <View key={item.ref_number} style={styles.itemContainer}>
                     
                             <View style={styles.iconContainer}>
                                 { matchedMerchant ? (
@@ -223,8 +219,8 @@ const Transactions = () => {
                             </View>
                             <View style={{flex: 1, flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center'}}>
                                 <View style={{ gap: 5 }}>
-                                    <Text style={[styles.spendingTxt, { fontWeight: 700 }]}>{item.desc}</Text>
-                                    <Text style={styles.spendingTxt}>{item.date}</Text>
+                                    <Text style={[styles.spendingTxt, { fontWeight: 700 }]}>{item.description}</Text>
+                                    <Text style={styles.spendingTxt}>{item.trans_date}</Text>
                                 </View>
                                 <Text style={[styles.spendingTxt, { fontWeight: 700 }]}>${item.amount}</Text>
                             </View>
