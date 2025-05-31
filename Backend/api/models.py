@@ -55,10 +55,10 @@ class Merchant(models.Model):
     def __str__(self):
         return self.name
 
-class Statement(models.Model):
-    name = models.CharField(max_length=100, unique=True)
-    author = models.ForeignKey(User, on_delete=models.CASCADE, related_name="statements")
-    document = models.FileField(upload_to=upload_document_path)
+class PDFDocument(models.Model):
+    name = models.CharField(max_length=100)
+    file = models.FileField(upload_to=upload_document_path, blank=True, null=True)
+    author = models.ForeignKey(User, on_delete=models.CASCADE, related_name="documents", null=True, blank=True)
 
     def __str__(self):
         return self.name

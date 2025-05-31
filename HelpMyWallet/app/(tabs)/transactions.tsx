@@ -73,35 +73,40 @@ const Transactions = () => {
 
     const uploadFile = async () => {
         const formData = new FormData();
-
-        
+    
         let fileName = fileInfo['assets'][0]['name']
         let fileType = fileName?.split('.').pop();
         let fileuri = fileInfo['assets'][0]['uri']
 
-        // console.log(fileInfo)
-        // console.log(fileType)
-        // console.log(fileuri)
         formData.append('name', fileName);
 
         if (fileInfo) {
         
-        formData.append('document', {
+        formData.append('file', {
             uri: fileuri,
             name: fileName,
             type: `application/${fileType}`,
         } as any); // `as any` to satisfy TypeScript
         }
 
-        await api.post('/api/upload/statement/', formData, {
-        headers: {
-            'Content-Type': 'multipart/form-data',
-        },
-        }).then( (res) => {
-            console.log(res.data)
-        }).catch((error) => {
-            console.log(error.message)
-        })
+        console.log(formData)
+        
+        try {
+
+            const res = await api.post('/api/upload/', formData, {
+            headers: {
+                'Content-Type': 'multipart/form-data',
+            },
+            })
+
+            console.log(res)
+         } catch (error) {
+             const errorData = await error.response.data;
+             console.log(errorData)
+            
+         }
+
+    
 }
     
   return (

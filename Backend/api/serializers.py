@@ -1,7 +1,6 @@
 from django.contrib.auth.models import User
 from rest_framework import serializers
-from .models import Category, Transaction, Merchant, Statement
-from django.db import models
+from .models import Category, Transaction, Merchant, PDFDocument
 
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
@@ -50,3 +49,12 @@ class MerchantSerializer(serializers.ModelSerializer):
         print("Creating Merchant with data:", validated_data)
         return Merchant.objects.create(**validated_data)  # Replace with actual creation logic
     
+class PDFDocumentSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = PDFDocument
+        fields = ["id", "name", "file", "author"]
+        extra_kwargs = {"author": {"read_only": True}}
+
+    def create(self, validated_data):
+        print("Creating Merchant with data:", validated_data)
+        return PDFDocument.objects.create(**validated_data)  

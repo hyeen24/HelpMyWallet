@@ -1,10 +1,11 @@
 from django.shortcuts import render
 from django.contrib.auth.models import User
 from rest_framework.views import APIView
-from rest_framework import generics
-from .serializers import UserSerializer, CategorySerializer, TransactionSerializer, MerchantSerializer
+from rest_framework import generics, status
+from rest_framework.parsers import MultiPartParser, FormParser
+from .serializers import UserSerializer, CategorySerializer, TransactionSerializer, MerchantSerializer, PDFDocumentSerializer
 from rest_framework.permissions import IsAuthenticated, AllowAny
-from .models import Category, Transaction, Merchant
+from .models import Category, Transaction, Merchant, PDFDocument
 from rest_framework.response import Response
 from rest_framework.exceptions import ValidationError
 
@@ -98,13 +99,16 @@ class MerchantListCreate(generics.ListCreateAPIView):
         else:
             print(serializer.errors)
 
-class StatementCreate(generics.CreateAPIView):
-    serializer_class = MerchantSerializer  # Replace with actual StatementSerializer
+class PDFUploadView(generics.CreateAPIView):
+    parser_classes = (MultiPartParser, FormParser)
+    serializer_class = PDFDocumentSerializer
     permission_classes = [IsAuthenticated]
+
+    def get_queryset(self):
+        return PDFDocument.objects.filter(author=self.request.user) 
 
     def perform_create(self, serializer):
         if serializer.is_valid():
-            statement = serializer.save(author=self.request.user)
-            # Additional logic for handling the statement can be added here
-        else:
-            print(serializer.errors)  # Handle validation errors
+            pdfdocument = serializer.save(author=self.request.user)
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
