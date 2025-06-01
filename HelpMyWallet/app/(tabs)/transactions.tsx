@@ -1,5 +1,5 @@
-import { Alert, Image, Modal, Pressable, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
-import React, { useEffect, useState } from 'react'
+import { Alert, Image, Modal, Pressable, RefreshControl, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
+import React, { use, useEffect, useState } from 'react'
 import { Stack } from 'expo-router'
 import Colors from '@/constants/Colors'
 import { SafeAreaView } from 'react-native-safe-area-context'
@@ -10,17 +10,20 @@ import { AntDesign, Feather, FontAwesome, FontAwesome6, Foundation, MaterialComm
 import Button from '@/components/Button'
 import api from '../api'
 import * as DocumentPicker from 'expo-document-picker';
+import * as Updates from 'expo-updates';
+import { isLoading } from 'expo-font'
+import Loading from '@/components/Loading'
 
 const Transactions = () => {
     const [searchTxt, setSearchTxt]  = useState("");
     const [merchantData, setMerchantData] = useState<any[]>([]);
     const [transactions, setTransactions] = useState<any[]>([]);
     const [uploading, setUploading] = useState(false);
+    const [isloading, setIsLoading] = useState(false);
     const [fileInfo, setFileInfo] = React.useState<DocumentPicker.DocumentPickerResult | null>(null);
-
-
-    useEffect(() => {
-        const fetchData = async () => {
+    const [refreshing, setRefreshing] = React.useState(false);
+    
+    const fetchData = async () => {
             try {
                 const response = await api.get("api/transactions/");
                 const transactionsData = response.data
@@ -39,7 +42,8 @@ const Transactions = () => {
                 console.error("API fetch error:", err);
             }
         };
-        
+
+    useEffect(() => {   
         fetchData();
         console.log("fileInfo:", fileInfo);
     }, []);
@@ -71,7 +75,14 @@ const Transactions = () => {
         }
     };
 
+    const onRefresh = React.useCallback(async () => {
+        setRefreshing(true);
+        await fetchData();
+        setRefreshing(false);
+    }, []);
+
     const uploadFile = async () => {
+        setIsLoading(true);
         const formData = new FormData();
     
         let fileName = fileInfo['assets'][0]['name']
@@ -96,13 +107,17 @@ const Transactions = () => {
                 'Content-Type': 'multipart/form-data',
             },
             }).then((res) => {  
-                Alert.alert('Bank Statement Uploaded.','Transactions have from the bank statement have been extracted and store in your transactions')
+                Alert.alert("Bank Statement Uploaded.", `Transaction extracted from bank statement`, [
+                                        { text : "OK", onPress: () => reloadApp() }
+                                    ]);
+                setIsLoading(false);
             }).catch((err) => {
                 const errorData =err.response.data;
                 console.log(errorData);
 
             });
     
+
 }
     
   return (
@@ -115,7 +130,13 @@ const Transactions = () => {
             onPress={toggleModal}/>,
         }}
         />
-    
+
+        { isloading ? ( 
+            <View>
+                <Loading />
+            </View>
+        ) : (
+
         <View style={[styles.container, { paddingTop: 100, paddingHorizontal: 20, gap: 20}]}>
             <Modal
             animationType="slide"
@@ -171,7 +192,7 @@ const Transactions = () => {
                 </View>
                 </View>
             </View>
-        </Modal>
+            </Modal>
             <Input 
                 placeholder="Search transactions" 
                 onChangeText={(value) => {setSearchTxt(value)}}
@@ -191,27 +212,31 @@ const Transactions = () => {
                     <AntDesign name='down' size={20} color={Colors.white} />
                 </View>
             </View>
-            <ScrollView>
+            <ScrollView refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh}/>}>
                 {
                     transactions&& transactions.length > 0 ? (
                 transactions.map((item) => {
                     // console.log("merchantData:", merchantData);
                     const matchedMerchant = merchantData.find((merchant) => 
-                    item.desc.toLowerCase().includes(merchant.name.toLowerCase())
+                    item.description.toLowerCase().includes(merchant.name.toLowerCase())
                     );
 
                     // console.log("Matching Merchant:",matchedMerchant.icon);
                     // console.log("matchedMerchant:", matchedMerchant);
+                    if (matchedMerchant) {
+                        console.log("Match name:",matchedMerchant.name)
+                        const iconUrl = matchedMerchant.icon.replace('/media','/api/media')
+                    }
 
                     return(
                     <View key={item.ref_number} style={styles.itemContainer}>
                     
                             <View style={styles.iconContainer}>
                                 { matchedMerchant ? (
-                                    // <Image
-                                    //     source={{ uri: matchedMerchant.icon }}
-                                    //     style={{ width: 22, height: 22, borderRadius: 10 }}/>
-                                    null
+                                    <Image
+                                        source={{ uri: matchedMerchant.icon.replace('/media','/api/media')}}
+                                        style={{ width: 50, height: 50, borderRadius: 10 }}/>
+                                    
                                     ) : (
                                         <Foundation name="dollar" size={22} color={Colors.white}/>
                                     )   
@@ -236,7 +261,7 @@ const Transactions = () => {
             </ScrollView>
 
         </View>
-        
+        )}
     </>
     )
 }
@@ -256,8 +281,8 @@ const styles = StyleSheet.create({
         color: Colors.white
     },
     iconContainer : {
-        width:40, 
-        height:40, 
+        width:50, 
+        height:50, 
         padding: 10 , 
         borderRadius:50 ,
         marginRight: 10, 

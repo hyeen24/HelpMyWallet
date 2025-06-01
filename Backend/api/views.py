@@ -17,8 +17,7 @@ class TransactionListCreate(generics.ListCreateAPIView):
 
     def get_queryset(self):
         user = self.request.user    
-        
-        return Transaction.objects.filter(author=user)
+        return Transaction.objects.filter(author=user).order_by('-trans_date')
 
     def perform_create(self, serializer):
         if serializer.is_valid():
@@ -83,6 +82,9 @@ class MerchantListCreate(generics.ListCreateAPIView):
 
     def get_queryset(self):
         return Merchant.objects.filter(author=self.request.user)  # Replace with actual Merchant queryset
+    
+    def get_serializer_context(self):
+        return {'request': self.request}
 
     def perform_create(self, serializer):
         if serializer.is_valid():
@@ -96,6 +98,7 @@ class MerchantListCreate(generics.ListCreateAPIView):
                     # update transaction merchant to this merchant.
                     transaction.merchant = merchant
                     transaction.save()
+                    print("Transactions updated with merchant name.")
 
         else:
             print(serializer.errors)
