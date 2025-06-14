@@ -17,7 +17,12 @@ class TransactionListCreate(generics.ListCreateAPIView):
 
     def get_queryset(self):
         user = self.request.user    
-        return Transaction.objects.filter(author=user).order_by('-trans_date')
+        queryset = Transaction.objects.filter(author=user).order_by('-trans_date')
+        merchant = self.request.query_params.get('merchant', None)
+        print("Merchant filter:", merchant)
+        if merchant:
+            queryset = queryset.filter(merchant_id= merchant)
+        return queryset
 
     def perform_create(self, serializer):
         if serializer.is_valid():
@@ -92,12 +97,15 @@ class MerchantListCreate(generics.ListCreateAPIView):
             list_of_empty_merchant = Transaction.objects.filter(author=self.request.user, merchant__isnull = True)
             merchant_name = merchant.name
             possible_names = [merchant_name.upper(), merchant_name.title(), merchant_name.lower()]
+            print("list of no merchant transactions:",list_of_empty_merchant)
             
             for transaction in list_of_empty_merchant:
                 if any(name in transaction.description for name in possible_names):
                     # update transaction merchant to this merchant.
+                    print("Transaction with this merchant: ",transaction)
                     transaction.merchant = merchant
                     transaction.save()
+                    print("Updated Transactions:",transaction)
                     print("Transactions updated with merchant name.")
 
         else:
@@ -121,3 +129,12 @@ class PDFUploadView(generics.CreateAPIView):
 
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    
+class MerchantDetail(generics.RetrieveAPIView):
+    serializer_class = MerchantSerializer
+    permission_classes = [IsAuthenticated]
+    queryset = Merchant.objects.all()
+
+    def get_queryset(self):
+        # Limit to merchants of the current user only
+        return Merchant.objects.filter(author=self.request.user)

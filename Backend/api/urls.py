@@ -10,4 +10,5 @@ urlpatterns = [
     path("categories/root/", views.RootCategoryListView.as_view(), name="root-categories"),
     path("merchants/", views.MerchantListCreate.as_view(), name="merchant-list"),
     path("upload/", views.PDFUploadView.as_view(), name="pdf-upload"),
+    path("merchant/<int:pk>/", views.MerchantDetail.as_view(), name="merchant-detail"),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

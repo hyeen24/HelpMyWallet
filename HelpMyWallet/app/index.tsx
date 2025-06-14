@@ -7,6 +7,7 @@ const index = () => {
     const router = useRouter();
     useEffect(() => {
         setTimeout(() => {
+                // router.push("/merchantDetails");
                 router.push("/home");
             }, 2000);
     },[])

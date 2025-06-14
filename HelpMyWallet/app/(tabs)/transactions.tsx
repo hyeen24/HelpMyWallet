@@ -1,6 +1,6 @@
 import { Alert, Image, Modal, Pressable, RefreshControl, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import React, { use, useEffect, useState } from 'react'
-import { Stack } from 'expo-router'
+import { Stack, useRouter } from 'expo-router'
 import Colors from '@/constants/Colors'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import PageHeader from '@/components/PageHeader'
@@ -13,6 +13,7 @@ import * as DocumentPicker from 'expo-document-picker';
 import * as Updates from 'expo-updates';
 import { isLoading } from 'expo-font'
 import Loading from '@/components/Loading'
+import { getItem } from 'expo-secure-store'
 
 const Transactions = () => {
     const [searchTxt, setSearchTxt]  = useState("");
@@ -22,12 +23,13 @@ const Transactions = () => {
     const [isloading, setIsLoading] = useState(false);
     const [fileInfo, setFileInfo] = React.useState<DocumentPicker.DocumentPickerResult | null>(null);
     const [refreshing, setRefreshing] = React.useState(false);
+    const router = useRouter();
     
     const fetchData = async () => {
             try {
                 const response = await api.get("api/transactions/");
                 const transactionsData = response.data
-                console.log("Transactions:", transactionsData);
+                // console.log("Transactions:", transactionsData);
                 setTransactions(transactionsData)
             } catch (err) {
                 console.error("API fetch error:", err);
@@ -37,7 +39,7 @@ const Transactions = () => {
                 const response = await api.get("api/merchants/");
                 const merchantData = response.data
                 setMerchantData(merchantData);
-                console.log("Merchant:", merchantData);
+                // console.log("Merchant:", merchantData);
             } catch (err) {
                 console.error("API fetch error:", err);
             }
@@ -45,7 +47,7 @@ const Transactions = () => {
 
     useEffect(() => {   
         fetchData();
-        console.log("fileInfo:", fileInfo);
+        // console.log("fileInfo:", fileInfo);
     }, []);
 
     const toggleModal = () => {
@@ -62,7 +64,7 @@ const Transactions = () => {
             copyToCacheDirectory: true,
             multiple: false,
         });
-        console.log('Document result:', result);
+        // console.log('Document result:', result);
         if (result.canceled) {
             
             console.log('Document picking cancelled');
@@ -108,7 +110,7 @@ const Transactions = () => {
             },
             }).then((res) => {  
                 Alert.alert("Bank Statement Uploaded.", `Transaction extracted from bank statement`, [
-                                        { text : "OK", onPress: () => reloadApp() }
+                                        { text : "OK", onPress: () => onRefresh() }
                                     ]);
                 setIsLoading(false);
             }).catch((err) => {
@@ -116,28 +118,41 @@ const Transactions = () => {
                 console.log(errorData);
 
             });
-    
+    }
+     const selectTransaction = (
+        merchantIcon : string,
+        merchantName: string,
+        merchantId: string,
+        itemAmount : string,
+        itemDescription: string,
+        transactionDate: string,
+    ) =>{
+        router.push({
+            pathname: '/transactionDetails',
+            params: {
+                merchantIcon,
+                merchantName,
+                merchantId,
+                itemAmount,
+                itemDescription,
+                transactionDate
+            }
+        });
+    }
 
-}
-    
   return (
-    <>    
+    <View style={{flex: 1 , backgroundColor: Colors.black}}>    
        <Stack.Screen
-        options={{
-          header: () => <PageHeader title="My Transactions" rightButton={
+        options={{headerShown: true,
+          header: () => (<PageHeader title="My Transactions" rightButton={
             <MaterialCommunityIcons name='file-plus-outline' size={22} color={Colors.white}/>
             }
-            onPress={toggleModal}/>,
+            onPress={toggleModal}/>),
+            headerTransparent: true
+            
         }}
         />
-
-        { isloading ? ( 
-            <View>
-                <Loading />
-            </View>
-        ) : (
-
-        <View style={[styles.container, { paddingTop: 100, paddingHorizontal: 20, gap: 20}]}>
+        <View style={styles.container}>
             <Modal
             animationType="slide"
             transparent={true}
@@ -217,24 +232,24 @@ const Transactions = () => {
                     transactions&& transactions.length > 0 ? (
                 transactions.map((item) => {
                     // console.log("merchantData:", merchantData);
-                    const matchedMerchant = merchantData.find((merchant) => 
-                    item.description.toLowerCase().includes(merchant.name.toLowerCase())
-                    );
-
                     // console.log("Matching Merchant:",matchedMerchant.icon);
-                    // console.log("matchedMerchant:", matchedMerchant);
-                    if (matchedMerchant) {
-                        console.log("Match name:",matchedMerchant.name)
-                        const iconUrl = matchedMerchant.icon.replace('/media','/api/media')
-                    }
+                    const merchant = item.merchant ? merchantData.find(m => m.id === item.merchant) : null;
+                    // console.log(merchant)
 
                     return(
-                    <View key={item.ref_number} style={styles.itemContainer}>
+                    <TouchableOpacity key={item.ref_number} style={styles.itemContainer} onPress={() => selectTransaction(
+                        merchant?.icon ?? '',
+                        merchant?.name ?? 'Unknown',
+                        merchant?.id ?? '',
+                        item.amount,
+                        item.description,
+                        item.trans_date
+                    )}>
                     
                             <View style={styles.iconContainer}>
-                                { matchedMerchant ? (
+                                { merchant && merchant.icon ? (
                                     <Image
-                                        source={{ uri: matchedMerchant.icon.replace('/media','/api/media')}}
+                                        source={{ uri: merchant.icon.replace('/media','/api/media') }}
                                         style={{ width: 50, height: 50, borderRadius: 10 }}/>
                                     
                                     ) : (
@@ -249,7 +264,7 @@ const Transactions = () => {
                                 </View>
                                 <Text style={[styles.spendingTxt, { fontWeight: 700 }]}>${item.amount}</Text>
                             </View>
-                    </View>  
+                    </TouchableOpacity>  
                     );
                 })): (
                     <View style={{ gap : 20}}>
@@ -261,8 +276,7 @@ const Transactions = () => {
             </ScrollView>
 
         </View>
-        )}
-    </>
+    </View>
     )
 }
 
@@ -270,8 +284,10 @@ export default Transactions
 
 const styles = StyleSheet.create({
     container: {
-           flex:1, 
-           backgroundColor:Colors.black
+           backgroundColor:Colors.black,
+           gap: 16,
+           paddingTop: 100,
+           marginHorizontal:16,
        },
     text: {
         color: Colors.white
@@ -294,14 +310,15 @@ const styles = StyleSheet.create({
         flexDirection: 'row', 
         marginVertical: 3, 
         alignItems:'center', 
+        borderRadius: 15,
         backgroundColor: Colors.grey, 
         height: 70,
         paddingHorizontal: 10,},
         centeredView: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
   modalView: {
     backgroundColor: Colors.neutral200,
     borderRadius: 20,

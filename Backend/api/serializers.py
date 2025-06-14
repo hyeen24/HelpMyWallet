@@ -34,7 +34,7 @@ class TransactionSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Transaction
-        fields = ["id","ref_number", "trans_date", "category", "category_name", "amount", "description", "created_at", "author"]
+        fields = ["id","ref_number", "trans_date", "category", "category_name", "amount", "description", "created_at", "author","merchant"]
         extra_kwargs = {"author": {"read_only": True}}
 
     def get_category_name(self, obj):

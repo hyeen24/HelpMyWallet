@@ -38,11 +38,11 @@ export default PageHeader
 
 const styles = StyleSheet.create({
     container: {
-        flex:1, 
         backgroundColor:Colors.black,
         flexDirection: 'row',
         justifyContent: 'space-between',
         marginBottom: 10,
+        height: 50
     },
     leftContainer : {
         height: 50,

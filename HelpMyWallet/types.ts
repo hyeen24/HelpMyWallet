@@ -55,6 +55,14 @@ export interface CustomButtonProps extends TouchableOpacityProps {
     hasShadow?: boolean;
     children: React.ReactNode;
   }
+  
+export interface ButtonSpaceBetweenTwoItemProps extends TouchableOpacityProps {
+leftIcon?: React.ReactNode;
+rightIcon?: React.ReactNode;
+leftTxt?: string;
+rightTxt?: string;
+onPress?: () => void;
+}
 
 export interface PageHeaderProps {
   title: string;
