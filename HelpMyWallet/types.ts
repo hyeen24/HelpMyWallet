@@ -79,6 +79,7 @@ export interface PageHeaderProps {
     text?: string;
     focusable?: boolean;
     focused?: boolean;
+    disabled?: boolean;
   }
 
 export type ScreenWrapperProps = {

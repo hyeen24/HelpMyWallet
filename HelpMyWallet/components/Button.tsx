@@ -9,7 +9,8 @@ const Button = ({
     style,
     onPress,
     loading = false,
-    children
+    children,
+    disabled = false
  }: CustomButtonProps) => {
     if(loading) {
         return (
@@ -19,7 +20,7 @@ const Button = ({
         );
     }
   return (
-    <TouchableOpacity style={[styles.button, style]} onPress={onPress}>
+    <TouchableOpacity style={[ disabled ? styles.disabledButton :styles.button, style]} onPress={onPress} disabled={disabled}>
         {children}
     </TouchableOpacity>
   )
@@ -30,6 +31,14 @@ export default Button
 const styles = StyleSheet.create({
     button: {
         backgroundColor: Colors.tintColor,
+        borderRadius: 30,
+        borderCurve: 'continuous',
+        height: 52,
+        justifyContent: 'center',
+        alignItems: 'center'
+    },
+    disabledButton: {
+        backgroundColor: Colors.neutral800,
         borderRadius: 30,
         borderCurve: 'continuous',
         height: 52,

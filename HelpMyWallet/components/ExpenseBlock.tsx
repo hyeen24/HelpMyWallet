@@ -67,11 +67,26 @@ const ExpenseBlock = ({expenseList} : {expenseList: ExpenseType[]}) => {
 
   return (
     <View>
-      <FlatList 
-        data={staticItem.concat(expenseList)} 
-        renderItem={renderItem} 
-        horizontal 
-        showsHorizontalScrollIndicator={false}/>
+        {
+            expenseList.length === 0 ? (
+                <View style={{flexDirection: 'row',justifyContent:'center', alignItems: 'center', marginBottom: 20}}>
+                    <TouchableOpacity onPress={() => router.navigate('/addCategory')}>
+                        <View style={styles.addCategoryView}>
+                            <Feather name="plus" size={22} color={'#ccc'} />
+                        </View>
+                    </TouchableOpacity>
+                    <View style={styles.expenseBlockEmpty}>
+                        <Text style={[styles.expenseBlockTitle,{color: Colors.white}]}>No Expense Category</Text>
+                    </View>
+                </View>
+            ) : (
+                <FlatList 
+                  data={staticItem.concat(expenseList)} 
+                  renderItem={renderItem} 
+                  horizontal 
+                  showsHorizontalScrollIndicator={false}/> 
+            )
+        }
     </View>
   )
 }
@@ -89,7 +104,18 @@ const styles = StyleSheet.create({
         marginRight: 20,
         gap : 8
     },
-
+    expenseBlockEmpty: {
+        backgroundColor: Colors.neutral700,
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+        width: 200,
+        height: 100,
+        padding: 15,
+        borderRadius: 15,
+        marginRight: 20,
+    },
+    
     expenseBlockTitle: {
         fontSize: 14,
         fontWeight: 600

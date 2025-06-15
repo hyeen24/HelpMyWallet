@@ -7,53 +7,60 @@ import { Feather, FontAwesome6, MaterialCommunityIcons, MaterialIcons } from '@e
 const IncomeBlock = ({incomeList} : {incomeList: IncomeType[]}) => {
     console.log("Income List", incomeList)
     const renderItem:ListRenderItem<IncomeType> = ({item}) => {
-        let amountString = item.amount ?? "0.00";
-        let amount = amountString.split('.');
-        let iconFamily = item.icon_type;
-        let iconName = item.icon;
-
-        return(
-            <View>
-                <View style={styles.incomeCategoryContainerTop}>
-                    <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center'}}>
-                        <View style={styles.categoryIconContainer}>
-                            {!iconName || !iconFamily ? (
-                                <Feather name="help-circle" size={22} color={Colors.white} />
-                                ) : iconFamily === 'FontAwesome6' ? (
-                                <FontAwesome6 name={iconName} size={22} color={Colors.white} />
-                                ) : iconFamily === 'MaterialIcons' ? (
-                                <MaterialIcons name={iconName as any} size={22} color={Colors.white} />
-                                ) : iconFamily === 'MaterialCommunityIcons' ? (
-                                <MaterialCommunityIcons name={iconName as any} size={22} color={Colors.white} />
-                                ) : null}
-
+            let amountString = item.amount ?? "0.00";
+            let amount = amountString.split('.');
+            let iconFamily = item.icon_type;
+            let iconName = item.icon;
+    
+            return(
+                <View>
+                    <View style={styles.incomeCategoryContainerTop}>
+                        <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center'}}>
+                            <View style={styles.categoryIconContainer}>
+                                {!iconName || !iconFamily ? (
+                                    <Feather name="help-circle" size={22} color={Colors.white} />
+                                    ) : iconFamily === 'FontAwesome6' ? (
+                                    <FontAwesome6 name={iconName} size={22} color={Colors.white} />
+                                    ) : iconFamily === 'MaterialIcons' ? (
+                                    <MaterialIcons name={iconName as any} size={22} color={Colors.white} />
+                                    ) : iconFamily === 'MaterialCommunityIcons' ? (
+                                    <MaterialCommunityIcons name={iconName as any} size={22} color={Colors.white} />
+                                    ) : null}
+    
+                            </View>
+                            <TouchableOpacity onPress={() => {}}>
+                                <Feather name="more-horizontal" size={20} color={Colors.white}/>
+                            </TouchableOpacity>   
                         </View>
-                        <TouchableOpacity onPress={() => {}}>
-                            <Feather name="more-horizontal" size={20} color={Colors.white}/>
-                        </TouchableOpacity>   
+                        <Text style={{ color: Colors.white}}>{item.name}</Text>  
+                        <Text style={styles.incomeAmountWholeNumber}>${amount[0]}.
+                            <Text style={styles.incomeAmountDecimalNumber}>{amount[1]}</Text>
+                        </Text>
                     </View>
-                    <Text style={{ color: Colors.white}}>{item.name}</Text>  
-                    <Text style={styles.incomeAmountWholeNumber}>${amount[0]}.
-                        <Text style={styles.incomeAmountDecimalNumber}>{amount[1]}</Text>
-                    </Text>
                 </View>
-            </View>
-        );
+            );
     }
   return (
-    <View style={{marginVertical: 20}}>
+    <View style={{marginVertical: 5}}>
         <View style= {{flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: 20}}>
             <Text style={styles.blockTitleTxt}>My 
                 <Text style={{ fontWeight: 700 }}> Income
                 </Text>
             </Text>
         </View>
-        
-        <FlatList 
-            data={incomeList} 
-            renderItem={renderItem}
-            horizontal
-            showsHorizontalScrollIndicator={false}/>
+        {
+            incomeList.length === 0 ? (
+                <View style={{ padding: 20, alignItems: 'center', justifyContent: 'center'}}>
+                    <Text style={{ color: Colors.white , fontWeight: 400}}>No Income Category</Text>
+                </View>
+            ) : (
+                <FlatList 
+                    data={incomeList} 
+                    renderItem={renderItem}
+                    horizontal
+                    showsHorizontalScrollIndicator={false}/>
+            )
+        }
     </View>
   )
 }
