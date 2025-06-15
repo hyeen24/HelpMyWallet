@@ -1,4 +1,4 @@
-import { FlatList, Image, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
+import { Alert, FlatList, Image, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import api from './api';
 import Colors from '@/constants/Colors';
@@ -9,6 +9,8 @@ import Input from '@/components/Input';
 import * as ImagePicker from 'expo-image-picker'
 import ProtectedRoute from '@/components/ProtectedRoute';
 import Button from '@/components/Button';
+import { router } from 'expo-router';
+import Loading from '@/components/Loading';
 
 const addMerchant = () => {
     const [merchantData, setMerchantData] = useState<any[]>([]);
@@ -18,6 +20,7 @@ const addMerchant = () => {
     const [categoryName, setCategoryName] = useState("");
     const [currentKeyWord, setCurrentKeyWord] = useState<string>("");
     const [keywords, setKeywords]  = useState<string[]>([]);
+    const [loading, setLoading] = useState(false);
 
     const pickImage = async () => {
             // Ask the user for permission to access the media library
@@ -62,7 +65,7 @@ const addMerchant = () => {
         console.log("Selected Merchant ID:", merchantId);
     }
 
-    const addNewMerchant = async () => {
+    const toggleMerchantNewExisting = () => {
         setNewMerchant(!newMerchant);
     }
 
@@ -84,9 +87,51 @@ const addMerchant = () => {
         setKeywords([...keywords, keyword]);
     }
 
+    const addNewMerchant = async () => {
+        const formData = new FormData();
+        
+        formData.append('name', categoryName.toLowerCase());
+
+        if (image) {
+        const fileName = image.split('/').pop();
+        const fileType = fileName?.split('.').pop();
+
+        formData.append('icon', {
+            uri: image,
+            name: fileName,
+            type: `image/${fileType}`,
+        } as any); // `as any` to satisfy TypeScript
+        }
+
+        await api.post('/api/merchants/', formData, {
+        headers: {
+            'Content-Type': 'multipart/form-data',
+        },
+        }).then( (res) => {
+            console.log("Response", res.data);
+            Alert.alert("Merchant Category", `Merchant category created`, [
+                { text : "OK",
+                    onPress: () => {
+                        setLoading(false);
+                        router.push('/(tabs)/home')}
+                }
+                
+            ]);
+            setCategoryName("");
+            setImage(null);
+        }).catch((error) => {
+            let message = error.response.data.name[0]
+            console.log(message)
+            Alert.alert('Failed to Create Merchant.',message[0].toUpperCase() + message.slice(1))
+        })   
+    }
+    
   return (
     <ProtectedRoute>
-
+        { loading ? (
+            <Loading/>
+        ) :
+        
         <View style={{ flex: 1, backgroundColor: Colors.black}}>
             <PageHeader
                 title="Add Merchant" />
@@ -97,7 +142,7 @@ const addMerchant = () => {
                 <Text style={styles.pageTxt}>Let's tag a merchant to this <Text style={{ fontWeight: 600 }}>transactions</Text>.</Text>
                 <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center'}}>
                     <Text style={styles.pageSubTitleTxt}>Select Exisiting Merchant</Text>
-                    <Button style={styles.toggleNewMerchantBtn} onPress={addNewMerchant}>
+                    <Button style={styles.toggleNewMerchantBtn} onPress={toggleMerchantNewExisting}>
                         <Text style={{color : Colors.white}}>Add New Merchant</Text>
                     </Button>
                 </View>
@@ -131,7 +176,7 @@ const addMerchant = () => {
                 <Text style={styles.pageTxt}>Let's tag a merchant to this <Text style={{ fontWeight: 600 }}>transactions</Text>.</Text>
                 <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center'}}>
                     <Text style={styles.pageSubTitleTxt}>Add New Merchant</Text>
-                    <Button style={styles.toggleNewMerchantBtn} onPress={addNewMerchant}>
+                    <Button style={styles.toggleNewMerchantBtn} onPress={toggleMerchantNewExisting}>
                         <Text style={{color : Colors.white}}>Existing Merchant</Text>
                     </Button>
                 </View>
@@ -204,12 +249,13 @@ const addMerchant = () => {
                         </TouchableOpacity>                           
                     </View>
                 </View>
-                <Button onPress={attachMerchant}> 
+                <Button onPress={addNewMerchant}> 
                     <Text style={{color : Colors.white}}>Add Merchant</Text>
                 </Button>
             </View>
             )}
         </View>
+        }
     </ProtectedRoute>
   )
 }

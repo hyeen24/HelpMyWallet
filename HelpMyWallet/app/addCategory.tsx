@@ -1,11 +1,10 @@
 import { Alert, StyleSheet, Text, TouchableOpacity, View, Image } from 'react-native'
-import React, { use, useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import Colors from '@/constants/Colors'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import Input from '@/components/Input'
-import { Entypo, FontAwesome, FontAwesome6, MaterialCommunityIcons, MaterialIcons } from '@expo/vector-icons'
+import { Entypo, FontAwesome6, MaterialCommunityIcons, MaterialIcons } from '@expo/vector-icons'
 import Button from '@/components/Button'
-import { isLoaded, isLoading } from 'expo-font'
 import api from './api'
 import CustomIconButton from '@/components/CustomIconButton'
 import ColorList from '@/data/colors.json'
@@ -14,7 +13,6 @@ import { useRouter } from 'expo-router'
 import BackButton from '@/components/BackButton'
 import * as ImagePicker from 'expo-image-picker'
 import Loading from '@/components/Loading'
-import PageHeader from '@/components/PageHeader'
 
 
 const addCategory = () => {
