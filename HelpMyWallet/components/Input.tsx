@@ -1,4 +1,4 @@
-import { StyleSheet, View, Text, TextInput } from 'react-native'
+import { StyleSheet, View, Text, TextInput, TouchableOpacity } from 'react-native'
 import React from 'react'
 import Colors from '@/constants/Colors'
 import { InputProps } from '@/types'
@@ -7,7 +7,7 @@ const Input = (props: InputProps) => {
   return (
     <View style={[styles.container, props.containerStyle && props.containerStyle]}>
         {
-            props.icon && props.icon
+            props.iconLeft && props.iconLeft
         }
       <TextInput
         style={[styles.input,
@@ -16,6 +16,10 @@ const Input = (props: InputProps) => {
         placeholderTextColor={Colors.white}
         ref={props.inputRef && props.inputRef}
         {...props}/>
+        
+          <TouchableOpacity onPress={props.onPress}>
+            {props.iconRight && props.iconRight}
+          </TouchableOpacity>
     </View>
   )
 }

@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react'
 import api from './api';
 import Colors from '@/constants/Colors';
 import PageHeader from '@/components/PageHeader';
-import { Ionicons, MaterialCommunityIcons, MaterialIcons } from '@expo/vector-icons';
+import { AntDesign, Entypo, Ionicons, MaterialCommunityIcons, MaterialIcons } from '@expo/vector-icons';
 import { toTitleCase } from '@/utils/stringUtils';
 import Input from '@/components/Input';
 import * as ImagePicker from 'expo-image-picker'
@@ -16,6 +16,8 @@ const addMerchant = () => {
     const [image, setImage] = useState<string | null>(null);
     const [newMerchant, setNewMerchant] = useState<boolean>(false);
     const [categoryName, setCategoryName] = useState("");
+    const [currentKeyWord, setCurrentKeyWord] = useState<string>("");
+    const [keywords, setKeywords]  = useState<string[]>([]);
 
     const pickImage = async () => {
             // Ask the user for permission to access the media library
@@ -66,6 +68,20 @@ const addMerchant = () => {
 
     const attachMerchant = async () => {
         console.log("Pressed Attach Merchant")
+    }
+
+    const addNewWord = (keyword: string) => () => {
+        console.log("Pressed Add New Word:", keyword);
+        if (keyword.trim() === "") {
+            console.log("Keyword is empty, not adding.");
+            return;
+        }
+
+        if (keywords.includes(keyword)) {
+            console.log("Keyword already exists, not adding.");
+            return;
+        }
+        setKeywords([...keywords, keyword]);
     }
 
   return (
@@ -125,16 +141,45 @@ const addMerchant = () => {
                         <Input 
                             placeholder="Enter merchant name" 
                             onChangeText={(value) => {setCategoryName(value)}}
-                            icon={<MaterialIcons name='storefront' size={24} color={Colors.white}/>}
+                            iconLeft={<MaterialIcons name='storefront' size={24} color={Colors.white}/>}
                         />
                     </View>
-                    <View>
+                    <View style={{ gap: 5 }}>
                         <Text style={styles.groupHeaderTxt}>Tag Keyword</Text>
                         <Input 
                             placeholder="Enter keywords (optional)" 
-                            onChangeText={(value) => {setCategoryName(value)}}
-                            icon={<MaterialIcons name='storefront' size={24} color={Colors.white}/>}
+                            onChangeText={(value) => {setCurrentKeyWord(value)}}
+                            iconLeft={<MaterialIcons name='abc' size={24} color={Colors.white}/>}
+                            iconRight={<AntDesign name='plus' size={22} color={Colors.white}/>}
+                            onPress = {addNewWord(currentKeyWord)}
                         />
+                        {
+                            keywords.length > 0 ? (
+                                <FlatList 
+                                    data={keywords} 
+                                    renderItem={({ item }) => (
+                                        <TouchableOpacity style={{ 
+                                            backgroundColor: Colors.neutral700, 
+                                            alignItems: 'center',
+                                            flexDirection: 'row',
+                                            padding: 10, 
+                                            borderRadius: 8, 
+                                            marginVertical: 5,
+                                            gap: 2
+                                        }} onPress={() => {
+                                            setKeywords(keywords.filter((word) => word !== item));
+                                        }}>
+                                            <Text style={{ color: Colors.white }}>{item}</Text>
+                                            <Entypo name="cross" size={16} color={Colors.white} />
+                                        </TouchableOpacity>
+                                    )}
+                                    keyExtractor={(item) => item}
+                                    horizontal
+                                    ItemSeparatorComponent={() => <View style={{ width: 5 }} />}
+                                    showsHorizontalScrollIndicator={false}
+                                />
+                            ) : null
+                        }
                         <Text style={styles.descriptionTxt}>
                             Keyword are use to auto attach transactions with this words or phrase to this merchant.
                         </Text>

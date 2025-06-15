@@ -29,10 +29,12 @@ export interface DropDownItem {
 }
 
 export interface InputProps extends TextInputProps {
-    icon?: React.ReactNode;
+    iconLeft?: React.ReactNode;
+    iconRight?: React.ReactNode;
     containerStyle?: ViewStyle;
     inputStyle?: TextStyle;
     inputRef?: React.RefObject<TextInput>;
+    onPress?: () => void;
     // label?: string;
     // error?: string;
   }
