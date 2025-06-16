@@ -43,7 +43,7 @@ class TransactionSerializer(serializers.ModelSerializer):
 class MerchantSerializer(serializers.ModelSerializer):
     class Meta:
         model = Merchant
-        fields = ["id", "name", "icon", "author"]
+        fields = ["id", "name", "icon", "author", "keywords"]
         extra_kwargs = {"author": {"read_only": True}}
 
     def create(self, validated_data):

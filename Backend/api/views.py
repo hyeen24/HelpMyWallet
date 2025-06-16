@@ -93,9 +93,13 @@ class MerchantListCreate(generics.ListCreateAPIView):
 
     def perform_create(self, serializer):
         if serializer.is_valid():
+          
             merchant = serializer.save(author=self.request.user)
             list_of_empty_merchant = Transaction.objects.filter(author=self.request.user, merchant__isnull = True)
             merchant_name = merchant.name
+            keywords = merchant.keywords
+            print("keywords:", keywords)
+
             possible_names = [merchant_name.upper(), merchant_name.title(), merchant_name.lower()]
             print("list of no merchant transactions:",list_of_empty_merchant)
             

@@ -8,8 +8,8 @@ const index = () => {
     useEffect(() => {
         setTimeout(() => {
                 // router.push("/merchantDetails");
-                router.push("/addMerchant");
-                // router.push("/home");
+                // router.push("/addMerchant");
+                router.push("/home");
             }, 2000);
     },[])
   return ( 
