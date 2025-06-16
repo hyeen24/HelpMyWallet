@@ -8,9 +8,8 @@ from rest_framework.permissions import IsAuthenticated, AllowAny
 from .models import Category, Transaction, Merchant, PDFDocument
 from rest_framework.response import Response
 from rest_framework.exceptions import ValidationError
-from .services.bank_statement_parser import extract_transactions_from_pdf
+from .services.bank_statement_parser import extract_transactions_from_pdf, update_transactions_with_merchant
 
-# Create your views here.
 class TransactionListCreate(generics.ListCreateAPIView):
     serializer_class = TransactionSerializer
     permission_classes = [IsAuthenticated]
@@ -93,15 +92,12 @@ class MerchantListCreate(generics.ListCreateAPIView):
 
     def perform_create(self, serializer):
         if serializer.is_valid():
-          
             merchant = serializer.save(author=self.request.user)
             list_of_empty_merchant = Transaction.objects.filter(author=self.request.user, merchant__isnull = True)
             merchant_name = merchant.name
             keywords = merchant.keywords
-            print("keywords:", keywords)
-
-            possible_names = [merchant_name.upper(), merchant_name.title(), merchant_name.lower()]
-            print("list of no merchant transactions:",list_of_empty_merchant)
+            possible_names = [ word.upper() for word in keywords] if keywords else []
+            possible_names.append(merchant_name.upper())
             
             for transaction in list_of_empty_merchant:
                 if any(name in transaction.description for name in possible_names):
@@ -130,6 +126,7 @@ class PDFUploadView(generics.CreateAPIView):
             pdfdocument_path = pdfdocument.file.path
             print("pdfDocument_path:", pdfdocument_path)
             transactions = extract_transactions_from_pdf(pdfdocument_path, user= self.request.user)
+            update_transactions_with_merchant(self.request.user)
 
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)

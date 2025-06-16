@@ -110,7 +110,7 @@ const Transactions = () => {
             },
             }).then((res) => {  
                 Alert.alert("Bank Statement Uploaded.", `Transaction extracted from bank statement`, [
-                                        { text : "OK", onPress: () => onRefresh() }
+                                        { text : "OK", onPress: () =>{onRefresh(); toggleModal()} }
                                     ]);
                 setIsLoading(false);
             }).catch((err) => {

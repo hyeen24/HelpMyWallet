@@ -1,7 +1,7 @@
 import pandas as pd
 import pdfplumber
 from datetime import datetime
-from ..models import Transaction
+from ..models import Transaction, Merchant
 
 year_today = datetime.now().year
 
@@ -46,3 +46,19 @@ def extract_transactions_from_pdf(file_path, user):
                         }
                     
     return transactions
+
+def update_transactions_with_merchant(user):
+    print("Updating transactions with merchant for user:", user)
+    transactions = Transaction.objects.filter(author=user, merchant__isnull=True)
+    for transaction in transactions:
+        description = transaction.description.upper()
+        merchants = Merchant.objects.filter(author=user)
+        for merchant in merchants:
+            merchant_name = merchant.name.upper()
+            possible_names = [word.upper() for word in merchant.keywords] if merchant.keywords else []
+            possible_names.append(merchant_name)
+            print("Possible names for merchant:", possible_names)
+            if any(name in description for name in possible_names):
+                transaction.merchant = merchant
+                transaction.save()
+                print(f"Updated transaction {transaction.ref_number} with merchant {merchant.name}")

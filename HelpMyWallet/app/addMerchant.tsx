@@ -89,8 +89,10 @@ const addMerchant = () => {
 
     const addNewMerchant = async () => {
         const formData = new FormData();
+        const lowerKeywords = keywords.map((word) => word.toLowerCase());
         
         formData.append('name', categoryName.toLowerCase());
+        formData.append('keywords', JSON.stringify(lowerKeywords));
 
         if (image) {
         const fileName = image.split('/').pop();
@@ -113,7 +115,7 @@ const addMerchant = () => {
                 { text : "OK",
                     onPress: () => {
                         setLoading(false);
-                        router.push('/(tabs)/home')}
+                        router.push('/transactions')}
                 }
                 
             ]);
