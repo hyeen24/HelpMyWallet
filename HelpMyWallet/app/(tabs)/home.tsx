@@ -1,7 +1,7 @@
-import { Alert, ScrollView, StyleSheet, Text, View } from "react-native";
+import { Alert, ScrollView, StyleSheet, Text, useColorScheme, View } from "react-native";
 import React, { useContext, useEffect, useState } from "react";
 import { AntDesign, FontAwesome, SimpleLineIcons } from "@expo/vector-icons";
-import Colors from "@/constants/Colors";
+import  Colors from "@/constants/Colors";
 import { Stack } from "expo-router";
 import { PieChart} from "react-native-gifted-charts";
 import ExpenseBlock from "@/components/ExpenseBlock";
@@ -13,6 +13,7 @@ import api from "../api";
 import TransactionBlock from "@/components/TransactionBlock";
 import HomeHeader from "@/components/HomeHeader";
 import Loading from "@/components/Loading";
+import { darkTheme, lightTheme } from "@/constants/Theme";
 
 const Home = () => {
 
@@ -20,6 +21,9 @@ const Home = () => {
   const [incomeCategories, setIncomeCategories] = React.useState([]);
   const [transactions, setTransactions] = React.useState([]);
   const [loading, setLoading] = useState(false);
+  const appTheme = useColorScheme();
+  const Theme = appTheme === 'dark' ? darkTheme : lightTheme;
+
 
   const deleteCategory = (id : string) => {
     api.delete(`api/category/delete/${id}`).then((res) => {
@@ -110,15 +114,15 @@ const Home = () => {
        {loading ? (
         <Loading />
       ) : (
-      <View style={[styles.container, { paddingTop: 80 }]}>
+      <View style={[styles.container, { paddingTop: 70, backgroundColor: Theme.backgroundColor }]}>
         <ScrollView showsVerticalScrollIndicator={false}>
             <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center'}}>
                 <View style={{ gap: 10 }}>
-                    <Text style={styles.text}>
+                    <Text style={{color: Theme.textColor}}>
                         My 
-                        <Text style={{fontWeight: 700}}> Overview</Text>
+                        <Text style={{fontWeight: 700, color: Theme.altTextColor }}> Overview</Text>
                     </Text>
-                    <Text style={{ color: Colors.white, fontSize:36, fontWeight: 700}}>$1500.<Text style={{fontSize:22, fontWeight: 400}}>00</Text></Text>
+                    <Text style={{ color:Theme.textColor, fontSize:36, fontWeight: 700}}>$1500.<Text style={{fontSize:22, fontWeight: 400}}>00</Text></Text>
                 </View>
                 
                 <View style={{ paddingVertical: 20, alignItems: "center" }}>
@@ -159,10 +163,6 @@ export default Home;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: Colors.black,
-    paddingHorizontal: 10
-  },
-  text: {
-    color: Colors.white,
-  },
+    paddingHorizontal: 8
+  }
 });

@@ -1,14 +1,18 @@
-import { FlatList, ListRenderItem, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
+import { FlatList, ListRenderItem, StyleSheet, Text, TouchableOpacity, useColorScheme, View } from 'react-native'
 import React from 'react'
 import { ExpenseType } from '@/types';
-import Colors from '@/constants/Colors';
+import  Colors  from '@/constants/Colors';
 import { Feather } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
 import addCategory from '@/app/addCategory';
+import { darkTheme, lightTheme } from '@/constants/Theme';
 
 const ExpenseBlock = ({expenseList} : {expenseList: ExpenseType[]}) => {
     const router = useRouter();
-    console.log("Expenses", expenseList)
+    const appTheme = useColorScheme();
+    const Theme = appTheme === 'dark' ? darkTheme: lightTheme
+    console.log("Theme",appTheme)
+    // console.log("Expenses", expenseList)
 
     const totalAmount = expenseList.reduce((sum, expense) => {
         return sum + parseFloat(expense.amount);
@@ -18,8 +22,8 @@ const ExpenseBlock = ({expenseList} : {expenseList: ExpenseType[]}) => {
         if ( index == 0 ) {
             return (
                 <TouchableOpacity onPress={() => router.navigate('/addCategory')}>
-                    <View style={styles.addCategoryView}>
-                        <Feather name="plus" size={22} color={'#ccc'} />
+                    <View style={[styles.addCategoryView, {borderColor:appTheme==='dark'? '#666' : Colors.tintColor}]}>
+                        <Feather name="plus" size={22} color={appTheme === 'dark' ? '#ccc' : Colors.lightTintColor} />
                     </View>
                 </TouchableOpacity>
             );
@@ -52,9 +56,9 @@ const ExpenseBlock = ({expenseList} : {expenseList: ExpenseType[]}) => {
                     backgroundColor: BlockColor
                 }
             ]}>
-                <Text style={[styles.expenseBlockTitle, { color : TxtColor}]}>{item.name}</Text>
-                <Text style={[styles.expenseAmountWholeNumber, { color : TxtColor}]}>${amount[0]}.
-                    <Text style={[styles.expenseAmountDecimalNumber, { color: TxtColor}]}>{amount[1]}</Text>
+                <Text style={[styles.expenseBlockTitle, { color : Theme.textColor}]}>{item.name}</Text>
+                <Text style={[styles.expenseAmountWholeNumber, { color : Theme.textColor}]}>${amount[0]}.
+                    <Text style={[styles.expenseAmountDecimalNumber, { color: Theme.textColor}]}>{amount[1]}</Text>
                 </Text>
                 <View style={styles.expensePercentageView}>
                     <Text style={[styles.expenseBlockTitle, { color: TxtColor }]}>{percentage}%</Text>
@@ -71,12 +75,13 @@ const ExpenseBlock = ({expenseList} : {expenseList: ExpenseType[]}) => {
             expenseList.length === 0 ? (
                 <View style={{flexDirection: 'row',justifyContent:'center', alignItems: 'center', marginBottom: 20}}>
                     <TouchableOpacity onPress={() => router.navigate('/addCategory')}>
-                        <View style={styles.addCategoryView}>
-                            <Feather name="plus" size={22} color={'#ccc'} />
+                        <View style={[styles.addCategoryView, {borderColor:appTheme==='dark'? '#666' : Colors.tintColor}]}>
+                            <Feather name="plus" size={22} color={appTheme === 'dark' ? '#ccc' : Colors.lightTintColor} />
                         </View>
                     </TouchableOpacity>
-                    <View style={styles.expenseBlockEmpty}>
-                        <Text style={[styles.expenseBlockTitle,{color: Colors.white}]}>No Expense Category</Text>
+                    <View style={[styles.expenseBlockEmpty, {backgroundColor: appTheme == 'dark'? 
+        Colors.neutral700 : Colors.lightTintColor}]}>
+                        <Text style={[styles.expenseBlockTitle,{ color: Colors.white}]}>No Expense Category</Text>
                     </View>
                 </View>
             ) : (
@@ -95,7 +100,6 @@ export default ExpenseBlock
 
 const styles = StyleSheet.create({
     expenseBlock: {
-        backgroundColor: Colors.tintColor,
         justifyContent: 'space-between',
         alignItems: 'flex-start',
         width: 100,
@@ -105,7 +109,6 @@ const styles = StyleSheet.create({
         gap : 8
     },
     expenseBlockEmpty: {
-        backgroundColor: Colors.neutral700,
         flex: 1,
         justifyContent: 'center',
         alignItems: 'center',
@@ -137,7 +140,7 @@ const styles = StyleSheet.create({
     addCategoryView : {
         flex:1,
         borderWidth: 2,
-        borderColor: '#666',
+        
         borderStyle: "dashed",
         borderRadius: 10,
         marginRight: 20,

@@ -1,25 +1,27 @@
-import { ListRenderItem, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
+import { ListRenderItem, StyleSheet, Text, TouchableOpacity, useColorScheme, View } from 'react-native'
 import React from 'react'
 import Colors from '@/constants/Colors'
 import { TransactionType } from '@/types'
 import { FontAwesome, FontAwesome5, Foundation } from '@expo/vector-icons'
 import { useRouter } from 'expo-router'
+import { darkTheme, lightTheme } from '@/constants/Theme'
 
 const TransactionBlock = ({transactionList}: {transactionList: TransactionType[]}) => {
-
+    const appTheme = useColorScheme();
+    const Theme = appTheme === 'dark' ? darkTheme: lightTheme
     const router = useRouter();
    
   return (
     <View>
-        <View style= {{flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center'}}>
-            <Text style={styles.blockTitleTxt}>My 
-                <Text style={{ fontWeight: 700 }}> Transactions
+        <View style= {{flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', paddingVertical: 10}}>
+            <Text style={[styles.blockTitleTxt, {color: Theme.textColor}]}>My 
+                <Text style={{ fontWeight: 700 , color: Theme.altTextColor}}> Transactions
                 </Text>
             </Text>
             {
                 transactionList.length > 0 ?
                 (<TouchableOpacity onPress={() => {router.push('/transactions')}}>
-                    <Text style={{ color: Colors.white, fontSize: 14}}>See all</Text>
+                    <Text style={{ color: Theme.textColor, fontSize: 14}}>See all</Text>
                 </TouchableOpacity>) : 
                 null
             }
@@ -56,8 +58,16 @@ const TransactionBlock = ({transactionList}: {transactionList: TransactionType[]
 export default TransactionBlock
 
 const styles = StyleSheet.create({
+    expensBlockContainer : {
+        justifyContent: 'space-between',
+        alignItems: 'flex-start',
+        width: 100,
+        padding: 15,
+        borderRadius: 15,
+        marginRight: 20,
+        gap : 8
+    },
     blockTitleTxt: {
-            color: Colors.white,
             fontSize: 16,
     },
     spendingTxt : {

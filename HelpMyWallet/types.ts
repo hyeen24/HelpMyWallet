@@ -97,3 +97,10 @@ iconSize?: number;
 export type ChildrenProps = {
   children: ReactNode ;
 }
+
+export type Theme = {
+  backgroundColor: string;
+  textColor: string;
+  cardColors: string;
+  altTextColor: string;
+};

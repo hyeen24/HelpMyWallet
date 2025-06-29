@@ -1,19 +1,24 @@
-import { Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
-import React, { useContext } from 'react'
+import { Image, StyleSheet, Text, TouchableOpacity, useColorScheme, View } from 'react-native'
+import React, { use, useContext } from 'react'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import Colors from '@/constants/Colors'
 import { toTitleCase } from '@/utils/stringUtils'
 import { PageHeaderProps } from '@/types'
 import BackButton from './BackButton'
 import { AntDesign } from '@expo/vector-icons'
+import { lightTheme, darkTheme } from '@/constants/Theme'
 
 const PageHeader = ({
     title, 
     rightButton, 
     onPress}: PageHeaderProps) => {
 
+    const appTheme = useColorScheme();
+    const Theme = appTheme === 'dark' ? darkTheme : lightTheme;
+    console.log(Theme.cardColors)
+
   return (
-    <SafeAreaView style={styles.container}>
+    <SafeAreaView style={[styles.container, { backgroundColor: Theme.cardColors }]}>
         <View style={styles.leftContainer}>
             <BackButton/>
         </View>
@@ -38,7 +43,6 @@ export default PageHeader
 
 const styles = StyleSheet.create({
     container: {
-        backgroundColor:Colors.black,
         flexDirection: 'row',
         justifyContent: 'space-between',
         marginBottom: 10,

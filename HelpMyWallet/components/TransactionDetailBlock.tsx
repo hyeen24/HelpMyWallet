@@ -1,18 +1,19 @@
-import { Image, StyleSheet, Text, View } from 'react-native'
+import { Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import React from 'react'
 import Colors from '@/constants/Colors'
 
-export type TransactionDetailProps = {
-  imageUrl?: string;
-}
+
 
 const TransactionDetailBlock = ({
-  imageUrl
+  imageUrl,
+  amount
 } : TransactionDetailProps ) => {
 
   return (
     <View style={styles.container}>
       <Image src={imageUrl} style={styles.merchantImage}/>
+      <Text style={styles.amountTxt}>${amount}</Text>
+   
     </View>
   )
 }
@@ -25,9 +26,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center'
   },
-  merchantImage:{
-    width: 50, 
-    height: 50,
-    borderRadius: 10
-  }
+ 
+
+
 })

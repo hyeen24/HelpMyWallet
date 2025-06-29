@@ -8,6 +8,7 @@ export default {
   grey: '#242424',
   white : '#FCFCFC',
   tintColor: '#723FEB',
+  lightTintColor : '#8d65eb',
   blue: '#97E0F7',
   neutral900: "#171717",
   neutral50: "#fafafa",
@@ -20,4 +21,5 @@ export default {
   neutral600: "#525252",
   neutral700: "#404040",
   neutral800: "#262626",
+  cyan : "#54d2e3"
 }

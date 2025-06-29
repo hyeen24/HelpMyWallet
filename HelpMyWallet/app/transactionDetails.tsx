@@ -3,7 +3,7 @@ import React from 'react'
 import { router, Stack, useLocalSearchParams } from 'expo-router'
 import PageHeader from '@/components/PageHeader'
 import { AntDesign, Entypo, FontAwesome, Fontisto, MaterialCommunityIcons, MaterialIcons } from '@expo/vector-icons'
-import Colors from '@/constants/Colors'
+import  Colors from '@/constants/Colors'
 import ButtonSpaceBetweenTwoItem from '@/components/ButtonSpaceBetweenTwoItem'
 import { toTitleCase } from '@/utils/stringUtils'
 
