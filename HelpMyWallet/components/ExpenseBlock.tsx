@@ -11,23 +11,15 @@ const ExpenseBlock = ({expenseList} : {expenseList: ExpenseType[]}) => {
     const router = useRouter();
     const appTheme = useColorScheme();
     const Theme = appTheme === 'dark' ? darkTheme: lightTheme
-    console.log("Theme",appTheme)
-    // console.log("Expenses", expenseList)
+    // console.log("Theme",appTheme)
+    console.log("Expenses", expenseList)
 
     const totalAmount = expenseList.reduce((sum, expense) => {
         return sum + parseFloat(expense.amount);
       }, 0);
 
     const renderItem: ListRenderItem<Partial<ExpenseType>> = ({item, index}) => {
-        if ( index == 0 ) {
-            return (
-                <TouchableOpacity onPress={() => router.navigate('/addCategory')}>
-                    <View style={[styles.addCategoryView, {borderColor:appTheme==='dark'? '#666' : Colors.tintColor}]}>
-                        <Feather name="plus" size={22} color={appTheme === 'dark' ? '#ccc' : Colors.lightTintColor} />
-                    </View>
-                </TouchableOpacity>
-            );
-        }
+
         let amountString = item.amount ?? "0.00";
         let amount = amountString.split('.');
         let percentage = Math.floor((parseFloat(amountString) / totalAmount) * 100);
@@ -67,18 +59,11 @@ const ExpenseBlock = ({expenseList} : {expenseList: ExpenseType[]}) => {
         );
     };
 
-    const staticItem = [{ name: "Add Item"}];
-
   return (
     <View>
         {
             expenseList.length === 0 ? (
                 <View style={{flexDirection: 'row',justifyContent:'center', alignItems: 'center', marginBottom: 20}}>
-                    <TouchableOpacity onPress={() => router.navigate('/addCategory')}>
-                        <View style={[styles.addCategoryView, {borderColor:appTheme==='dark'? '#666' : Colors.tintColor}]}>
-                            <Feather name="plus" size={22} color={appTheme === 'dark' ? '#ccc' : Colors.lightTintColor} />
-                        </View>
-                    </TouchableOpacity>
                     <View style={[styles.expenseBlockEmpty, {backgroundColor: appTheme == 'dark'? 
         Colors.neutral700 : Colors.lightTintColor}]}>
                         <Text style={[styles.expenseBlockTitle,{ color: Colors.white}]}>No Expense Category</Text>
@@ -86,7 +71,7 @@ const ExpenseBlock = ({expenseList} : {expenseList: ExpenseType[]}) => {
                 </View>
             ) : (
                 <FlatList 
-                  data={staticItem.concat(expenseList)} 
+                  data={expenseList} 
                   renderItem={renderItem} 
                   horizontal 
                   showsHorizontalScrollIndicator={false}/> 

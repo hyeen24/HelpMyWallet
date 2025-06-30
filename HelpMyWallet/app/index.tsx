@@ -10,6 +10,8 @@ const index = () => {
                 // router.push("/merchantDetails");
                 // router.push("/addMerchant");
                 router.push("/home");
+                // router.push("/transactions");
+                // router.push("/profile")
             }, 2000);
     },[])
   return ( 

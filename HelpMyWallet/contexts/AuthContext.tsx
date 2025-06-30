@@ -113,7 +113,6 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         return true;
       } catch (err) {
         // console.log("Token refresh failed:", err.response?.data || err.message);
-        Alert.alert("Invalid email or password.")
         return false;
       }
     };

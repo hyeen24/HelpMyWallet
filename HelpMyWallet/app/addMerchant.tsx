@@ -143,7 +143,7 @@ const addMerchant = () => {
                 <Text style={styles.pageTitleTxt}>Attach a Merchant</Text>
                 <Text style={styles.pageTxt}>Let's tag a merchant to this <Text style={{ fontWeight: 600 }}>transactions</Text>.</Text>
                 <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center'}}>
-                    <Text style={styles.pageSubTitleTxt}>Select Exisiting Merchant</Text>
+                    <Text style={styles.pageSubTitleTxt}>Exisiting Merchant</Text>
                     <Button style={styles.toggleNewMerchantBtn} onPress={toggleMerchantNewExisting}>
                         <Text style={{color : Colors.white}}>Add New Merchant</Text>
                     </Button>

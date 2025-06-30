@@ -15,7 +15,7 @@ const PageHeader = ({
 
     const appTheme = useColorScheme();
     const Theme = appTheme === 'dark' ? darkTheme : lightTheme;
-    console.log(Theme.cardColors)
+    // console.log(Theme.cardColors)
 
   return (
     <SafeAreaView style={[styles.container, { backgroundColor: Theme.cardColors }]}>
@@ -45,7 +45,7 @@ const styles = StyleSheet.create({
     container: {
         flexDirection: 'row',
         justifyContent: 'space-between',
-        marginBottom: 10,
+        paddingBottom: 10,
         height: 50
     },
     leftContainer : {

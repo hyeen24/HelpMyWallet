@@ -1,8 +1,8 @@
-import { Alert, ScrollView, StyleSheet, Text, useColorScheme, View } from "react-native";
+import { Alert, ScrollView, StyleSheet, Text, TouchableOpacity, useColorScheme, View } from "react-native";
 import React, { useContext, useEffect, useState } from "react";
-import { AntDesign, FontAwesome, SimpleLineIcons } from "@expo/vector-icons";
+import { AntDesign, Feather, FontAwesome, SimpleLineIcons } from "@expo/vector-icons";
 import  Colors from "@/constants/Colors";
-import { Stack } from "expo-router";
+import { router, Stack } from "expo-router";
 import { PieChart} from "react-native-gifted-charts";
 import ExpenseBlock from "@/components/ExpenseBlock";
 import IncomeBlock from "@/components/IncomeBlock";
@@ -152,7 +152,11 @@ const Home = () => {
                 <ExpenseBlock expenseList={expenseCategories}/>
                 <IncomeBlock incomeList={incomeCategories}/>
                 <TransactionBlock transactionList={transactions} />
+                
         </ScrollView>
+        <TouchableOpacity style={styles.floatingAddBtn} onPress={()=>router.push('/addCategory')}>
+            <Feather name="plus" size={22} color={appTheme === 'dark' ? '#ccc' : Colors.lightTintColor} />
+        </TouchableOpacity>
       </View>)}
     </>
   );
@@ -163,6 +167,17 @@ export default Home;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    paddingHorizontal: 8
+    paddingHorizontal: 10
+  },
+  floatingAddBtn: {
+    backgroundColor : Colors.tintColor, 
+    position:'absolute' , 
+    justifyContent:'center',
+    alignItems:'center',
+    right: 12,
+    bottom: 45,
+    height: 40,
+    width: 40,
+    borderRadius: 50
   }
 });
