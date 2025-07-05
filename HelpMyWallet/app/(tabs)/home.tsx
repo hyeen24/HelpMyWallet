@@ -24,17 +24,7 @@ const Home = () => {
   const appTheme = useColorScheme();
   const Theme = appTheme === 'dark' ? darkTheme : lightTheme;
 
-
-  const deleteCategory = (id : string) => {
-    api.delete(`api/category/delete/${id}`).then((res) => {
-      if (res.status === 204) Alert.alert("Action", "Category deleted successfully.")
-        else Alert.alert("Action", "Fail to delete category.")
-    }).catch((error) => Alert.alert(error))
-  }
-  
-  useEffect(() => {
-    setLoading(true);
-    const fetchData = async () => {
+  const fetchData = async () => {
       
       // Retrieve data for transactions
       try {
@@ -87,6 +77,10 @@ const Home = () => {
       }
 
     };
+  
+  useEffect(() => {
+    setLoading(true);
+
 
     fetchData();
     setLoading(false);
@@ -103,61 +97,180 @@ const Home = () => {
         {value: 16, color: '#BDB2FA', gradientCenterColor: '#8F80F3'},
         {value: 3, color: '#FFA5BA', gradientCenterColor: '#FF7F97'},
       ];
+
+    const renderDot = (color: string) => {
+  return (
+    <View
+      style={{
+        height: 10,
+        width: 10,
+        borderRadius: 5,
+        backgroundColor: color,
+        marginRight: 10,
+      }}
+    />
+  );
+};
+
+const renderLegendComponent = () => {
   return (
     <>
-   
+      <View
+        style={{
+          flexDirection: 'row',
+          justifyContent: 'center',
+          marginBottom: 10,
+        }}>
+        <View
+          style={{
+            flexDirection: 'row',
+            alignItems: 'center',
+            width: 120,
+            marginRight: 20,
+          }}>
+          {renderDot('#006DFF')}
+          <Text style={{color: 'white'}}>Excellent: 47%</Text>
+        </View>
+        <View
+          style={{flexDirection: 'row', alignItems: 'center', width: 120}}>
+          {renderDot('#8F80F3')}
+          <Text style={{color: 'white'}}>Okay: 16%</Text>
+        </View>
+      </View>
+      <View style={{flexDirection: 'row', justifyContent: 'center'}}>
+        <View
+          style={{
+            flexDirection: 'row',
+            alignItems: 'center',
+            width: 120,
+            marginRight: 20,
+          }}>
+          {renderDot('#3BE9DE')}
+          <Text style={{color: 'white'}}>Good: 40%</Text>
+        </View>
+        <View
+          style={{flexDirection: 'row', alignItems: 'center', width: 120}}>
+          {renderDot('#FF7F97')}
+          <Text style={{color: 'white'}}>Poor: 3%</Text>
+        </View>
+      </View>
+    </>
+  );
+};
+
+  return (
+    <>
       <Stack.Screen
         options={{
           header: () => <HomeHeader />,
         }}
       />
-       {loading ? (
+      {loading ? (
         <Loading />
       ) : (
-      <View style={[styles.container, { paddingTop: 70, backgroundColor: Theme.backgroundColor }]}>
-        <ScrollView showsVerticalScrollIndicator={false}>
-            <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center'}}>
-                <View style={{ gap: 10 }}>
-                    <Text style={{color: Theme.textColor}}>
-                        My 
-                        <Text style={{fontWeight: 700, color: Theme.altTextColor }}> Overview</Text>
-                    </Text>
-                    <Text style={{ color:Theme.textColor, fontSize:36, fontWeight: 700}}>$1500.<Text style={{fontSize:22, fontWeight: 400}}>00</Text></Text>
-                </View>
-                
-                <View style={{ paddingVertical: 20, alignItems: "center" }}>
-                    <PieChart
-                        data={pieData}
-                        donut
-                        showGradient
-                        sectionAutoFocus
-                        radius={70}
-                        innerRadius={55}
-                        semiCircle
-                        focusOnPress
-                        innerCircleColor={'#232B5D'}
-                        centerLabelComponent={() => {
-                            return (
-                            <View style={{justifyContent: 'center', alignItems: 'center'}}>
-                                <Text
-                                style={{fontSize: 22, color: 'white', fontWeight: 'bold'}}>
-                                47%
-                                </Text>
-                            </View>
-                            );
-                        }}
-                    />
-                </View>
+        <View
+          style={[
+            styles.container,
+            { paddingTop: 70, backgroundColor: Theme.backgroundColor },
+          ]}
+        >
+          <ScrollView showsVerticalScrollIndicator={false}>
+            <View
+              style={{
+                flexDirection: "row",
+                justifyContent: "space-between",
+                alignItems: "center",
+              }}
+            >
+              <View style={{ gap: 10, marginTop: 20 }}>
+                <Text style={{ color: Theme.textColor }}>
+                  My
+                  <Text style={{ fontWeight: 700, color: Theme.altTextColor }}>
+                    {" "}
+                    Overview
+                  </Text>
+                </Text>
+                <Text
+                  style={{
+                    color: Theme.textColor,
+                    fontSize: 36,
+                    fontWeight: 700,
+                  }}
+                >
+                  $1500.
+                  <Text style={{ fontSize: 22, fontWeight: 400 }}>00</Text>
+                </Text>
+              </View>
             </View>
-                <ExpenseBlock expenseList={expenseCategories}/>
-                <IncomeBlock incomeList={incomeCategories}/>
-                <TransactionBlock transactionList={transactions} />
-                
-        </ScrollView>
-        <TouchableOpacity style={styles.floatingAddBtn} onPress={()=>router.push('/addCategory')}>
-            <Feather name="plus" size={22} color={appTheme === 'dark' ? '#ccc' : Colors.lightTintColor} />
-        </TouchableOpacity>
-      </View>)}
+            <View>
+              <View
+                style={{
+                  margin: 20,
+                  padding: 16,
+                  borderRadius: 20,
+                  backgroundColor: "#232B5D",
+                }}
+              >
+                <Text
+                  style={{ color: "white", fontSize: 16, fontWeight: "bold" }}
+                >
+                  Income
+                </Text>
+                <View style={{ padding: 20, alignItems: "center" }}>
+                  <PieChart
+                    data={pieData}
+                    donut
+                    showGradient
+                    sectionAutoFocus
+                    focusOnPress
+                    radius={90}
+                    innerRadius={60}
+                    innerCircleColor={"#232B5D"}
+                    centerLabelComponent={() => {
+                      return (
+                        <View
+                          style={{
+                            justifyContent: "center",
+                            alignItems: "center",
+                          }}
+                        >
+                          <Text
+                            style={{
+                              fontSize: 22,
+                              color: "white",
+                              fontWeight: "bold",
+                            }}
+                          >
+                            47%
+                          </Text>
+                          <Text style={{ fontSize: 14, color: "white" }}>
+                            Excellent
+                          </Text>
+                        </View>
+                      );
+                    }}
+                  />
+                </View>
+                {renderLegendComponent()}
+              </View>
+            </View>
+
+            <ExpenseBlock expenseList={expenseCategories} />
+            <IncomeBlock incomeList={incomeCategories} onRefresh={fetchData} />
+            <TransactionBlock transactionList={transactions} />
+          </ScrollView>
+          <TouchableOpacity
+            style={styles.floatingAddBtn}
+            onPress={() => router.push("/addCategory")}
+          >
+            <Feather
+              name="plus"
+              size={22}
+              color={appTheme === "dark" ? "#ccc" : Colors.lightTintColor}
+            />
+          </TouchableOpacity>
+        </View>
+      )}
     </>
   );
 };

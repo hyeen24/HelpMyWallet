@@ -1,6 +1,6 @@
 from django.contrib.auth.models import User
 from rest_framework import serializers
-from .models import Category, Transaction, Merchant, PDFDocument
+from .models import Category, Transaction, Merchant, PDFDocument, CalendarEvent
 
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
@@ -20,7 +20,7 @@ class CategorySerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Category
-        fields = ['id', 'name', 'icon', 'color', 'parent', 'author', 'parent_name','icon_type']
+        fields = ['id', 'name', 'icon', 'color', 'parent', 'author', 'parent_name','icon_type', 'amount','recurrence','start_date','end_date']
         extra_kwargs = {'author': {'read_only': True}}
 
     def get_parent(self, obj):
@@ -49,7 +49,18 @@ class MerchantSerializer(serializers.ModelSerializer):
     def create(self, validated_data):
         print("Creating Merchant with data:", validated_data)
         return Merchant.objects.create(**validated_data)  # Replace with actual creation logic
-    
+
+# class CalendarEventSerializer(serializers.ModelSerializer):
+#     class Meta:
+#         model = CalendarEvent
+#         fields = ["user", "income_plan", "title", "date", "amount"]
+#         extra_kwargs = {"author": {"read_only": True}}
+
+#     def create(self,validated_data)
+
+
+
+
 class PDFDocumentSerializer(serializers.ModelSerializer):
     class Meta:
         model = PDFDocument

@@ -16,7 +16,7 @@ const CustomIconButton = ({
  }: CustomIconButtonProps) => {
     if(loading) {
         return (
-            <View style={[styles.button, style, {backgroundColor: 'transparent'}]}>
+            <View style={[styles.button, style, { backgroundColor: 'transparent'}]}>
                 <Loading/>
             </View>
         );
@@ -28,8 +28,8 @@ const CustomIconButton = ({
                 styles.button,
                 style,
                 {
-                    borderColor: focused ? Colors.white : '#666',
-                    backgroundColor: focused ? '#524d41' : 'transparent',
+                    borderColor: focused ? Colors.tintColor : '#666',
+                    backgroundColor: 'transparent',
                 },
             ]}
             onPress={onPress}

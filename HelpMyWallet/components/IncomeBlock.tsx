@@ -1,14 +1,39 @@
 import { FlatList, ListRenderItem, StyleSheet, Text, TouchableOpacity, useColorScheme, View } from 'react-native'
-import React from 'react'
+import React, { useState } from 'react'
 import  Colors  from '@/constants/Colors'
 import { IncomeType } from '@/types'
-import { Feather, FontAwesome6, MaterialCommunityIcons, MaterialIcons } from '@expo/vector-icons'
+import { AntDesign, Feather, FontAwesome6, MaterialCommunityIcons, MaterialIcons } from '@expo/vector-icons'
 import { darkTheme, lightTheme } from '@/constants/Theme'
+import { Dropdown } from 'react-native-element-dropdown'
+import api from '@/app/api'
 
-const IncomeBlock = ({incomeList} : {incomeList: IncomeType[]}) => {
+const IncomeBlock = ({incomeList, onRefresh} : {incomeList: IncomeType[],  onRefresh: () => void }) => {
+    const [showMore, setShowMore] = useState("");
+    const [value, setValue] = useState(null);
+    const [isFocus, setIsFocus] = useState(false);
     const appTheme = useColorScheme();
     const Theme = appTheme === 'dark' ? darkTheme: lightTheme
-    console.log("Income List", incomeList)
+    // console.log("Income List", incomeList)
+
+    const toggleShowMore = (item: any) => {
+        if (showMore != item.id){
+            setShowMore(item.id)
+        }else {
+            setShowMore("")
+        }
+        console.log("Income Id:",showMore)
+        
+    }
+
+    const deleteIncome = async () => {
+        await api.delete(`api/category/delete/${showMore}/`).then((res) => {
+            onRefresh();
+        }).catch((err) => {
+                const errorData =err.response.data;
+                console.log(errorData);
+            });
+    }
+
     const renderItem:ListRenderItem<IncomeType> = ({item}) => {
             let amountString = item.amount ?? "0.00";
             let amount = amountString.split('.');
@@ -31,9 +56,34 @@ const IncomeBlock = ({incomeList} : {incomeList: IncomeType[]}) => {
                                     ) : null}
     
                             </View>
-                            <TouchableOpacity onPress={() => {}}>
+                            <TouchableOpacity onPress={()=>toggleShowMore(item)}>
                                 <Feather name="more-horizontal" size={20} color={Theme.textColor}/>
                             </TouchableOpacity>   
+                            {
+                                showMore == item.id? (
+                                     <View style={{position:'absolute',
+                                        zIndex: 999, 
+                                        backgroundColor: Theme.cardColors, 
+                                        gap:8,
+                                        borderRadius: 5,
+                                        paddingHorizontal: 16,
+                                        paddingVertical: 16,
+                                        alignItems:'center',
+                                        transform:[{
+                                        translateY: 40
+                                     }]}}>
+                                <TouchableOpacity>
+                                    <Text style={{color: Theme.textColor}}>Edit</Text>
+                                </TouchableOpacity>
+                                <View style={{ height: 1, backgroundColor: Colors.black }} />
+                                <TouchableOpacity onPress={deleteIncome}>
+                                    <Text style={{color: Theme.textColor}}>Delete</Text>
+                                </TouchableOpacity>
+                                
+                            </View>
+                                ) : null
+                            }
+                           
                         </View>
                         <Text style={{ color: Theme.textColor}}>{item.name}</Text>  
                         <Text style={[styles.incomeAmountWholeNumber, {color: Theme.textColor}]}>${amount[0]}.
@@ -96,5 +146,38 @@ const styles = StyleSheet.create({
     incomeAmountDecimalNumber: {
         fontSize: 12,
         fontWeight: 400
+    },
+     dropdown: {
+      height: 50,
+      borderColor: 'gray',
+      borderWidth: 0.5,
+      borderRadius: 8,
+      paddingHorizontal: 8,
+    },
+    icon: {
+      marginRight: 5,
+    },
+    label: {
+      position: 'absolute',
+      backgroundColor: 'white',
+      left: 22,
+      top: 8,
+      zIndex: 999,
+      paddingHorizontal: 8,
+      fontSize: 14,
+    },
+    placeholderStyle: {
+      fontSize: 16,
+    },
+    selectedTextStyle: {
+      fontSize: 16,
+    },
+    iconStyle: {
+      width: 20,
+      height: 20,
+    },
+    inputSearchStyle: {
+      height: 40,
+      fontSize: 16,
     },
 })

@@ -9,6 +9,7 @@ from .models import Category, Transaction, Merchant, PDFDocument
 from rest_framework.response import Response
 from rest_framework.exceptions import ValidationError
 from .services.bank_statement_parser import extract_transactions_from_pdf, update_transactions_with_merchant
+from .services.calendar_event import generate_calendar_events_for_income
 
 class TransactionListCreate(generics.ListCreateAPIView):
     serializer_class = TransactionSerializer
@@ -43,11 +44,26 @@ class CategoryListCreate(generics.ListCreateAPIView):
         color = serializer.validated_data.get('color')
         icon_type = serializer.validated_data.get('icon_type')
         parent_name = serializer.validated_data.get('parent_name')
+        amount = serializer.validated_data.get('amount')
+        recurrence = serializer.validated_data.get('recurrence')
+        start_date = serializer.validated_data.get('start_date')
+        end_date = serializer.validated_data.get('end_date')
 
         if parent_name:
             try:
                 parent = Category.objects.get(name__iexact=parent_name, author=author)
-                new_category = parent.add_child(name=name.title(), icon=icon, color=color, author=author, icon_type=icon_type)
+                new_category = parent.add_child(
+                    name=name.title(), 
+                    icon=icon, 
+                    color=color, 
+                    author=author, 
+                    icon_type=icon_type, 
+                    amount=amount,
+                    recurrence=recurrence,
+                    start_date=start_date,
+                    end_date=end_date
+                    )
+                generate_calendar_events_for_income(new_category)               
             except Category.DoesNotExist:
                 raise ValidationError(f"Parent category '{parent_name}' not found.")
         else:

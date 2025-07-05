@@ -1,4 +1,4 @@
-import { Alert, StyleSheet, Text, TouchableOpacity, View, Image } from 'react-native'
+import { Alert, StyleSheet, Text, TouchableOpacity, View, Image, useColorScheme } from 'react-native'
 import React, { useState } from 'react'
 import Colors from '@/constants/Colors'
 import { SafeAreaView } from 'react-native-safe-area-context'
@@ -13,6 +13,8 @@ import { useRouter } from 'expo-router'
 import BackButton from '@/components/BackButton'
 import * as ImagePicker from 'expo-image-picker'
 import Loading from '@/components/Loading'
+import PageHeader from '@/components/PageHeader'
+import { darkTheme, lightTheme } from '@/constants/Theme'
 
 
 const addCategory = () => {
@@ -23,6 +25,9 @@ const addCategory = () => {
     const [categoryColor, setCategoryColor] = useState("");
     const [image, setImage] = useState<string | null>(null);
     const [loading, setLoading] = useState(false);
+
+    const appTheme = useColorScheme();
+    const Theme = appTheme === 'dark' ? darkTheme : lightTheme;
 
     const router = useRouter();
     const pickImage = async () => {
@@ -136,38 +141,39 @@ const addCategory = () => {
     <View style={{ flex: 1  ,backgroundColor: 'transparent'}}>
       {loading ? (
         <Loading />
-      ) : (
-    <SafeAreaView style={styles.container}>
-        <BackButton/>
-        <Text style={styles.pageTitleTxt}>Add New Category</Text>
-        <Text style={styles.pageTxt}>Let's add a new category for your <Text style={{ fontWeight: 600 }}>transactions</Text>.</Text>
-        <View>
-            <Text style={styles.groupHeaderTxt}>Category Type</Text>
-                <View style={{ flexDirection: 'row', gap: 10}}>
+      ) : ( 
+        <>
+        <PageHeader title='Category'/>
+    <View style={styles.container}>
+        <View style={{ flexDirection: 'row', gap: 10, marginTop: 10, justifyContent:'space-evenly', backgroundColor: Theme.backgroundColor}}>
                     <CustomIconButton 
-                        icon={<MaterialCommunityIcons name='gold' size={22} color={Colors.white}/>} 
+                        icon={<MaterialCommunityIcons name='gold' size={18} color={Colors.white}/>} 
                         text='Income'
                         focusable={true}
                         focused={selectedType === 'income'}
                         onPress={() => toggleRadio('income')}
+                        style={{ borderRadius:10}}
                         />
 
                     <CustomIconButton 
-                        icon={<FontAwesome6 name='hand-holding-dollar' size={22} color={Colors.white}/>} 
+                        icon={<FontAwesome6 name='hand-holding-dollar' size={18} color={Colors.white}/>} 
                         text='Expenses'
                         focusable={true}
                         focused={selectedType === 'expenses'}
                         onPress={() => toggleRadio('expenses')}
+                        style={{borderRadius:10}}
                         />
                     <CustomIconButton 
-                        icon={<Entypo name='shop' size={22} color={Colors.white}/>} 
+                        icon={<Entypo name='shop' size={18} color={Colors.white}/>} 
                         text='Merchant'
                         focusable={true}
                         focused={selectedType === 'merchant'}
                         onPress={() => toggleRadio('merchant')}
+                        style={{borderRadius:10}}
                         />
-                </View>
-            </View>
+        </View>
+        <Text style={styles.pageTitleTxt}>Add New Category</Text>
+        <Text style={[styles.pageTxt, {marginBottom: 20}]}>Let's add a new category for your <Text style={{ fontWeight: 600 }}>transactions</Text>.</Text>
         <View>
             {
                 selectedType === 'merchant' ? (
@@ -223,7 +229,7 @@ const addCategory = () => {
             
         </View>
         {selectedType === 'income' && (
-            <View style={{ height: 150 }}>
+            <View style={{ height: 150 , marginTop: 20}}>
                 <Text style={styles.groupHeaderTxt}>Category Icon</Text>
                 <View style={{ flex: 1, flexDirection: 'row', gap: 10, flexWrap: 'wrap', marginBottom: 10 }}>
                 {
@@ -258,7 +264,7 @@ const addCategory = () => {
         )}
 
         {selectedType === 'expenses' && (
-            <View style={{ height: 150 }}>
+            <View style={{ height: 150 , marginTop: 20 }}>
                 <Text style={styles.groupHeaderTxt}>Category Color</Text>
                 <View style={{ flex: 1, flexDirection: 'row', gap: 10, flexWrap: 'wrap', marginBottom: 10 }}>
                 {
@@ -291,7 +297,8 @@ const addCategory = () => {
                 <Text style={styles.groupHeaderTxt}>Add</Text>
             </Button>
         
-    </SafeAreaView>
+    </View>
+        </>
   )
 }
   </View>)
@@ -301,11 +308,10 @@ export default addCategory
 
 const styles = StyleSheet.create({
     container: {
-        paddingTop: 20,
         flex: 1,
-        gap : 20,
         backgroundColor: Colors.black,
-        paddingHorizontal: 10
+        paddingHorizontal : 8,
+        gap : 8
       },
     pageTitleTxt : {
         fontSize: 24,

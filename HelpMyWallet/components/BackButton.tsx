@@ -7,10 +7,11 @@ import { AntDesign } from '@expo/vector-icons'
 
 const BackButton = ({
     style,
-    iconSize = 26,
+    iconSize = 22,
 
 }: BackButtonProps) => {
     const router = useRouter();
+    
   return (
     <TouchableOpacity onPress={()=> router.back()} style={[styles.button, style]}>
         <AntDesign name='left' size={iconSize}
