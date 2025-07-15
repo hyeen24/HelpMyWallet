@@ -58,9 +58,6 @@ class MerchantSerializer(serializers.ModelSerializer):
 
 #     def create(self,validated_data)
 
-
-
-
 class PDFDocumentSerializer(serializers.ModelSerializer):
     class Meta:
         model = PDFDocument
