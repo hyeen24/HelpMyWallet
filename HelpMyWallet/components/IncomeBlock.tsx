@@ -37,6 +37,7 @@ const IncomeBlock = ({incomeList, onRefresh} : {incomeList: IncomeType[],  onRef
     const renderItem:ListRenderItem<IncomeType> = ({item}) => {
             let amountString = item.amount ?? "0.00";
             let amount = amountString.split('.');
+            let incomeAmountWholeNumber = amount[0] || "0";
             let iconFamily = item.icon_type;
             let iconName = item.icon;
     
@@ -86,7 +87,7 @@ const IncomeBlock = ({incomeList, onRefresh} : {incomeList: IncomeType[],  onRef
                            
                         </View>
                         <Text style={{ color: Theme.textColor}}>{item.name}</Text>  
-                        <Text style={[styles.incomeAmountWholeNumber, {color: Theme.textColor}]}>${amount[0]}.
+                        <Text style={[styles.incomeAmountWholeNumber, {color: Theme.textColor}]}>${Number(incomeAmountWholeNumber).toLocaleString("en-US", {minimumFractionDigits: 0, maximumFractionDigits: 0})}.
                             <Text style={[styles.incomeAmountDecimalNumber, {color: Theme.textColor}]}>{amount[1]}</Text>
                         </Text>
                     </View>

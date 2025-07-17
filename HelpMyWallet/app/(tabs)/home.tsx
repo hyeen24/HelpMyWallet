@@ -9,11 +9,12 @@ import IncomeBlock from "@/components/IncomeBlock";
 import ExpenseList from '@/data/expenses.json';
 import IncomeList from '@/data/income.json';
 import TransactionList from '@/data/Spending.json';
-import api from "../api";
+
 import TransactionBlock from "@/components/TransactionBlock";
 import HomeHeader from "@/components/HomeHeader";
 import Loading from "@/components/Loading";
 import { darkTheme, lightTheme } from "@/constants/Theme";
+import api from "../api";
 
 const Home = () => {
 
@@ -23,6 +24,7 @@ const Home = () => {
   const [loading, setLoading] = useState(false);
   const appTheme = useColorScheme();
   const Theme = appTheme === 'dark' ? darkTheme : lightTheme;
+   const currentMonth = new Date().toLocaleString("default", { month: "long" });
 
   const fetchData = async () => {
       
@@ -53,7 +55,8 @@ const Home = () => {
         // Filter subcategories by parent
         const expenseSubs = categories.filter((cat: any) => cat.parent === expensesId);
         const incomeSubs = categories.filter((cat: any) => cat.parent === incomeId);
-
+        console.log("Expense Subcategories:", expenseSubs);
+        console.log("Income Subcategories:", incomeSubs);
         setExpenseCategories(expenseSubs);
         setIncomeCategories(incomeSubs);
       }
@@ -184,7 +187,7 @@ const renderLegendComponent = () => {
             >
               <View style={{ gap: 10, marginTop: 20 }}>
                 <Text style={{ color: Theme.textColor }}>
-                  My
+                  {currentMonth}
                   <Text style={{ fontWeight: 700, color: Theme.altTextColor }}>
                     {" "}
                     Overview

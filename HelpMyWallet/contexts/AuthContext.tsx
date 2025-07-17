@@ -1,8 +1,9 @@
 import axios from "axios";
 import React, { createContext, ReactNode, useEffect, useState } from "react";
 import * as SecureStore from 'expo-secure-store';
-import api from "@/app/api";
+
 import { Alert } from "react-native";
+import api from "@/app/api";
 
 export const AuthContext = createContext<{
   login: (username: string, password: string) => Promise<boolean>;

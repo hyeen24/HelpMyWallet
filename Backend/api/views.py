@@ -3,9 +3,9 @@ from django.contrib.auth.models import User
 from rest_framework.views import APIView
 from rest_framework import generics, status
 from rest_framework.parsers import MultiPartParser, FormParser
-from .serializers import UserSerializer, CategorySerializer, TransactionSerializer, MerchantSerializer, PDFDocumentSerializer
+from .serializers import UserSerializer, CategorySerializer, TransactionSerializer, MerchantSerializer, PDFDocumentSerializer, CalendarEventSerializer
 from rest_framework.permissions import IsAuthenticated, AllowAny
-from .models import Category, Transaction, Merchant, PDFDocument
+from .models import Category, Transaction, Merchant, PDFDocument, CalendarEvent
 from rest_framework.response import Response
 from rest_framework.exceptions import ValidationError
 from .services.bank_statement_parser import extract_transactions_from_pdf, update_transactions_with_merchant
@@ -79,6 +79,14 @@ class RootCategoryListView(APIView):
         root_categories = Category.get_root_nodes().filter(author=request.user)
         serializer = CategorySerializer(root_categories, many=True)
         return Response(serializer.data)
+    
+class CalendarEventListView(generics.ListAPIView):
+    serializer_class = CalendarEventSerializer  # Replace with actual CalendarEventSerializer
+    permission_classes = [IsAuthenticated]
+
+    def get_queryset(self):
+        user = self.request.user
+        return CalendarEvent.objects.filter(author=user, parent__isnull=True)  # Adjust as needed for calendar events
 
 class CategoryDelete(generics.DestroyAPIView):
     queryset = Category.objects.all()

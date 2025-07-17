@@ -50,13 +50,12 @@ class MerchantSerializer(serializers.ModelSerializer):
         print("Creating Merchant with data:", validated_data)
         return Merchant.objects.create(**validated_data)  # Replace with actual creation logic
 
-# class CalendarEventSerializer(serializers.ModelSerializer):
-#     class Meta:
-#         model = CalendarEvent
-#         fields = ["user", "income_plan", "title", "date", "amount"]
-#         extra_kwargs = {"author": {"read_only": True}}
+class CalendarEventSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = CalendarEvent
+        fields = ["user", "income_plan", "title", "date", "amount"]
+        extra_kwargs = {"author": {"read_only": True}}
 
-#     def create(self,validated_data)
 
 class PDFDocumentSerializer(serializers.ModelSerializer):
     class Meta:

@@ -18,6 +18,9 @@ import Colors from "@/constants/Colors";
 import { darkTheme, lightTheme } from "@/constants/Theme";
 import iconList from "@/data/icons.json";
 import DateTimePicker from "@react-native-community/datetimepicker";
+import Button from "./Button";
+import api from "@/app/api";
+import { router } from "expo-router";
 
 const AddNewIncome = () => {
   const [categoryName, setCategoryName] = useState("");
@@ -72,12 +75,78 @@ const AddNewIncome = () => {
       setEndDate(startDate); // Reset end date to start date
     }
   };
+  
+  const createNewIncome = async () => {
+    if (!categoryName || !incomeAmount || !icon || !iconFamily) {
+      Alert.alert("Error", "Please fill in all fields.");
+      return;
+    }
+
+    // Here you would typically send the data to your backend or state management
+    console.log({
+      categoryName,
+      incomeAmount,
+      icon,
+      iconFamily,
+      recurrence,
+      startDate,
+      endDate,
+    });
+
+    try {
+        if (!startDate || !endDate) {
+            Alert.alert("Error", "Please select valid start and end dates.");
+            return;
+        }
+
+        const payload = {
+            parent_name: "income",
+            icon: icon,
+            amount: incomeAmount,
+            recurrence: recurrence,
+            start_date: startDate.toISOString().split("T")[0], 
+            end_date: endDate.toISOString().split("T")[0], 
+            name: categoryName,
+            icon_type: iconFamily,
+        };
+
+        console.log("Payload", payload);
+
+        const res = await api.post("/api/categories/", payload);
+        Alert.alert("Category", `Category created`, [
+          {
+            text: "OK",
+            onPress: () => {
+              router.push("/(tabs)/home");
+            },
+          },
+        ]);
+
+      } catch (error) {
+        console.error(error.response?.data || error.message);
+        Alert.alert("Error", "Failed to create category.");
+      }
+
+    // Reset form after submission
+    setCategoryName("");
+    setIncomeAmount(null);
+    setIcon("");
+    setIconFamily("");
+    setRecurrence(null);
+    setStartDate(new Date());
+    setEndDate(new Date());
+  }
 
   return (
     <View style={styles.container}>
       <View>
+        <Text style={styles.pageTitleTxt}>Add New Income</Text>
+                    <Text style={[styles.pageTxt, { marginBottom: 20 }]}>
+                      Let's add a new income source for your{" "}
+                      <Text style={{ fontWeight: 600 }}>account.</Text>
+                    </Text>
         <Text style={[styles.groupHeaderTxt, { color: Theme.textColor }]}>
-          Category Name
+          Income Name
         </Text>
         <Input
           placeholder="Enter category type"
@@ -143,21 +212,21 @@ const AddNewIncome = () => {
                     <FontAwesome6
                       name={iconName}
                       size={24}
-                      color={Colors.white}
+                      color={isSelectedIcon ? Colors.tintColor :Colors.white}
                     />
                   )}
                   {iconFamily === "MaterialIcons" && (
                     <MaterialIcons
                       name={iconName}
                       size={24}
-                      color={Colors.white}
+                      color={isSelectedIcon ? Colors.tintColor :Colors.white}
                     />
                   )}
                   {iconFamily === "MaterialCommunityIcons" && (
                     <MaterialCommunityIcons
                       name={iconName}
                       size={24}
-                      color={Colors.white}
+                      color={isSelectedIcon ? Colors.tintColor :Colors.white}
                     />
                   )}
                 </View>
@@ -306,6 +375,9 @@ const AddNewIncome = () => {
             </View>
           </View>
         </View>
+        <Button onPress={()=>createNewIncome()}>
+        <Text style={[styles.groupHeaderTxt, {color:Colors.white}]}>Add</Text>
+        </Button>
       </View>
     </View>
   );
@@ -336,4 +408,14 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     padding: 5,
   },
+  pageTitleTxt: {
+      fontSize: 24,
+      color: Colors.white,
+      fontWeight: 700,
+    },
+    pageTxt: {
+      color: Colors.white,
+      fontSize: 12,
+      marginBottom: 10,
+    },
 });

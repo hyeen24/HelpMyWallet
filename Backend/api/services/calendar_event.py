@@ -8,7 +8,7 @@ def generate_calendar_events_for_income(income_plan: Category):
 
     while current <= end:
         CalendarEvent.objects.get_or_create(
-            user=income_plan.user,
+            user=income_plan.author,
             income_plan=income_plan,
             date=current,
             defaults={'amount': income_plan.amount}

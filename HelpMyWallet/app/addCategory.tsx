@@ -226,11 +226,6 @@ const addCategory = () => {
                 style={{ borderRadius: 10 }}
               />
             </View>
-            <Text style={styles.pageTitleTxt}>Add New Category</Text>
-            <Text style={[styles.pageTxt, { marginBottom: 20 }]}>
-              Let's add a new category for your{" "}
-              <Text style={{ fontWeight: 600 }}>transactions</Text>.
-            </Text>
             <View>
               {selectedType === "merchant" ? (
                 <View style={{ gap: 20 }}>
@@ -369,19 +364,6 @@ const addCategory = () => {
                 </View>
               </View>
             )}
-
-            <Button
-              onPress={
-                selectedType
-                  ? () => {
-                      createCategory();
-                    }
-                  : () => {}
-              }
-              style={!selectedType ? styles.disabledButton : undefined}
-            >
-              <Text style={styles.groupHeaderTxt}>Add</Text>
-            </Button>
           </View>
         </>
       )}
