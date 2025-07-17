@@ -43,7 +43,7 @@ const TransactionBlock = ({transactionList}: {transactionList: TransactionType[]
                     </View>  
                 ))
             ) : (
-                <View style={{ height : 100, justifyContent:'center', alignItems:'center'}}>
+                <View style={{ height : 100, justifyContent:'center', alignItems:'center', marginBottom: 80}}>
                     <Text style={{ fontWeight: 400, color: Colors.white }}>No transaction record.</Text>
                 </View>
             )
@@ -65,7 +65,8 @@ const styles = StyleSheet.create({
         padding: 15,
         borderRadius: 15,
         marginRight: 20,
-        gap : 8
+        gap : 8,
+        marginBottom: 80        
     },
     blockTitleTxt: {
             fontSize: 16,

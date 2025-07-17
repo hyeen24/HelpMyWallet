@@ -17,12 +17,21 @@ class TransactionListCreate(generics.ListCreateAPIView):
 
     def get_queryset(self):
         user = self.request.user    
+        year = self.request.query_params.get('year')
+        month = self.request.query_params.get('month')
+        if month and year:
+            queryset = Transaction.objects.filter(author=user, trans_date__year=year, trans_date__month=month).order_by('-trans_date')
+            return
+        
         queryset = Transaction.objects.filter(author=user).order_by('-trans_date')
         merchant = self.request.query_params.get('merchant', None)
+
         print("Merchant filter:", merchant)
         if merchant:
             queryset = queryset.filter(merchant_id= merchant)
         return queryset
+    
+        
 
     def perform_create(self, serializer):
         if serializer.is_valid():
@@ -80,13 +89,6 @@ class RootCategoryListView(APIView):
         serializer = CategorySerializer(root_categories, many=True)
         return Response(serializer.data)
     
-class CalendarEventListView(generics.ListAPIView):
-    serializer_class = CalendarEventSerializer  # Replace with actual CalendarEventSerializer
-    permission_classes = [IsAuthenticated]
-
-    def get_queryset(self):
-        user = self.request.user
-        return CalendarEvent.objects.filter(user=user)  # Adjust as needed for calendar events
 
 class CategoryDelete(generics.DestroyAPIView):
     queryset = Category.objects.all()
@@ -163,3 +165,21 @@ class MerchantDetail(generics.RetrieveAPIView):
     def get_queryset(self):
         # Limit to merchants of the current user only
         return Merchant.objects.filter(author=self.request.user)
+    
+
+class CalendarEventListView(generics.ListAPIView):
+    serializer_class = CalendarEventSerializer
+    permission_classes = [IsAuthenticated]
+
+    def get_queryset(self):
+        user = self.request.user
+        queryset = CalendarEvent.objects.filter(user=user)
+
+        # Optional: filter by year and month if provided in query params
+        year = self.request.query_params.get('year')
+        month = self.request.query_params.get('month')
+
+        if year and month:
+            queryset = queryset.filter(date__year=year, date__month=month)
+
+        return queryset

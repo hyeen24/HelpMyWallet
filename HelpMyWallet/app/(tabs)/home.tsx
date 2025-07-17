@@ -22,15 +22,20 @@ const Home = () => {
   const [incomeCategories, setIncomeCategories] = React.useState([]);
   const [transactions, setTransactions] = React.useState([]);
   const [loading, setLoading] = useState(false);
+  const [dataMonth, setDataMonth] = useState<string>("");
+  const [dataYear, setDataYear] = useState<string>("");
   const appTheme = useColorScheme();
   const Theme = appTheme === 'dark' ? darkTheme : lightTheme;
-   const currentMonth = new Date().toLocaleString("default", { month: "long" });
+  const currentMonthName = new Date().toLocaleString("default", { month: "long" });
+  const currentMonthNumber = new Date().getMonth() + 1; 
+  const currentYear = new Date().getFullYear();
 
   const fetchData = async () => {
+    console.log("Fetching data for month:", dataMonth, "and year:", dataYear);
       
       // Retrieve data for transactions
       try {
-        const response = await api.get("api/transactions/");
+        const response = await api.get(`api/transactions/?year=${dataYear}&month=${dataMonth}`);
         const transactionsData = response.data
         console.log("Transactions:", transactionsData);
         setTransactions(transactionsData)
@@ -78,10 +83,9 @@ const Home = () => {
       }
 
       try {
-        const responseCalendar = await api.get("api/calendar/");
+        const responseCalendar = await api.get(`api/calendar/?year=${dataYear}&month=${dataMonth}`);
         const calendarData = responseCalendar.data;
         console.log("Calendar Data:", calendarData);
-        
       
       } catch (err) {
         const errorData = await err.response.data;
@@ -91,9 +95,9 @@ const Home = () => {
     };
   
   useEffect(() => {
+    setDataMonth(currentMonthNumber.toString());
+    setDataYear(currentYear.toString());
     setLoading(true);
-
-
     fetchData();
     setLoading(false);
   }, []);
@@ -196,7 +200,7 @@ const renderLegendComponent = () => {
             >
               <View style={{ gap: 10, marginTop: 20 }}>
                 <Text style={{ color: Theme.textColor }}>
-                  {currentMonth}
+                  {currentMonthName}
                   <Text style={{ fontWeight: 700, color: Theme.altTextColor }}>
                     {" "}
                     Overview
