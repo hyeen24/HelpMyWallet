@@ -71,7 +71,16 @@ const Home = () => {
       try {
         const responseMerchant = await api.get("api/merchants/");
         const merchants = responseMerchant.data;
-        console.log("Merchants:", merchants);
+        // console.log("Merchants:", merchants);
+      } catch (err) {
+        const errorData = await err.response.data;
+        console.log("API fetch error:", errorData);
+      }
+
+      try {
+        const responseCalendar = await api.get("api/calendar/");
+        const calendarData = responseCalendar.data;
+        console.log("Calendar Data:", calendarData);
         
       
       } catch (err) {

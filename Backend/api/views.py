@@ -86,7 +86,7 @@ class CalendarEventListView(generics.ListAPIView):
 
     def get_queryset(self):
         user = self.request.user
-        return CalendarEvent.objects.filter(author=user, parent__isnull=True)  # Adjust as needed for calendar events
+        return CalendarEvent.objects.filter(user=user)  # Adjust as needed for calendar events
 
 class CategoryDelete(generics.DestroyAPIView):
     queryset = Category.objects.all()
