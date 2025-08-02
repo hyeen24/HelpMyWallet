@@ -2,6 +2,7 @@ import pandas as pd
 import pdfplumber
 from datetime import datetime
 from ..models import Transaction, Merchant
+from .calendar_event import generate_calendar_events_for_expense
 
 year_today = datetime.now().year
 
@@ -28,6 +29,8 @@ def extract_transactions_from_pdf(file_path, user):
                         description = new_item['desc'],
                         author = user
                     )
+
+                    generate_calendar_events_for_expense(transaction)
 
                     # print("Item added :",new_item)
 

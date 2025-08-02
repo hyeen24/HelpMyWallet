@@ -24,9 +24,9 @@ class Category(MP_Node):
     icon = models.CharField(max_length=100, blank=True, null=True)
     icon_type = models.CharField(max_length=50, blank=True, null=True)
     color = models.CharField(max_length=7, blank=True, null=True)
-    amount = models.DecimalField(max_digits=12, decimal_places=2, default=0)
+    amount = models.DecimalField(max_digits=12, decimal_places=2, default=0, null=True, blank=True)
     recurrence = models.CharField(max_length=10, choices=RECUR_CHOICES, null=True)
-    start_date = models.DateField(null=True)
+    start_date = models.DateField(null=True, blank=True)
     end_date = models.DateField(null=True, blank=True)  
 
     node_order_by = ['name']
@@ -35,9 +35,14 @@ class Category(MP_Node):
         return self.name
     
 class CalendarEvent(models.Model):
+    type_of_transaction  = [
+        ('expenses','Expenses'),
+        ('income','Income')
+        ]
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='calendar_events')
-    income_plan = models.ForeignKey(Category, on_delete=models.CASCADE, related_name='events')
-    title = models.CharField(max_length=255, default='Income')
+    income_plan = models.ForeignKey(Category, on_delete=models.CASCADE, related_name='events', null=True, blank=True)
+    expense_category = models.ForeignKey(Category, on_delete=models.CASCADE, related_name='expense_events', null=True, blank=True)
+    title = models.CharField(max_length=255, default='Income', choices=type_of_transaction)
     date = models.DateField()
     amount = models.DecimalField(max_digits=10, decimal_places=2)
 

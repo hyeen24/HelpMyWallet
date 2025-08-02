@@ -1,5 +1,6 @@
 import {
   Alert,
+  ScrollView,
   StyleSheet,
   Text,
   TouchableOpacity,
@@ -138,7 +139,7 @@ const AddNewIncome = () => {
   }
 
   return (
-    <View style={styles.container}>
+    <ScrollView style={styles.container}>
       <View>
         <Text style={styles.pageTitleTxt}>Add New Income</Text>
                     <Text style={[styles.pageTxt, { marginBottom: 20 }]}>
@@ -379,7 +380,8 @@ const AddNewIncome = () => {
         <Text style={[styles.groupHeaderTxt, {color:Colors.white}]}>Add</Text>
         </Button>
       </View>
-    </View>
+      <View style={{height:50}}></View>
+    </ScrollView>
   );
 };
 

@@ -31,6 +31,7 @@ import Loading from "@/components/Loading";
 import PageHeader from "@/components/PageHeader";
 import { darkTheme, lightTheme } from "@/constants/Theme";
 import AddNewIncome from "@/components/AddNewIncome";
+import AddNewExpense from "@/components/AddNewExpense";
 
 const addCategory = () => {
   const [icon, setIcon] = useState("");
@@ -304,65 +305,7 @@ const addCategory = () => {
               )}
 
             {selectedType === "expenses" && (
-              <View style={{ height: 150, marginTop: 20 }}>
-                <View>
-                  <Text style={styles.groupHeaderTxt}>Category Name</Text>
-                  <Input
-                    placeholder="Enter category type"
-                    onChangeText={(value) => {
-                      setCategoryName(value);
-                    }}
-                    iconLeft={
-                      <MaterialIcons
-                        name="category"
-                        size={24}
-                        color={Colors.white}
-                      />
-                    }
-                  />
-                </View>
-                <Text style={styles.groupHeaderTxt}>Category Color</Text>
-                <View
-                  style={{
-                    flex: 1,
-                    flexDirection: "row",
-                    gap: 10,
-                    flexWrap: "wrap",
-                    marginBottom: 10,
-                  }}
-                >
-                  {ColorList.map((item) => {
-                    const colorCode = item["code "]?.trim(); // remove trailing space if necessary
-                    const isSelected = categoryColor === colorCode;
-
-                    return (
-                      <TouchableOpacity
-                        key={colorCode}
-                        onPress={() => setCategoryColor(colorCode)}
-                      >
-                        <View
-                          style={{
-                            justifyContent: "center",
-                            alignItems: "center",
-                            height: 40,
-                            width: 40,
-                            borderColor: isSelected ? Colors.white : "#666",
-                            borderWidth: isSelected ? 2 : 1,
-                            borderRadius: 50,
-                          }}
-                        >
-                          <View
-                            style={[
-                              styles.colorContainer,
-                              { backgroundColor: colorCode },
-                            ]}
-                          />
-                        </View>
-                      </TouchableOpacity>
-                    );
-                  })}
-                </View>
-              </View>
+              <AddNewExpense/>
             )}
           </View>
         </>
@@ -385,16 +328,16 @@ const styles = StyleSheet.create({
     color: Colors.white,
     fontWeight: 700,
   },
+  pageTxt: {
+    color: Colors.white,
+    fontSize: 12,
+    marginBottom: 10,
+  },
   groupHeaderTxt: {
     color: Colors.white,
     fontSize: 14,
     paddingBottom: 8,
     fontWeight: 600,
-  },
-  pageTxt: {
-    color: Colors.white,
-    fontSize: 12,
-    marginBottom: 10,
   },
   footer: {
     justifyContent: "center",

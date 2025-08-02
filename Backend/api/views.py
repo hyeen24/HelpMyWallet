@@ -19,11 +19,14 @@ class TransactionListCreate(generics.ListCreateAPIView):
         user = self.request.user    
         year = self.request.query_params.get('year')
         month = self.request.query_params.get('month')
-        if month and year:
-            queryset = Transaction.objects.filter(author=user, trans_date__year=year, trans_date__month=month).order_by('-trans_date')
-            return
-        
         queryset = Transaction.objects.filter(author=user).order_by('-trans_date')
+        print("Year filter:", year)
+        print("Month filter:", month)
+        if month and year:
+            queryset = queryset.filter(trans_date__year=int(year), trans_date__month=int(month)).order_by('-trans_date')
+            return queryset
+        
+        
         merchant = self.request.query_params.get('merchant', None)
 
         print("Merchant filter:", merchant)
@@ -58,7 +61,7 @@ class CategoryListCreate(generics.ListCreateAPIView):
         start_date = serializer.validated_data.get('start_date')
         end_date = serializer.validated_data.get('end_date')
 
-        if parent_name:
+        if parent_name == "income":
             try:
                 parent = Category.objects.get(name__iexact=parent_name, author=author)
                 new_category = parent.add_child(

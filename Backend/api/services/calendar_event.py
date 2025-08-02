@@ -1,6 +1,6 @@
 from datetime import timedelta, date
 from dateutil.relativedelta import relativedelta
-from ..models import Category, CalendarEvent
+from ..models import Category, CalendarEvent, Transaction
 
 def generate_calendar_events_for_income(income_plan: Category):
     current = income_plan.start_date
@@ -22,4 +22,14 @@ def generate_calendar_events_for_income(income_plan: Category):
             current += relativedelta(years=1)
         else :
             end = current
+
+def generate_calendar_events_for_expense(transaction: Transaction):
+    amount = transaction.amount
+
+    CalendarEvent.objects.get_or_create(
+        user=transaction.author,
+        title='expenses',
+        defaults={'amount': amount},
+        date=transaction.trans_date
+    )
 

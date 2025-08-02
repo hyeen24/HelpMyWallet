@@ -220,7 +220,9 @@ const Transactions = () => {
                 </Button>
             </View>
             <View style={{flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center'}}> 
-                <Text style={{color: Colors.white}}>January 2026</Text>
+                <View>
+                    <Text style={{color: Colors.white}}>All</Text>
+                </View>
                 <View style={{ flexDirection: 'row', marginHorizontal: 5, gap:5, justifyContent:'center'}}>
                     <FontAwesome name='calendar' size={20} color={Colors.white} />
                     <Text style={{color: Colors.white}}>Sort By: Date</Text>

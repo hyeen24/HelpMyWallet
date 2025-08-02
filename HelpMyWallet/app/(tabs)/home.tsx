@@ -15,6 +15,7 @@ import HomeHeader from "@/components/HomeHeader";
 import Loading from "@/components/Loading";
 import { darkTheme, lightTheme } from "@/constants/Theme";
 import api from "../api";
+import Button from "@/components/Button";
 
 const Home = () => {
 
@@ -22,13 +23,12 @@ const Home = () => {
   const [incomeCategories, setIncomeCategories] = React.useState([]);
   const [transactions, setTransactions] = React.useState([]);
   const [loading, setLoading] = useState(false);
-  const [dataMonth, setDataMonth] = useState<string>("");
-  const [dataYear, setDataYear] = useState<string>("");
+  const [dataMonth, setDataMonth] = useState<string>(String(new Date().getMonth() + 1));
+  const [dataYear, setDataYear] = useState<string>(String(new Date().getFullYear()));
+  const [dataMonthName, setDataMonthName] = useState<string>(new Date().toLocaleString('default', { month: 'long' }));
+  const [dataDate, setDataDate] = useState<Date>(new Date());
   const appTheme = useColorScheme();
   const Theme = appTheme === 'dark' ? darkTheme : lightTheme;
-  const currentMonthName = new Date().toLocaleString("default", { month: "long" });
-  const currentMonthNumber = new Date().getMonth() + 1; 
-  const currentYear = new Date().getFullYear();
 
   const fetchData = async () => {
     console.log("Fetching data for month:", dataMonth, "and year:", dataYear);
@@ -95,12 +95,53 @@ const Home = () => {
     };
   
   useEffect(() => {
-    setDataMonth(currentMonthNumber.toString());
-    setDataYear(currentYear.toString());
     setLoading(true);
     fetchData();
     setLoading(false);
+
   }, []);
+
+  const updateMonthData = ( to: any) => {
+    if (to === "next") {
+      const nextMonthDate = new Date(dataDate);
+      nextMonthDate.setMonth(nextMonthDate.getMonth() + 1);
+
+      const newDataMonthName = nextMonthDate.toLocaleString("default", { month: "long" });
+      const newDataYear = String(nextMonthDate.getFullYear());
+      const newDataMonth = String(nextMonthDate.getMonth() + 1); // Months are 0-indexed in JS
+
+      setDataDate(nextMonthDate);
+      setDataMonth(newDataMonth); // Months are 0-indexed in JS
+      setDataYear(newDataYear);
+      setDataMonthName(newDataMonthName);
+      // console.log("Updated Month:", newDataMonth, "Year:", newDataYear, "Name:", newDataMonthName);
+    }
+
+    if (to === "previous") {
+      const previousMonthDate = new Date(dataDate);
+      previousMonthDate.setMonth(previousMonthDate.getMonth() - 1);
+
+      const newDataMonthName = previousMonthDate.toLocaleString("default", { month: "long" });
+      const newDataYear = String(previousMonthDate.getFullYear());
+      const newDataMonth= String(previousMonthDate.getMonth() + 1); // Months are 0-indexed in JS
+
+      setDataDate(previousMonthDate);
+      setDataMonth(newDataMonth);
+      setDataYear(newDataYear);
+      setDataMonthName(newDataMonthName);
+      // console.log("Updated Month:", newDataMonth, "Year:", newDataYear, "Name:", newDataMonthName);
+    }
+    // fetchData();
+  }
+
+  useEffect(() => {
+    if (dataMonth && dataYear) {
+      console.log
+      fetchData();
+    }
+  }, [dataMonth, dataYear]);
+
+  // Sample data for the pie chart
 
     const pieData = [
         {
@@ -145,7 +186,7 @@ const renderLegendComponent = () => {
             marginRight: 20,
           }}>
           {renderDot('#006DFF')}
-          <Text style={{color: 'white'}}>Excellent: 47%</Text>
+          <Text style={{color: 'white'}}>Income: 47%</Text>
         </View>
         <View
           style={{flexDirection: 'row', alignItems: 'center', width: 120}}>
@@ -198,27 +239,27 @@ const renderLegendComponent = () => {
                 alignItems: "center",
               }}
             >
-              <View style={{ gap: 10, marginTop: 20 }}>
-                <Text style={{ color: Theme.textColor }}>
-                  {currentMonthName}
-                  <Text style={{ fontWeight: 700, color: Theme.altTextColor }}>
-                    {" "}
-                    Overview
-                  </Text>
-                </Text>
-                <Text
-                  style={{
-                    color: Theme.textColor,
-                    fontSize: 36,
-                    fontWeight: 700,
-                  }}
-                >
-                  $1500.
-                  <Text style={{ fontSize: 22, fontWeight: 400 }}>00</Text>
-                </Text>
+              <View style={{  marginTop: 20 }}>
               </View>
             </View>
             <View>
+                <View style={{ flexDirection: "row",justifyContent:"space-between", alignItems: "center", paddingHorizontal: 80, height: 30 , marginTop: 10}}>
+                  <Button style={{ backgroundColor: 'transparent'}} onPress={() => updateMonthData("previous")}>                                                          
+                    <AntDesign
+                      name="left"
+                      size={16}
+                      color={Theme.textColor}
+                    />
+                  </Button>
+                  <Text style={{color: Theme.textColor}}>{dataMonthName} - {dataYear}</Text>
+                  <Button style={{ backgroundColor: 'transparent'}} onPress={() => updateMonthData("next")}>
+                    <AntDesign
+                      name="right"
+                      size={16}
+                      color={Theme.textColor}
+                    />
+                    </Button>
+                </View>
               <View
                 style={{
                   margin: 20,
@@ -228,11 +269,11 @@ const renderLegendComponent = () => {
                 }}
               >
                 <Text
-                  style={{ color: "white", fontSize: 16, fontWeight: "bold" }}
+                  style={{ fontSize: 24, fontWeight: 700, color: Theme.altTextColor}}
                 >
-                  Income
+                  Overview
                 </Text>
-                <View style={{ padding: 20, alignItems: "center" }}>
+                <View style={{ alignItems: "center" }}>
                   <PieChart
                     data={pieData}
                     donut

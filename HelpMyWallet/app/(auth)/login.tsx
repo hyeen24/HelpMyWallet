@@ -1,4 +1,4 @@
-import { View, Text, StyleSheet, Pressable, Alert } from 'react-native'
+import { View, Text, StyleSheet, Pressable, Alert, useColorScheme } from 'react-native'
 import React, { useContext, useRef, useState } from 'react';
 import ScreenWrapper from '@/components/ScreenWrapper';
 import Input from '@/components/Input';
@@ -9,6 +9,7 @@ import { AntDesign, Feather } from '@expo/vector-icons';
 import BackButton from '@/components/BackButton';
 import { AuthContext } from '@/contexts/AuthContext';
 import Loading from '@/components/Loading';
+import { darkTheme, lightTheme } from '@/constants/Theme';
 
 
 const Login= () => {
@@ -16,6 +17,8 @@ const Login= () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const router = useRouter();
+  const appTheme = useColorScheme();
+    const Theme = appTheme === 'dark' ? darkTheme : lightTheme;
   
   // console.log(isLoading)
   const handleSignIn = async () => {
@@ -71,20 +74,20 @@ const Login= () => {
           color={Colors.white}/>}
           />
           {password.length < 8 && (
-                        <Text style={{ fontSize: 15, color: Colors.white}} > {'\u2022'} Minimum 8 characters</Text>
+                        <Text style={{ fontSize: 15, color: Theme.textColor}} > {'\u2022'} Minimum 8 characters</Text>
                       )}
         </View>
         <Pressable onPress={() => {}}>
           <Text  style={{fontSize: 14, color: Colors.white, alignSelf: 'flex-end'}} >Forget Password?</Text>
         </Pressable>
         <Button loading={isLoading} onPress={handleSignIn}>
-          <Text style={{ fontWeight: 700, color: Colors.black, fontSize: 21 }}>Login</Text>
+          <Text style={{ fontWeight: 700, color: Theme.textColor, fontSize: 21 }}>Login</Text>
         </Button> 
 
         <View style={styles.footer}>
-          <Text style={{color: Colors.white, fontSize: 15 }}>Don't have an account?</Text>
+          <Text style={{color: Theme.textColor, fontSize: 15 }}>Don't have an account?</Text>
           <Pressable onPress={()=> router.push('/(auth)/register')}>
-            <Text style={{ fontSize: 15, fontWeight: 700, color : Colors.white
+            <Text style={{ fontSize: 15, fontWeight: 700, color : Theme.textColor
             }}>Sign up</Text>
           </Pressable>
         </View>
