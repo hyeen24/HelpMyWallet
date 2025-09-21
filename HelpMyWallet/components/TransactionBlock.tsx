@@ -39,16 +39,19 @@ const TransactionBlock = ({transactionList}: {transactionList: TransactionType[]
                                 <Text style={styles.spendingTxt}>{item.trans_date}</Text>
                             </View>
                             <Text style={[styles.spendingTxt, { fontWeight: 700 }]}>${item.amount}</Text>
-                        </View>
+                        </View>      
                     </View>  
+                    
                 ))
+                
             ) : (
-                <View style={{ height : 100, justifyContent:'center', alignItems:'center', marginBottom: 80}}>
+                <View style={{ justifyContent:'center', alignItems:'center'}}>
                     <Text style={{ fontWeight: 400, color: Colors.white }}>No transaction record.</Text>
                 </View>
             )
             
         }
+        <View style={{ height : 50, justifyContent:'center', alignItems:'center', marginBottom: 80}}></View>
         
 
     </View>

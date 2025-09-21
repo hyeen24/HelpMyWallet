@@ -1,35 +1,48 @@
 from datetime import timedelta, date
 from dateutil.relativedelta import relativedelta
-from ..models import Category, CalendarEvent, Transaction
+from ..models import Transaction, Income
+from django.contrib.contenttypes.models import ContentType
 
-def generate_calendar_events_for_income(income_plan: Category):
-    current = income_plan.start_date
-    end = income_plan.end_date or (date.today() + relativedelta(years=1))  # default: 1 year ahead
+def generate_calendar_events_for_income(income: Income):
+    current = income.start_date
+    end = income.end_date or (date.today() + relativedelta(years=1))  # default: 1 year ahead
 
     while current <= end:
-        CalendarEvent.objects.get_or_create(
-            user=income_plan.author,
-            income_plan=income_plan,
-            date=current,
-            defaults={'amount': income_plan.amount}
+
+        # Create matching transaction if not already existing
+        Transaction.objects.get_or_create(
+            author=income.author,
+            income_id=income.id,
+            post_date=current,
+            transaction_date=current,
+            amount=income.amount,
+            description=income.name,
+            category_type=ContentType.objects.get_for_model(income),
+            category_id=income.id,
         )
 
-        if income_plan.recurrence == 'daily':
+        # Step to next recurrence
+        if income.recurrence == 'daily':
             current += timedelta(days=1)
-        elif income_plan.recurrence == 'monthly':
+        elif income.recurrence == 'monthly':
             current += relativedelta(months=1)
-        elif income_plan.recurrence == 'yearly':
+        elif income.recurrence == 'yearly':
             current += relativedelta(years=1)
-        else :
-            end = current
+        else:
+            break
+
 
 def generate_calendar_events_for_expense(transaction: Transaction):
-    amount = transaction.amount
 
-    CalendarEvent.objects.get_or_create(
-        user=transaction.author,
-        title='expenses',
-        defaults={'amount': amount},
-        date=transaction.trans_date
+    # Ensure transaction is recorded (in case this function is called separately)
+    Transaction.objects.get_or_create(
+        author=transaction.author,
+        trans_date=transaction.trans_date,
+        amount=transaction.amount,
+        category=transaction.category,
+        defaults={
+            'description': transaction.description or "Expense Transaction",
+            'merchant': getattr(transaction, 'merchant', None),
+        }
     )
 

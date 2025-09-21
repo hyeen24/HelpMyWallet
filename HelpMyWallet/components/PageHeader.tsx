@@ -7,18 +7,17 @@ import { PageHeaderProps } from '@/types'
 import BackButton from './BackButton'
 import { AntDesign } from '@expo/vector-icons'
 import { lightTheme, darkTheme } from '@/constants/Theme'
+import { useTheme } from '@/contexts/ThemeContext'
 
 const PageHeader = ({
     title, 
     rightButton, 
     onPress}: PageHeaderProps) => {
 
-    const appTheme = useColorScheme();
-    const Theme = appTheme === 'dark' ? darkTheme : lightTheme;
-    // console.log(Theme.cardColors)
+    const { theme } = useTheme();  
 
   return (
-    <SafeAreaView style={[styles.container, { backgroundColor: Theme.cardColors }]}>
+    <SafeAreaView style={[styles.container, { backgroundColor: theme.cardColors }]}>
         <View style={styles.leftContainer}>
             <BackButton/>
         </View>
@@ -34,7 +33,7 @@ const PageHeader = ({
                 </TouchableOpacity>
             :<View style={{width: 36}}></View>
         }
-        
+
     </SafeAreaView>
   )
 }
@@ -43,10 +42,11 @@ export default PageHeader
 
 const styles = StyleSheet.create({
     container: {
+        display: 'flex',
         flexDirection: 'row',
         justifyContent: 'space-between',
         paddingBottom: 10,
-        height: 50
+        height: 90
     },
     leftContainer : {
         height: 50,

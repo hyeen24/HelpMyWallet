@@ -101,8 +101,6 @@ const AddNewIncome = () => {
         }
 
         const payload = {
-            parent_name: "income",
-            icon: icon,
             amount: incomeAmount,
             recurrence: recurrence,
             start_date: startDate.toISOString().split("T")[0], 
@@ -113,8 +111,8 @@ const AddNewIncome = () => {
 
         console.log("Payload", payload);
 
-        const res = await api.post("/api/categories/", payload);
-        Alert.alert("Category", `Category created`, [
+        const res = await api.post("/api/incomes/", payload);
+        Alert.alert("Income", `New income stream created`, [
           {
             text: "OK",
             onPress: () => {

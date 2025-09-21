@@ -29,9 +29,11 @@ import BackButton from "@/components/BackButton";
 import * as ImagePicker from "expo-image-picker";
 import Loading from "@/components/Loading";
 import PageHeader from "@/components/PageHeader";
-import { darkTheme, lightTheme } from "@/constants/Theme";
 import AddNewIncome from "@/components/AddNewIncome";
 import AddNewExpense from "@/components/AddNewExpense";
+import AddNewMerchant from "@/components/AddNewMerchant";
+import AddNewExpenseItem from "@/components/AddNewExpenseItem";
+import { useTheme } from "@/contexts/ThemeContext";
 
 const addCategory = () => {
   const [icon, setIcon] = useState("");
@@ -39,17 +41,14 @@ const addCategory = () => {
   const [categoryName, setCategoryName] = useState("");
   const [selectedType, setSelectedType] = useState<
     "income" | "expenses" | "merchant" | null
-  >(null);
+  >("income");
   const [categoryColor, setCategoryColor] = useState("");
   const [image, setImage] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
   
   const [incomeAmount, setIncomeAmount] = useState<number | null>(null);
  
-
-  const appTheme = useColorScheme();
-  const Theme = appTheme === "dark" ? darkTheme : lightTheme;
-
+  const { theme } = useTheme();
   const router = useRouter();
 
   
@@ -178,7 +177,7 @@ const addCategory = () => {
         <Loading />
       ) : (
         <>
-          <PageHeader title="Category" />
+          <PageHeader title="Add New Item" />
           <View style={styles.container}>
             <View
               style={{
@@ -186,7 +185,7 @@ const addCategory = () => {
                 gap: 10,
                 marginTop: 10,
                 justifyContent: "space-evenly",
-                backgroundColor: Theme.backgroundColor,
+                backgroundColor: theme.backgroundColor,
               }}
             >
               <CustomIconButton
@@ -209,7 +208,7 @@ const addCategory = () => {
                   <FontAwesome6
                     name="hand-holding-dollar"
                     size={18}
-                    color={Colors.white}
+                    color={theme.textColor}
                   />
                 }
                 text="Expenses"
@@ -219,7 +218,7 @@ const addCategory = () => {
                 style={{ borderRadius: 10 }}
               />
               <CustomIconButton
-                icon={<Entypo name="shop" size={18} color={Colors.white} />}
+                icon={<Entypo name="shop" size={18} color={theme.textColor} />}
                 text="Merchant"
                 focusable={true}
                 focused={selectedType === "merchant"}
@@ -227,85 +226,15 @@ const addCategory = () => {
                 style={{ borderRadius: 10 }}
               />
             </View>
-            <View>
               {selectedType === "merchant" ? (
-                <View style={{ gap: 20 }}>
-                  <View>
-                    <Text style={styles.groupHeaderTxt}>Merchant Name</Text>
-                    <Input
-                      placeholder="Enter merchant name"
-                      onChangeText={(value) => {
-                        setCategoryName(value);
-                      }}
-                      icon={
-                        <MaterialIcons
-                          name="storefront"
-                          size={24}
-                          color={Colors.white}
-                        />
-                      }
-                    />
-                  </View>
-                  <View>
-                    <Text style={styles.groupHeaderTxt}>Linked Account</Text>
-                    <Input
-                      placeholder="Select linked account"
-                      onChangeText={(value) => {}} // Handle linked account selection
-                      icon={
-                        <MaterialCommunityIcons
-                          name="bank"
-                          size={22}
-                          color={Colors.white}
-                        />
-                      }
-                    />
-                  </View>
-                  <View>
-                    <Text style={styles.groupHeaderTxt}>Merchant Icon</Text>
-                    <TouchableOpacity
-                      onPress={() => {
-                        pickImage();
-                      }}
-                      style={{
-                        width: 100,
-                        height: 100,
-                        justifyContent: "center",
-                        alignItems: "center",
-                        borderRadius: 10,
-                        borderWidth: 0.7,
-                        borderColor: Colors.white,
-                        borderStyle: "dashed",
-                        backgroundColor: Colors.grey,
-                      }}
-                    >
-                      {image ? (
-                        <Image
-                          source={{ uri: image }}
-                          style={{
-                            width: "100%",
-                            height: "100%",
-                            borderRadius: 10,
-                          }}
-                        />
-                      ) : (
-                        <MaterialCommunityIcons
-                          name="file-image-plus"
-                          size={36}
-                          color={Colors.white}
-                        />
-                      )}
-                    </TouchableOpacity>
-                  </View>
-                </View>
+                <AddNewMerchant/>
               ) : null}
-              
-            </View>
             {selectedType === "income" && (
               <AddNewIncome/>
               )}
 
             {selectedType === "expenses" && (
-              <AddNewExpense/>
+              <AddNewExpenseItem/>
             )}
           </View>
         </>

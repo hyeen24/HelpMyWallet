@@ -5,58 +5,72 @@ import { MaterialIcons } from '@expo/vector-icons';
 import Colors from '@/constants/Colors';
 import ColorList from "@/data/colors.json";
 import Button from './Button';
-import api from '@/app/api';
-import { Dropdown } from 'react-native-element-dropdown';
+// import { Dropdown } from 'react-native-element-dropdown';
 import { toTitleCase } from '@/utils/stringUtils';
 import { useRouter } from 'expo-router';
+import { useTheme } from '@/contexts/ThemeContext';
+import { useAuth } from '@/contexts/AuthContext';
+import { AddNewExpenseGroupProps } from '@/types';
 
-const AddNewExpense = () => {
-    const [categoryName, setCategoryName] = useState("");
-    const [categoryColor, setCategoryColor] = useState("#000000"); // Default color
-    const [selectedMerchant, setSelectedMerchant] = useState<any>(null);
-    const [merchantData, setMerchantData] = useState([]);
+
+
+const AddNewExpenseGroup = ({
+    categoryName,
+    setCategoryName,
+    categoryColor,
+    setCategoryColor
+}: AddNewExpenseGroupProps) => {
+
+    const { theme } = useTheme();
     const router = useRouter();
+    const { user } = useAuth();
 
     const fetchMerchantCategories = async () => {
-        try {
-            const res = await api.get('/api/merchants/');
-            const resData = res.data;
-            console.log("Merchant Data: ", resData);
-            setMerchantData(resData);
+        // try {
+        //     const res = await api.get('/api/merchants/');
+        //     const resData = res.data;
+        //     console.log("Merchant Data: ", resData);
+        //     setMerchantData(resData);
            
-        } catch (error: any) {
-            const errorMessage = error.response?.data?.message || "An error occurred";
-            Alert.alert("Error", errorMessage);
-        }
+        // } catch (error: any) {
+        //     const errorMessage = error.response?.data?.message || "An error occurred";
+        //     Alert.alert("Error", errorMessage);
+        // }
     };
+
 
     useEffect(() => {
         fetchMerchantCategories();
     }, []);
 
     const createNewExpensesGroup = async () => {
-        console.log(selectedMerchant)
-        const payload = {
+        const payLoad = {
             name: categoryName,
-            color: categoryColor,     
-            merchant: selectedMerchant
-        };
+            color: categoryColor,
+            author_id: user.userId || "",
+        }
 
-        await api.post("/api/expenses/", payload).then((res) => {
-            Alert.alert("Category", `Category created`, [
-          {
-            text: "OK",
-            onPress: () => {
-              router.push("/(tabs)/home");
-            },
-          },
-        ]);
+        try {
 
-        //    console.log("Creating expenses", res)
-        }).catch((error)=> {
-            const errorMessage = error.response?.data?.message || "An error occurred";
-            Alert.alert("Error", errorMessage);
-        })
+        const response = await client.graphql({
+            query: mutations.createExpenseGroup,
+            variables: { input: payLoad }
+            });
+            Alert.alert("New Expense Created", "Your expense group has been added successfully.", [
+                {
+                text: "OK",
+                onPress: () => router.push("/(tabs)/home"),
+                },
+            ]);
+    
+            // const response = await client.graphql({
+            //   query: mutations.createCalendar,
+    
+            // })
+        } catch (error) {
+            console.error("Error creating expense group:", error);
+            Alert.alert("Error", "Failed to create expense group. Please try again.");
+        }
         
     };
 
@@ -64,7 +78,6 @@ const AddNewExpense = () => {
   return (
     <View style={styles.container}>
         <View>
-            <Text style={styles.groupHeaderTxt}>Expenses Group</Text>
             <Input
             placeholder="Enter category type"
             onChangeText={(value) => {
@@ -74,13 +87,13 @@ const AddNewExpense = () => {
                 <MaterialIcons
                 name="category"
                 size={24}
-                color={Colors.white}
+                color={theme.textColor}
                 />
             }
             />
         </View>
         <View style={{ height:150 }}>
-            <Text style={styles.groupHeaderTxt}>Grouping Color</Text>
+            <Text style={[styles.groupHeaderTxt, { color: theme.textColor}]}>Grouping Color</Text>
             <View
                 style={{
                 flex: 1,
@@ -105,7 +118,7 @@ const AddNewExpense = () => {
                         alignItems: "center",
                         height: 40,
                         width: 40,
-                        borderColor: isSelected ? Colors.white : "#666",
+                        borderColor: isSelected ? Colors.tintColor: "#666",
                         borderWidth: isSelected ? 2 : 1,
                         borderRadius: 50,
                         }}
@@ -122,8 +135,8 @@ const AddNewExpense = () => {
                 })}
             </View>
         </View>
-        <View>
-            <Text style={styles.groupHeaderTxt}>Tag Merchant</Text>
+        {/* <View>
+            <Text style={[styles.groupHeaderTxt, {color: theme.textColor}]}>Tag Merchant</Text>
             <View style={styles.containerExistingMerchant}>
                     {
                         merchantData.length > 0 ? (
@@ -136,11 +149,11 @@ const AddNewExpense = () => {
                                             uri: merchant.icon ? merchant.icon.replace('/media', '/api/media') : '',
                                         }}
                                         style={{ width: 50, height: 50, borderRadius: 25, marginBottom: 5 }}/>
-                                    <Text style={{ color: Colors.white, fontSize: 16 }}>{toTitleCase(merchant.name)}</Text>
+                                    <Text style={{ color: theme.textColor, fontSize: 16 }}>{toTitleCase(merchant.name)}</Text>
                                 </TouchableOpacity>
                             ))
                         ) : (
-                            <Text style={{ color: Colors.white }}>No merchants found.</Text>
+                            <Text style={{ marginLeft: 20 ,color: theme.textColor }}>No merchants found.</Text>
                         )
 }
                 </View>
@@ -149,21 +162,20 @@ const AddNewExpense = () => {
             <Button onPress={()=>createNewExpensesGroup()}>
                 <Text style={[styles.groupHeaderTxt, {color:Colors.white}]}>Add</Text>
             </Button>
-        </View>    
+        </View>     */}
     </View>
   )
 }
 
-export default AddNewExpense
+export default AddNewExpenseGroup
 
 const styles = StyleSheet.create({
     container: {
         height: 150, 
-        marginTop: 20,
+        marginTop: 8,
         gap: 20
     },
     groupHeaderTxt: {
-        color: Colors.white,
         fontSize: 14,
         paddingBottom: 8,
         fontWeight: 600,
@@ -186,7 +198,6 @@ const styles = StyleSheet.create({
             borderRadius: 10,
             borderWidth: 1,
             padding: 10,
-            borderColor: Colors.neutral700
         },
     containerExistingMerchantItem2: {
         justifyContent:'center',
@@ -196,7 +207,6 @@ const styles = StyleSheet.create({
         backgroundColor: Colors.neutral400,
         borderWidth: 1,
         padding: 10,
-        borderColor: Colors.neutral700
     },
 
 })

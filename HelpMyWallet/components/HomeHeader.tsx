@@ -2,28 +2,26 @@ import { Image, StyleSheet, Text, TouchableOpacity, useColorScheme, View } from 
 import React, { useContext } from 'react'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import Colors from '@/constants/Colors'
-import { AuthContext } from '@/contexts/AuthContext'
-import * as SecureStore from 'expo-secure-store';
 import { toTitleCase } from '@/utils/stringUtils'
 import { darkTheme, lightTheme } from '@/constants/Theme'
+import { useTheme } from '@/contexts/ThemeContext'
+import { useAuth } from '@/contexts/AuthContext'
 
-const HomeHeader = () => {
-    const { logout } = useContext(AuthContext);
-    const name = SecureStore.getItem("name") || "";
-    const appTheme = useColorScheme();
-    const Theme = appTheme === 'dark' ? darkTheme: lightTheme
+const HomeHeader = ({ budget }: { budget: number }) => {
+    const { user, logout } = useAuth();
+    const { theme } = useTheme();   
 
   return (
-    <SafeAreaView style={[styles.container, { backgroundColor: Theme.cardColors}]}>
-        <View style={styles.leftContainer}>
+    <SafeAreaView style={[styles.container, { backgroundColor: theme.cardColors}]}>
+        <View style={[styles.leftContainer, { backgroundColor: theme.cardColors}]}>
             <View style={{ flexDirection: 'row', alignItems: 'center'}}>     
                 <Image
                     source={require('../assets/images/react-logo.png')}
                     style={{ height: 50, width: 50, borderRadius: 30 }}
                 />
                 <View style={{ marginLeft: 10}}>
-                    <Text style={{ color: Colors.white,  fontSize: 12}}>Hi, {toTitleCase(name)}</Text>
-                    <Text style={{ color: Colors.white, fontSize: 16}}>Your Budget</Text>
+                    <Text style={{ color: Colors.white,  fontSize: 12}}>Hi, {user?.first_name? toTitleCase(user.first_name) : null}</Text>
+                    <Text style={{ color: Colors.white, fontSize: 16}}>Budget : ${budget}</Text>
                 </View>
             </View >
             <TouchableOpacity onPress={logout} style={{ 
@@ -44,7 +42,7 @@ export default HomeHeader
 const styles = StyleSheet.create({
     container: {
         flex:1,
-        paddingBottom: 30
+        height:70
     },
     leftContainer : {
         flexDirection: 'row', 

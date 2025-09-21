@@ -12,7 +12,7 @@ const ExpenseBlock = ({expenseList} : {expenseList: ExpenseType[]}) => {
     const appTheme = useColorScheme();
     const Theme = appTheme === 'dark' ? darkTheme: lightTheme
     // console.log("Theme",appTheme)
-    console.log("Expenses", expenseList)
+    // console.log("Expenses", expenseList)
 
     const totalAmount = expenseList.reduce((sum, expense) => {
         return sum + parseFloat(expense.amount);

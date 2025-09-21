@@ -63,5 +63,18 @@ def update_transactions_with_merchant(user):
             print("Possible names for merchant:", possible_names)
             if any(name in description for name in possible_names):
                 transaction.merchant = merchant
+                if merchant.category:
+                    transaction.category = merchant.category
                 transaction.save()
                 print(f"Updated transaction {transaction.ref_number} with merchant {merchant.name}")
+
+def update_transactions_with_category(user, merchant_id):
+    transactions = Transaction.objects.filter(author=user, merchant__isnull=False)
+    merchant = Merchant.objects.filter(pk=merchant_id)
+    for transaction in transactions:
+        if transaction.merchant == merchant:
+            transaction.category == merchant.category
+            transaction.save()
+            
+
+

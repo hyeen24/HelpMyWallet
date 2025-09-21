@@ -26,7 +26,7 @@ const IncomeBlock = ({incomeList, onRefresh} : {incomeList: IncomeType[],  onRef
     }
 
     const deleteIncome = async () => {
-        await api.delete(`api/category/delete/${showMore}/`).then((res) => {
+        await api.delete(`api/income/${showMore}/`).then((res) => {
             onRefresh();
         }).catch((err) => {
                 const errorData =err.response.data;

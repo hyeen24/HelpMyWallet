@@ -104,3 +104,16 @@ export type Theme = {
   cardColors: string;
   altTextColor: string;
 };
+
+export type UserType = {
+  first_name: string;
+  username: string;
+  email?: string; // include any other fields your API returns
+};
+
+export type AddNewExpenseGroupProps = {
+    categoryName: string;
+    setCategoryName: (name: string) => void;
+    categoryColor: string;
+    setCategoryColor: (color: string) => void;
+};

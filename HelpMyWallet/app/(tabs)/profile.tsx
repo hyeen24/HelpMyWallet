@@ -63,7 +63,7 @@ export default profile
 
 const styles = StyleSheet.create({
     container: {
-      marginTop: 80,
+      marginTop: 50,
       paddingTop: 10,
       flex: 1,
       paddingHorizontal: 10,

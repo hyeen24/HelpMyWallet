@@ -25,25 +25,19 @@ const Register = () => {
   const handleRegister = async () => {
     const isValidName = (str: string) => /^[A-Za-z\s]+$/.test(name);
 
-    if (!name || !email || !password) {
-      Alert.alert('Fail to Sign Up', 'Please fill up all fields.');
-      return;
-    } 
-
-    if (emailRegex.test(email) == false) {
-      Alert.alert('Fail to Sign Up', 'Please enter a valid email address.');
-      return;
-    }
-    
-    if (password.length < 8 ) {
-      Alert.alert('Fail to Sign Up','Please ensure password has the minimum length of 8 characters.')
-      return;
-    }
-
-    if (!isValidName(name)) {
-      Alert.alert("Fail to Sign Up","Name should only consist of alphabets.");
-      return;
-    }
+    if (
+          password.length < 8 ||
+          !/[a-z]/.test(password) ||       // no lowercase
+          !/[A-Z]/.test(password) ||       // no uppercase
+          !/\d/.test(password) ||          // no digit
+          !/[!@#$%^&*(),.?":{}|<>]/.test(password) // no special char
+        ) {
+          Alert.alert(
+            'Fail to Sign Up',
+            'Password must be at least 8 characters long, contain uppercase and lowercase letters, a number, and a special character.'
+          );
+          return;
+        }
     
     const isRegistered = await register(name, email.toLowerCase(), password);
     
@@ -68,25 +62,43 @@ const Register = () => {
           <Input 
           placeholder="Enter your name" 
           onChangeText={(value) => {setName(value)}}
-          icon={<FontAwesome name='address-book' size={26}
+          iconLeft={<FontAwesome name='address-book' size={26}
           color={Colors.neutral300}/>}
           />
           <Input 
           placeholder="Enter your email" 
           onChangeText={(value) => {setEmail(value)}}
-          icon={<Feather name='mail' size={26}
+          iconLeft={<Feather name='mail' size={26}
           color={Colors.neutral300}/>}
           />
           <Input 
           placeholder="Enter your password" 
           secureTextEntry
           onChangeText={(value) => {setPassword(value)}}
-          icon={<AntDesign name='lock' size={26}
+          iconLeft={<AntDesign name='lock' size={26}
           color={Colors.neutral300}/>}
           />
-          {password.length < 8 && (
-              <Text style={{ fontSize: 15, color: Colors.white}} > {'\u2022'} Minimum 8 characters</Text>
-            )}
+          <View>
+            <Text style={{ fontSize: 15, color: Colors.white }}>
+              {'\u2022'} Minimum 8 characters {password.length >= 8 ? '✅' : ''}
+            </Text>
+
+            <Text style={{ fontSize: 15, color: Colors.white }}>
+              {'\u2022'} At least one lowercase character {/[a-z]/.test(password) ? '✅' : ''}
+            </Text>
+
+            <Text style={{ fontSize: 15, color: Colors.white }}>
+              {'\u2022'} At least one uppercase character {/[A-Z]/.test(password) ? '✅' : ''}
+            </Text>
+
+            <Text style={{ fontSize: 15, color: Colors.white }}>
+              {'\u2022'} At least one numeral (0-9) {/\d/.test(password) ? '✅' : ''}
+            </Text>
+
+            <Text style={{ fontSize: 15, color: Colors.white }}>
+              {'\u2022'} At least one symbol character {/[!@#$%^&*(),.?":{}|<>]/.test(password) ? '✅' : ''}
+            </Text>
+          </View>
           
         </View>
 
